@@ -1,0 +1,23 @@
+## Interface: 70000
+## Title: mod ui
+## Author: modernist
+## Notes: a ui
+
+skin/skin.lua
+
+core/text.lua
+core/skins.lua
+core/colour.lua
+
+actionbar/bars.lua
+
+chat/cmd.lua
+
+bag/menu.lua
+bag/bag/bag.lua
+bag/button.lua
+bag/bank/bank.lua
+bag/tools/greys.lua
+bag/update.lua
+
+menu/menu.lua
