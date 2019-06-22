@@ -1,0 +1,27 @@
+
+
+<Ui xmlns='http://www.blizzard.com/wow/ui'>
+	<Button name='modauraTemplate' inherits='SecureActionButtonTemplate' virtual='true'>
+		<Size x='26' y='26'/>
+		<Attributes>
+			<Attribute name='type' value='cancelaura'/>
+		</Attributes>
+		<Scripts>
+			<OnLoad>
+				local header = self:GetParent()
+				self:RegisterForClicks'RightButtonUp'
+				self.unit = header:GetAttribute'unit'
+   				self.filter = header:GetAttribute'filter'
+				if  self.filter:find'HARMFUL' then
+				 	self.debuff = true
+				end
+			</OnLoad>
+			<OnEnter>
+				local i = self:GetAttribute'index'
+				GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMLEFT')
+				GameTooltip:SetUnitAura(self.unit, i, self.filter)
+			</OnEnter>
+			<OnLeave function='GameTooltip_Hide'/>
+		</Scripts>
+	</Button>
+</Ui>

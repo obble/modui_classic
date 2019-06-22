@@ -1,18 +1,36 @@
-## Interface: 70000
+## Interface: 81000
 ## Title: mod ui
 ## Author: modernist
 ## Notes: a ui
 
+#   ~colour modification (todo: put button skinning in here?)
 skin/skin.lua
 
+#   ~shared functions & overall UI biz
 core/text.lua
 core/skins.lua
 core/colour.lua
 
+#   ~insert templates
+templates.xml
+
+#   ~action bar and buttons
 actionbar/bars.lua
 
-chat/cmd.lua
+#   ~buffs
+aura/aura.lua
 
+#   ~castbars for target and nameplates
+castbars/enemy.lua
+
+#   ~chat
+chat/chat.lua
+chat/cmd.lua
+chat/event.lua
+chat/tab.lua
+chat/url.lua
+
+#   ~one bag system
 bag/menu.lua
 bag/bag/bag.lua
 bag/button.lua
@@ -20,4 +38,20 @@ bag/bank/bank.lua
 bag/tools/greys.lua
 bag/update.lua
 
+#   ~micromenu
 menu/menu.lua
+
+#   ~minimap
+minimap/minimap.lua
+
+#   ~nameplates
+nameplate/nameplate.lua
+
+#   ~objective tracker
+quest/quest.lua
+
+#   ~unitframes
+unit/unit.lua
+
+#   ~world map
+worldmap/worldmap.lua

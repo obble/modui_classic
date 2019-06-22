@@ -7,7 +7,7 @@
 	_G['MicroButtonAndBagsBar']:Hide()
 	_G['MicroButtonAndBagsBar']:UnregisterAllEvents()
 
-	bu:SetParent(MainMenuBarArtFrame)
+	bu:SetParent(_G['modui_endcaps'])
 	bu:ClearAllPoints()
 	bu:SetPoint('CENTER', MainMenuBarArtFrame.RightEndCap, -10, -5)
 	bu:SetSize(21, 21)

@@ -126,21 +126,16 @@
     ColorPickerFrame.reset:Hide()
 
     local icon = CreateFrame('Button', 'modcolourmenu', MainMenuBarBackpackButton)
-    icon:SetSize(20, 20)
+    icon:SetSize(16, 16)
     icon:ClearAllPoints()
-    icon:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', 5, 105)
-
-    icon.bd = icon:CreateTexture(nil, 'ARTWORK')
-    icon.bd:SetAllPoints()
-    icon.bd:SetColorTexture(0, 0, 0)
+    icon:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', .5, 1)
 
     local t = icon:CreateFontString(nil, 'ARTWORK')
-    t:SetFont(STANDARD_TEXT_FONT, 16, 'OUTLINE')
+    t:SetFont(STANDARD_TEXT_FONT, 36, 'OUTLINE')
     t:SetPoint('CENTER', icon, .5, .5)
-    t:SetText'M'
+    t:SetText'·'
     t:SetTextColor(1, 1, 1)
 
-    icon:SetPoint('CENTER', UIParent, 0, -100)
     icon:SetScript('OnClick', function()
         ColourPicker(
             addon.colour[1],

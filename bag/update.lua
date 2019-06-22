@@ -122,7 +122,6 @@
 
 	local HideBank = function()
 		BankFrame:EnableMouse(false)
-		BankFrame:EnableMouse(false)
 		BankFrame:DisableDrawLayer'BACKGROUND'
 		BankFrame:DisableDrawLayer'BORDER'
 		BankFrame:DisableDrawLayer'OVERLAY'
@@ -132,12 +131,22 @@
 		BankItemAutoSortButton:EnableMouse(false)
 		BankItemAutoSortButton:SetAlpha(0)
 
+		BankPortraitTexture:SetTexture''
+
+		for _,  v in pairs({BankFrame:GetRegions()}) do
+			if  v:GetObjectType() == 'Texture' then
+				v:SetTexture''
+				v:SetAlpha(0)
+			end
+		end
+
 		for _, v in pairs({
 			BankFrameCloseButton,
 			BankFrameMoneyFrame,
 			BankItemSearchBox,
 			BankPortraitTexture,
-			BankFramePurchaseInfo
+			BankFramePurchaseInfo,
+			BankFrame.NineSlice
 		}) do
 			v:Hide()
 		end

@@ -7,7 +7,12 @@
         'MultiBarBottomLeft',
         'MultiBarBottomRight',
         'MultiBarLeft',
-        'MultiBarRight'
+        'MultiBarRight',
+    }
+
+    local x = {
+        'Pet',
+        'Stance',
     }
 
     for _, v in pairs(n) do
@@ -38,6 +43,30 @@
                 end
             end
         end
+    end
+
+    for _, v in pairs(x) do
+        for i = 1, 10 do
+            local bu = _G[v..'Button'..i]
+            if bu then
+                ns.BU(bu, 0, true, bu:GetHeight() - 2, bu:GetWidth() - 2)
+                ns.BUBorder(bu, 24)
+                ns.BUElements(bu)
+            end
+        end
+    end
+
+    local caps = CreateFrame('Frame', 'modui_endcaps', UIParent)
+    caps:SetAllPoints(MainMenuBarArtFrame)
+    caps:SetFrameLevel(1)
+
+    for _, v in pairs(
+        {
+            MainMenuBarArtFrame.LeftEndCap or MainMenuBarLeftEndCap,
+            MainMenuBarArtFrame.RightEndCap or MainMenuBarRightEndCap,
+        }
+    ) do
+        v:SetParent(caps)
     end
 
     --

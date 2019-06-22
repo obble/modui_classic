@@ -8,7 +8,7 @@
 
     local FONT_REGULAR = ns.FONT_REGULAR
 
-    local TEXTURE  = [[Interface\AddOns\modui\customise\statusbar\statusbar]]
+    local TEXTURE  = [[Interface\TargetingFrame\UI-StatusBar]]
     local BACKDROP = {
         bgFile     = [[Interface\ChatFrame\ChatFrameBackground]],
         tiled      = false,

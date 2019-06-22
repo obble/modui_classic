@@ -1,0 +1,5 @@
+
+
+    SetCVar('ShowClassColorInFriendlyNameplate', 1)
+
+    --

@@ -3,6 +3,7 @@
     local _, ns = ...
 
     local _, class = UnitClass'player'
+    local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
     local CLASS_ICON_TCOORDS = {
         ['WARRIOR']		= {0, .25, .025, .225},
@@ -27,7 +28,20 @@
        ['HelpMicroButton']         = {{-12, 100}, {12, 100}},
    }
 
-   local menu = CreateFrame('Button', 'moduimenuButton', MainMenuBarArtFrame)
+   local BFAbuttons = {
+       ['CharacterMicroButton']         = {{-12, 10}, {-12, 10}},
+       ['SpellbookMicroButton']         = {{ 12, 10}, { 12, 10}},
+       ['TalentMicroButton']            = {{-12, 45}, {-12, 45}},
+       ['AchievementMicroButton']       = {{-12, 45}, { 12, 45}},
+       ['QuestLogMicroButton']          = {{ 12, 45}, {-12, 80}},
+       ['GuildMicroButton']             = {{-12, 80}, { 12, 80}},
+       ['LFDMicroButton']               = {{ 12, 80}, {-12, 115}},
+       ['CollectionsMicroButton']       = {{-12, 115}, {12, 115}},
+       ['EJMicroButton']                = {{-12, 150}, {-12, 150}},
+       ['MainMenuMicroButton']          = {{-12, 150}, {12, 150}},
+   }
+
+   local menu = CreateFrame('Button', 'moduimenuButton', _G['modui_endcaps'])
    menu:SetPoint('CENTER', MainMenuBarArtFrame.LeftEndCap, 10, -5)
    menu:SetSize(21, 21)
    --menu:GetNormalTexture():SetTexture''
@@ -99,7 +113,7 @@
 
    local ShowMenu = function()
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 6)
-       for i, v in pairs(buttons) do
+       for i, v in pairs(build < 2 and buttons or BFAbuttons) do
            local bu = _G[i]
            if  bu then -- 8.0 buffer
                bu:SetAlpha(1)
@@ -111,7 +125,7 @@
    local HideMenu = function()
        GameTooltip:Hide()
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 3)
-       for i, v in pairs(buttons) do
+       for i, v in pairs(build < 2 and buttons or BFAbuttons) do
            local bu = _G[i]
            if  bu then -- 8.0 buffer
                bu:SetAlpha(0)
@@ -122,7 +136,10 @@
 
    local AddMenu = function()
        local l = UnitLevel'player'
-       for i, v in pairs(buttons) do
+       local frames = {
+
+       }
+       for i, v in pairs(build < 2 and buttons or BFAbuttons) do
            local bu = _G[i]
            if  bu then
                bu:ClearAllPoints()
@@ -135,7 +152,34 @@
                bu:HookScript('OnLeave', HideMenu)
            end
        end
+       for _, f in pairs(
+            {
+                MainMenuBarPerformanceBar,
+                StoreMicroButton
+            }
+       ) do
+           if  f then
+               f:Hide()
+           end
+       end
    end
+
+   local AddAlerts = function()
+       local focus = GetMouseFocus()
+       ShowMenu()
+       if  not menu.timer then
+           menu.timer = true
+           C_Timer.After(5, function()
+               menu.timer = false
+               if  focus == menu or focus == menu.mouseover or str.find(focus:GetName(), build < 2 and buttons or BFAbuttons) then
+                   return
+               else
+                   HideMenu()
+               end
+           end)
+       end
+   end
+
 
    menu:SetScript('OnEnter', function()
        ShowMenu()
@@ -192,5 +236,8 @@
    e:RegisterEvent'PLAYER_LOGIN'
    e:RegisterEvent'PLAYER_LEVEL_UP'
    e:SetScript('OnEvent', AddMenu)
+
+   hooksecurefunc('UpdateMicroButtons', AddMenu)
+   -- hooksecurefunc('MainMenuMicroButton_ShowAlert', AddAlerts)
 
     --
