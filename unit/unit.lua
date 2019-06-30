@@ -19,7 +19,7 @@
             FocusFrameNameBackground
         }
     ) do
-        t:SetTexture[[Interface\TargetingFrame\UI-StatusBar]]
+        t:SetTexture[[Interface\TARGETINGFRAME\NameplateFill]]
     end
 
     local function OnEvent(self, event)

@@ -195,26 +195,28 @@
         bu.bo[1]:SetPoint('TOPLEFT', -6, 7)
         bu.bo[1]:SetSize(x, y)
         bu.bo[1]:SetTexCoord(.5, .673, 0, 1)
+        --bu.bo[1]:SetVertexColor(.6, .6, .6)
 
         bu.bo[2] = bu:CreateTexture(nil, 'BORDER')
         bu.bo[2]:SetTexture[[Interface\Tooltips\UI-Tooltip-Border]]
         bu.bo[2]:SetPoint('TOPRIGHT', 6, 7)
         bu.bo[2]:SetSize(x, y)
         bu.bo[2]:SetTexCoord(.675, .5, 0, 1)
+        --bu.bo[2]:SetVertexColor(.6, .6, .6)
 
         bu.bo[3] = bu:CreateTexture(nil, 'BORDER')
         bu.bo[3]:SetTexture[[Interface\Tooltips\UI-Tooltip-Border]]
         bu.bo[3]:SetPoint('BOTTOMLEFT', -6, -7)
         bu.bo[3]:SetSize(x, y)
         bu.bo[3]:SetTexCoord(.75875, .87325, 0, 1)
-        bu.bo[3]:SetVertexColor(.9, .9, .9)
+        --bu.bo[3]:SetVertexColor(.6, .6, .6)
 
         bu.bo[4] = bu:CreateTexture(nil, 'BORDER')
         bu.bo[4]:SetTexture[[Interface\Tooltips\UI-Tooltip-Border]]
         bu.bo[4]:SetPoint('BOTTOMRIGHT', 6, -7)
         bu.bo[4]:SetSize(x, y)
         bu.bo[4]:SetTexCoord(.87325, .75875, 0, 1)
-        bu.bo[4]:SetVertexColor(.9, .9, .9)
+        --bu.bo[4]:SetVertexColor(.6, .6, .6)
     end
 
     ns.BDStone = function(bu, x, path)

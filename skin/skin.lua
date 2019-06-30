@@ -2,6 +2,8 @@
 
     local _, addon = ...
 
+    local f = CreateFrame'Frame'
+
     addon.colour = {1, 1, 1, 1}
     addon.skin = {
         MinimapBorder,
@@ -55,6 +57,109 @@
         tinsert(addon.skin, a)
     end
 
+    local _, a, b, c, d = ItemTextFrame:GetRegions()
+    for _, v in pairs({a, b, c, d}) do
+        tinsert(addon.skin, v)
+    end
+
+    local a, b, c, d, e, f, g = HelpFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e, f, g}) do
+        tinsert(addon.skin, v)
+    end
+
+    if HonorFrame then
+        local a, b, c, d = HonorFrame:GetRegions()
+        for _, v in pairs({a, b, c, d}) do
+            tinsert(addon.skin, v)
+        end
+    end
+
+    local _, a = LootFrame:GetRegions()
+    tinsert(addon.skin, a)
+
+    if  LFGParentFrame then
+        local _, a = LFGParentFrame:GetRegions()
+        for _, v in pairs({a}) do tinsert(addon.skin, v) end
+    end
+
+    local _, a, b, c, d, _, _, _, e, f, g, h, j, k = MerchantFrame:GetRegions()
+    for _, v in pairs({a, b, c ,d, e, f, g, h, j, k}) do
+        tinsert(addon.skin, v)
+    end
+
+    tinsert(addon.skin, MerchantBuyBackItemNameFrame)
+
+    local _, a, b, c, d = OpenMailFrame:GetRegions()
+   for _, v in pairs({a, b, c, d}) do
+       tinsert(addon.skin, v)
+   end
+
+   local _, a, b, c, d = MailFrame:GetRegions()
+   for _, v in pairs({a, b, c, d}) do
+       tinsert(addon.skin, v)
+   end
+
+   for i = 1, MIRRORTIMER_NUMTIMERS do
+        local m = _G['MirrorTimer'..i]
+        local _, _, a = m:GetRegions()
+        tinsert(addon.skin, a)
+    end
+
+
+        -- PAPERDOLL
+    local a, b, c, d, _, e = PaperDollFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e}) do
+        tinsert(addon.skin, v)
+    end
+
+    local a, b, c, d = ReputationFrame:GetRegions()
+    for _, v in pairs({a, b, c, d}) do
+        tinsert(addon.skin, v)
+    end
+
+    local _, a, b, c, d = FriendsFrame:GetRegions()
+    for _, v in pairs({a, b, c, d}) do
+        tinsert(addon.skin, v)
+    end
+
+    local _, a, b, c, d = SpellBookFrame:GetRegions()
+    for _, v in pairs({a, b, c, d}) do
+        tinsert(addon.skin, v)
+    end
+
+    local _, a, b, c, d = TabardFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e}) do
+        tinsert(addon.skin, v)
+    end
+
+        -- TAXI
+    local _, a, b, c, d = TaxiFrame:GetRegions()
+    for _, v in pairs({a, b, c, d}) do
+        tinsert(addon.skin, v)
+    end
+
+
+        -- TRADE
+    local _, _, a, b, c, d = TradeFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e}) do
+        tinsert(addon.skin, v)
+    end
+
+
+        -- WARDROBE
+    local _, a, b, c, d = DressUpFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e}) do
+        tinsert(addon.skin, v)
+    end
+
+        -- WORLDMAP
+    local _, a, b, c, d, e, _, _, f, g, h, j, k = WorldMapFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e, f, g, h, j, k}) do
+        tinsert(addon.skin, v)
+    end
+
+    --todo: borders
+
     -- in classic?
     --[[
     for _, v in pairs(
@@ -97,8 +202,7 @@
         ColorPickerFrame:SetPoint'CENTER'
     end
 
-    local f = CreateFrame'Frame'
-    f.recolourTexture = function(colour, cancel)
+    --[[f.recolourTexture = function(colour, cancel)
         if  colour then
             if  cancel then
                 addon.colour[1], addon.colour[2], addon.colour[3] = 0, 0, 0
@@ -117,34 +221,13 @@
                 )
             end
         end
-    end
+    end ]]
 
     ColorPickerFrame.reset = CreateFrame('Button', 'ColorPickerFrameReset', ColorPickerFrame, 'GameMenuButtonTemplate')
     ColorPickerFrame.reset:SetSize(144, 24)
     ColorPickerFrame.reset:SetText'Reset to Default'
     ColorPickerFrame.reset:SetPoint('BOTTOMLEFT', ColorPickerOkayButton, 0, 22)
     ColorPickerFrame.reset:Hide()
-
-    local icon = CreateFrame('Button', 'modcolourmenu', MainMenuBarBackpackButton)
-    icon:SetSize(16, 16)
-    icon:ClearAllPoints()
-    icon:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', .5, 1)
-
-    local t = icon:CreateFontString(nil, 'ARTWORK')
-    t:SetFont(STANDARD_TEXT_FONT, 36, 'OUTLINE')
-    t:SetPoint('CENTER', icon, .5, .5)
-    t:SetText'·'
-    t:SetTextColor(1, 1, 1)
-
-    icon:SetScript('OnClick', function()
-        ColourPicker(
-            addon.colour[1],
-            addon.colour[2],
-            addon.colour[3],
-            addon.colour[4],
-            f.recolourTexture
-        )
-    end)
 
     ColorPickerFrame:SetScript('OnShow', function(self)
         if  self.hasOpacity then
@@ -181,6 +264,59 @@
                     addon.colour[3]
                 )
             end
+        end
+    end)
+
+    local list = {
+        {
+            text            = 'modui',
+            isTitle         = true,
+            notCheckable    = true,
+            fontObject      = Game13Font,
+       },
+       {
+           text = 'UI Colour',
+           icon = 'Interface\\ICONS\\inv_misc_gem_variety_02',
+           func = function()
+               ColourPicker(
+                   addon.colour[1],
+                   addon.colour[2],
+                   addon.colour[3],
+                   addon.colour[4],
+                   f.recolourTexture
+               )
+           end,
+           notCheckable = true,
+           fontObject = Game13Font,
+       },
+       {
+           text = 'Toggle Elements',
+           icon = 'Interface\\PaperDollInfoFrame\\UI-EquipmentManager-Toggle',
+           func = function()
+           end,
+           notCheckable = true,
+           fontObject = Game13Font,
+       }
+    }
+
+    local icon = CreateFrame('Button', 'modcolourmenu', MainMenuBarBackpackButton)
+    icon:SetSize(16, 16)
+    icon:ClearAllPoints()
+    icon:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', .5, 1)
+
+    local t = icon:CreateFontString(nil, 'ARTWORK')
+    t:SetFont(STANDARD_TEXT_FONT, 36, 'OUTLINE')
+    t:SetPoint('CENTER', icon, .5, .5)
+    t:SetText'·'
+    t:SetTextColor(1, 1, 1)
+
+    local menu = CreateFrame('Frame', 'modoptions', UIParent, 'UIDropDownMenuTemplate')
+
+    icon:SetScript('OnClick', function()
+        if  DropDownList1:IsShown() then
+            DropDownList1:Hide()
+        else
+            EasyMenu(list, menu, icon, 3, 111, 'MENU', 5)
         end
     end)
 

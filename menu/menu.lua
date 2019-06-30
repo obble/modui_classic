@@ -2,8 +2,9 @@
 
     local _, ns = ...
 
-    local _, class = UnitClass'player'
-    local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
+    local _, class  = UnitClass'player'
+    local build     = tonumber(string.sub(GetBuildInfo() , 1, 2))
+    local classic   = build < 1 and true or false
 
     local CLASS_ICON_TCOORDS = {
         ['WARRIOR']		= {0, .25, .025, .225},
@@ -29,16 +30,16 @@
    }
 
    local BFAbuttons = {
-       ['CharacterMicroButton']         = {{-12, 10}, {-12, 10}},
-       ['SpellbookMicroButton']         = {{ 12, 10}, { 12, 10}},
-       ['TalentMicroButton']            = {{-12, 45}, {-12, 45}},
-       ['AchievementMicroButton']       = {{-12, 45}, { 12, 45}},
-       ['QuestLogMicroButton']          = {{ 12, 45}, {-12, 80}},
-       ['GuildMicroButton']             = {{-12, 80}, { 12, 80}},
-       ['LFDMicroButton']               = {{ 12, 80}, {-12, 115}},
-       ['CollectionsMicroButton']       = {{-12, 115}, {12, 115}},
-       ['EJMicroButton']                = {{-12, 150}, {-12, 150}},
-       ['MainMenuMicroButton']          = {{-12, 150}, {12, 150}},
+       ['CharacterMicroButton']         = {{-12, 30}, {-12, 30}},
+       ['SpellbookMicroButton']         = {{ 12, 30}, { 12, 30}},
+       ['TalentMicroButton']            = {{-12, 65}, {-12, 65}},
+       ['AchievementMicroButton']       = {{-12, 65}, { 12, 65}},
+       ['QuestLogMicroButton']          = {{ 12, 65}, {-12, 100}},
+       ['GuildMicroButton']             = {{-12, 100}, {12, 100}},
+       ['LFDMicroButton']               = {{ 12, 100}, {-12, 135}},
+       ['CollectionsMicroButton']       = {{-12, 135}, {12, 135}},
+       ['EJMicroButton']                = {{-12, 170}, {-12, 170}},
+       ['MainMenuMicroButton']          = {{-12, 170}, {12, 170}},
    }
 
    local menu = CreateFrame('Button', 'moduimenuButton', _G['modui_endcaps'])
@@ -47,6 +48,7 @@
    --menu:GetNormalTexture():SetTexture''
    ns.BUElements(menu)
    menu:RegisterForClicks'AnyUp'
+   menu:SetFrameLevel(2)
 
    menu.t = menu:CreateTexture(nil, 'ARTWORK')
    menu.t:SetTexture[[Interface\GLUES\CHARACTERCREATE\UI-CHARACTERCREATE-CLASSES]]
@@ -62,12 +64,12 @@
 
    menu.mouseover = CreateFrame('Button', nil, menu)
    menu.mouseover:SetWidth(60)
-   menu.mouseover:SetHeight(300)
+   menu.mouseover:SetHeight(200)
    menu.mouseover:SetPoint('BOTTOM', menu, 'TOP')
-   menu.mouseover:SetFrameLevel(10)
+   menu.mouseover:SetFrameLevel(0)
 
    menu.sb = CreateFrame('StatusBar', nil, menu)
-   menu.sb:SetStatusBarTexture[[Interface\AddOns\ladyui\art\statusbar.tga]]
+   ns.SB(menu.sb)
    menu.sb:SetSize(22, 3)
    menu.sb:SetPoint('TOP', menu, 'BOTTOM', 1, -5)
    menu.sb:SetStatusBarColor(0, 1, 0)
@@ -113,11 +115,10 @@
 
    local ShowMenu = function()
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 6)
-       for i, v in pairs(build < 2 and buttons or BFAbuttons) do
+       for i, v in pairs(classic and buttons or BFAbuttons) do
            local bu = _G[i]
            if  bu then -- 8.0 buffer
                bu:SetAlpha(1)
-               bu:EnableMouse(true)
            end
        end
    end
@@ -125,11 +126,10 @@
    local HideMenu = function()
        GameTooltip:Hide()
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 3)
-       for i, v in pairs(build < 2 and buttons or BFAbuttons) do
+       for i, v in pairs(classic and buttons or BFAbuttons) do
            local bu = _G[i]
            if  bu then -- 8.0 buffer
                bu:SetAlpha(0)
-               bu:EnableMouse(false)
            end
        end
    end
@@ -139,13 +139,12 @@
        local frames = {
 
        }
-       for i, v in pairs(build < 2 and buttons or BFAbuttons) do
+       for i, v in pairs(classic and buttons or BFAbuttons) do
            local bu = _G[i]
            if  bu then
                bu:ClearAllPoints()
                bu:SetPoint('BOTTOM', menu, 'TOP', l < 10 and v[1][1] or v[2][1], l < 10 and v[1][2] or v[2][2])
                bu:SetAlpha(0)
-               bu:EnableMouse(false)
                bu:SetFrameLevel(11)
 
                bu:HookScript('OnEnter', ShowMenu)
@@ -171,7 +170,7 @@
            menu.timer = true
            C_Timer.After(5, function()
                menu.timer = false
-               if  focus == menu or focus == menu.mouseover or str.find(focus:GetName(), build < 2 and buttons or BFAbuttons) then
+               if  focus == menu or focus == menu.mouseover or str.find(focus:GetName(), classic and buttons or BFAbuttons) then
                    return
                else
                    HideMenu()
@@ -187,28 +186,11 @@
        GameTooltip:SetOwner(menu, 'ANCHOR_LEFT', -25, 12)
        GameTooltip:AddLine(MAINMENU_BUTTON)
 
-       GameTooltip:AddLine' '
-
-       -- latency
-       local _, _, latency = GetNetStats()
-       --[[local string = format(MAINMENUBAR_LATENCY_LABEL, latency)
-       GameTooltip:AddLine(string, 1, 1, 1)
-       if  SHOW_NEWBIE_TIPS == '1' then
-           GameTooltip:AddLine(NEWBIE_TOOLTIP_LATENCY, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
-       end
-
-       GameTooltip:AddLine'\n'
-
-       -- fps
-       local string = format(MAINMENUBAR_FPS_LABEL, GetFramerate())
-       GameTooltip:AddLine(string, 1, 1, 1)
-       if  SHOW_NEWBIE_TIPS == '1' then
-           GameTooltip:AddLine(NEWBIE_TOOLTIP_FRAMERATE, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, 1)
-       end]]
+       --GameTooltip:AddLine' '
 
        GameTooltip:Show()
    end)
-   menu:SetScript('OnLeave',      HideMenu)
+   menu:SetScript('OnLeave', HideMenu)
    menu.mouseover:SetScript('OnEnter', ShowMenu)
    menu.mouseover:SetScript('OnLeave', HideMenu)
 

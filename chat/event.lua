@@ -116,11 +116,16 @@
         local _, class  = UnitClass'player'
         local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class].colorStr
         local d = date'%I.%M'..string.lower(date'%p')
+
+        if  string.find(t, 'Left Channel:') then                        --   global channels being left should be indentifiable
+            t = gsub(t, '%[(%d0?)%. (.-)%]', '|cffffffff%1|r %2   ')    --   [2. trade] > 2: Trade
+        else                                                            --   otherwise:
+            t = gsub(t, '%[(%d0?)%. (.-)%]', '|cffffffff%1|r   ')       --   globals channels: [2. trade] > 2
+        end
                                                                 --  'square'-off string icons
         t = gsub(t, '|TInterface\\Icons\\(.+):(.+)|t', '|TInterface\\Icons\\%1:'..size..':'..size..':0:0:64:64:8:56:8:56|t')
         t = gsub(t, '(|HBNplayer.-|h)%[(.-)%]|h', '%1%2|h')     --   battlenet player name
         t = gsub(t, '(|Hplayer.-|h)%[(.-)%]|h', '%1%2|h')       --   player name
-        t = gsub(t, '%[(%d0?)%. (.-)%]', '|cffffffff%1|r:%2   ')   --   globals channels: [2. trade] > 2
         t = gsub(t, 'Guild Message of the Day:', 'GMOTD   ')    --   message of the day
         t = gsub(t, 'To (|HBNplayer.+|h):', '%1 >   ')          --   whisper to bnet
         t = gsub(t, 'To (|Hplayer.+|h):', '%1 >   ')            --   whisper to
