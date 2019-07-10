@@ -1,11 +1,12 @@
 
 
-    local _, addon = ...
+    local _, ns = ...
 
     local f = CreateFrame'Frame'
+    local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
-    addon.colour = {1, 1, 1, 1}
-    addon.skin = {
+    ns.colour = {1, 1, 1, 1}
+    ns.skin = {
         MinimapBorder,
         MiniMapTrackingBorder,
         MiniMapMailBorder,
@@ -25,137 +26,150 @@
 
         CastingBarBorder,
 
-        -- 8.0?
-        MainMenuBarArtFrameBackground.BackgroundLarge,
-        MainMenuBarArtFrameBackground.BackgroundSmall,
-        MainMenuBarArtFrame.LeftEndCap,
-        MainMenuBarArtFrame.RightEndCap,
-        MicroButtonAndBagsBar.MicroBagBar,
-
-        -- in classic?
-        MainMenuBarTexture0,
-        MainMenuBarTexture1,
-        MainMenuBarTexture2,
-        MainMenuBarTexture3,
-        MainMenuMaxLevelBar0,
-        MainMenuMaxLevelBar1,
-        MainMenuMaxLevelBar2,
-        MainMenuMaxLevelBar3,
-        MainMenuXPBarTextureLeftCap,
-        MainMenuXPBarTextureRightCap,
-        MainMenuXPBarTextureMid,
-        BonusActionBarTexture0,
-        BonusActionBarTexture1,
-        MainMenuBarLeftEndCap,
-        MainMenuBarRightEndCap,
-
         _G['TargetFrameToTTextureFrameTexture'],
     }
 
+    -- 8.0?
+    if  build > 1 then
+        for _, v in pairs(
+            {
+                MainMenuBarArtFrameBackground.BackgroundLarge,
+                MainMenuBarArtFrameBackground.BackgroundSmall,
+                MainMenuBarArtFrame.LeftEndCap,
+                MainMenuBarArtFrame.RightEndCap,
+                MicroButtonAndBagsBar.MicroBagBar,
+            }
+        ) do
+            tinsert(ns.skin, v)
+        end
+    else
+        for _, v in pairs(
+            {
+                MainMenuBarTexture0,
+                MainMenuBarTexture1,
+                MainMenuBarTexture2,
+                MainMenuBarTexture3,
+                MainMenuMaxLevelBar0,
+                MainMenuMaxLevelBar1,
+                MainMenuMaxLevelBar2,
+                MainMenuMaxLevelBar3,
+                MainMenuXPBarTextureLeftCap,
+                MainMenuXPBarTextureRightCap,
+                MainMenuXPBarTextureMid,
+                BonusActionBarTexture0,
+                BonusActionBarTexture1,
+                MainMenuBarLeftEndCap,
+                MainMenuBarRightEndCap,
+            }
+        ) do
+            tinsert(ns.skin, v)
+        end
+    end
+
     for i = 1, 12 do
         local _, a = _G['ContainerFrame'..i]:GetRegions()
-        tinsert(addon.skin, a)
+        tinsert(ns.skin, a)
     end
 
     local _, a, b, c, d = ItemTextFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
     local a, b, c, d, e, f, g = HelpFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e, f, g}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
     if HonorFrame then
         local a, b, c, d = HonorFrame:GetRegions()
         for _, v in pairs({a, b, c, d}) do
-            tinsert(addon.skin, v)
+            tinsert(ns.skin, v)
         end
     end
 
     local _, a = LootFrame:GetRegions()
-    tinsert(addon.skin, a)
+    tinsert(ns.skin, a)
 
     if  LFGParentFrame then
         local _, a = LFGParentFrame:GetRegions()
-        for _, v in pairs({a}) do tinsert(addon.skin, v) end
+        for _, v in pairs({a}) do tinsert(ns.skin, v) end
     end
 
     local _, a, b, c, d, _, _, _, e, f, g, h, j, k = MerchantFrame:GetRegions()
     for _, v in pairs({a, b, c ,d, e, f, g, h, j, k}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
-    tinsert(addon.skin, MerchantBuyBackItemNameFrame)
+    tinsert(ns.skin, MerchantBuyBackItemNameFrame)
 
     local _, a, b, c, d = OpenMailFrame:GetRegions()
    for _, v in pairs({a, b, c, d}) do
-       tinsert(addon.skin, v)
+       tinsert(ns.skin, v)
    end
 
    local _, a, b, c, d = MailFrame:GetRegions()
    for _, v in pairs({a, b, c, d}) do
-       tinsert(addon.skin, v)
+       tinsert(ns.skin, v)
    end
 
    for i = 1, MIRRORTIMER_NUMTIMERS do
         local m = _G['MirrorTimer'..i]
         local _, _, a = m:GetRegions()
-        tinsert(addon.skin, a)
+        tinsert(ns.skin, a)
     end
 
 
         -- PAPERDOLL
     local a, b, c, d, _, e = PaperDollFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
     local a, b, c, d = ReputationFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
     local _, a, b, c, d = FriendsFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
     local _, a, b, c, d = SpellBookFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
     local _, a, b, c, d = TabardFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
         -- TAXI
     local _, a, b, c, d = TaxiFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
 
         -- TRADE
     local _, _, a, b, c, d = TradeFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
 
         -- WARDROBE
     local _, a, b, c, d = DressUpFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
         -- WORLDMAP
     local _, a, b, c, d, e, _, _, f, g, h, j, k = WorldMapFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e, f, g, h, j, k}) do
-        tinsert(addon.skin, v)
+        tinsert(ns.skin, v)
     end
 
     --todo: borders
@@ -174,19 +188,19 @@
         for _,  j in pairs({v:GetRegions()}) do
             -- print(j:GetName(), j:GetObjectType(), j:GetDrawLayer())
             if  j:GetObjectType() == 'Texture' and j:GetDrawLayer() == 'BACKGROUND' then
-                tinsert(addon.skin, v)
+                tinsert(ns.skin, v)
             end
         end
     end
     ]]
 
     -- initialise
-    for _,  v in pairs(addon.skin) do
+    for _,  v in pairs(ns.skin) do
         if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
             v:SetVertexColor(
-                addon.colour[1],
-                addon.colour[2],
-                addon.colour[3]
+                ns.colour[1],
+                ns.colour[2],
+                ns.colour[3]
             )
         end
     end
@@ -205,19 +219,19 @@
     --[[f.recolourTexture = function(colour, cancel)
         if  colour then
             if  cancel then
-                addon.colour[1], addon.colour[2], addon.colour[3] = 0, 0, 0
+                ns.colour[1], ns.colour[2], ns.colour[3] = 0, 0, 0
             else
-                addon.colour[1], addon.colour[2], addon.colour[3] = colour[1], colour[2], colour[3] -- ?
+                ns.colour[1], ns.colour[2], ns.colour[3] = colour[1], colour[2], colour[3] -- ?
             end
         else
-            addon.colour[1], addon.colour[2], addon.colour[3] = ColorPickerFrame:GetColorRGB()
+            ns.colour[1], ns.colour[2], ns.colour[3] = ColorPickerFrame:GetColorRGB()
         end
-        for _,  v in pairs(addon.skin) do
+        for _,  v in pairs(ns.skin) do
             if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
                 v:SetVertexColor(
-                    addon.colour[1],
-                    addon.colour[2],
-                    addon.colour[3]
+                    ns.colour[1],
+                    ns.colour[2],
+                    ns.colour[3]
                 )
             end
         end
@@ -250,18 +264,18 @@
     end)
 
     ColorPickerFrame.reset:SetScript('OnClick', function()
-        addon.colour[1], addon.colour[2], addon.colour[3] = 0, 0, 0
+        ns.colour[1], ns.colour[2], ns.colour[3] = 0, 0, 0
         ColorPickerFrame:SetColorRGB(
-            addon.colour[1],
-            addon.colour[2],
-            addon.colour[3]
+            ns.colour[1],
+            ns.colour[2],
+            ns.colour[3]
         )
-        for _,  v in pairs(addon.skin) do
+        for _,  v in pairs(ns.skin) do
             if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
                 v:SetVertexColor(
-                    addon.colour[1],
-                    addon.colour[2],
-                    addon.colour[3]
+                    ns.colour[1],
+                    ns.colour[2],
+                    ns.colour[3]
                 )
             end
         end
@@ -279,10 +293,10 @@
            icon = 'Interface\\ICONS\\inv_misc_gem_variety_02',
            func = function()
                ColourPicker(
-                   addon.colour[1],
-                   addon.colour[2],
-                   addon.colour[3],
-                   addon.colour[4],
+                   ns.colour[1],
+                   ns.colour[2],
+                   ns.colour[3],
+                   ns.colour[4],
                    f.recolourTexture
                )
            end,

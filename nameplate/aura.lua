@@ -2,6 +2,8 @@
 
     local _, ns = ...
 
+
+
     local events = {
         'NAME_PLATE_UNIT_ADDED',
         'UNIT_AURA'
@@ -12,10 +14,14 @@
             plate.aura = {}
             for i = 1, 4 do
                 plate.aura[i] = CreateFrame('Frame', nil, plate)
-                plate.aura[i]:SetSize(16, 12)
-                plate.aura[i]:SetPoint('BOTTOMLEFT', i == 1 and plate or plate.aura[i - 1], i == 1 and 'TOPLEFT' or 'BOTTOMRIGHT', 10, i == 1 and 15 or 0)
+                ns.BUBorder(plate.aura[i], 14, 14, 2)
+                ns.BD(plate.aura[i])
+                plate.aura[i]:SetSize(16, 9)
+                plate.aura[i]:SetPoint('BOTTOMLEFT', i == 1 and plate or plate.aura[i - 1], i == 1 and 'TOPLEFT' or 'BOTTOMRIGHT', 11, i == 1 and 2 or 0)
+                plate.aura[i]:Hide()
 
                 plate.aura[i].icon = plate.aura[i]:CreateTexture(nil, 'ARTWORK')
+                plate.aura[i].icon:SetTexCoord(.1, .9, .1, .6)
                 plate.aura[i].icon:SetAllPoints()
 
                 plate.aura[i].count = plate.aura[i]:CreateFontString(nil, 'OVERLAY')
@@ -70,13 +76,12 @@
     end
 
     local OnEvent = function(_, event, unit)
+        local  plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if not plate then return end
         if  event == 'NAME_PLATE_UNIT_ADDED' then
-            CreateAura(C_NamePlate.GetNamePlateForUnit(unit))
-        elseif event == 'UNIT_AURA' then
-            local  plate = C_NamePlate.GetNamePlateForUnit(unit)
-            if not plate then return end
-            UpdateAura(plate, unit)
+            CreateAura(plate)
         end
+        UpdateAura(plate, unit)
     end
 
     local  e = CreateFrame'Frame'

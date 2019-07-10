@@ -46,9 +46,10 @@ menu/menu.lua
 minimap/minimap.lua
 
 #   ~nameplates
+nameplate/aura.lua
 nameplate/colour.lua
 nameplate/combopoint.lua
-nameplate/aura.lua
+nameplate/totem.lua
 
 #   ~objective tracker
 quest/quest.lua
