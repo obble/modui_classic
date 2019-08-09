@@ -94,17 +94,21 @@
         end
     end
 
-    local _, a = LootFrame:GetRegions()
-    tinsert(ns.skin, a)
+    for _,  v in pairs({LootFrame:GetRegions()}) do
+        if  v ~= LootFramePortraitOverlay then
+            tinsert(ns.skin, v)
+        end
+    end
 
     if  LFGParentFrame then
         local _, a = LFGParentFrame:GetRegions()
         for _, v in pairs({a}) do tinsert(ns.skin, v) end
     end
 
-    local _, a, b, c, d, _, _, _, e, f, g, h, j, k = MerchantFrame:GetRegions()
-    for _, v in pairs({a, b, c ,d, e, f, g, h, j, k}) do
-        tinsert(ns.skin, v)
+    for _, v in pairs({MerchantFrame:GetRegions()}) do
+        if v ~= MerchantFramePortrait then
+            tinsert(ns.skin, v)
+        end
     end
 
     tinsert(ns.skin, MerchantBuyBackItemNameFrame)

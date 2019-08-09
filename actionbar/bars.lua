@@ -36,6 +36,10 @@
     bar.caps:SetPoint('BOTTOM', bar)
     bar.caps:SetFrameLevel(1)
 
+    ReputationWatchBar:SetSize(760, 6)
+
+    ReputationWatchBar.StatusBar:SetSize(760, 6)
+
     ReputationWatchBar.spark = ReputationWatchBar:CreateTexture(nil, 'OVERLAY', nil, 7)
     ReputationWatchBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
     ReputationWatchBar.spark:SetSize(35, 35)
@@ -138,6 +142,8 @@
         MainMenuBarPageNumber:SetPoint('LEFT', ActionBarUpButton, 'RIGHT', -2, -10)
         if  shorten then
             MainMenuExpBar:SetSize(760, 8)
+            ReputationWatchBar:SetSize(760, 6)
+            ReputationWatchBar.StatusBar:SetSize(760, 6)
             bar.t:SetTexture[[Interface/Addons/modui_classic/art/mainbar/ActionBarArtLarge]]
             bar.t:SetPoint('BOTTOM', -111, -11)
             bar.caps:SetSize(950, 64)
@@ -145,35 +151,14 @@
             ActionButton1:SetPoint('BOTTOMLEFT', MainMenuBarArtFrame, 120, 7)
         else
             MainMenuExpBar:SetSize(500, 8)
+            ReputationWatchBar:SetSize(500, 6)
+            ReputationWatchBar.StatusBar:SetSize(500, 6)
             bar.t:SetTexture[[Interface/Addons/modui_classic/art/mainbar/ActionBarArtSmall]]
             bar.t:SetPoint('BOTTOM', -237, -11)
             bar.caps:SetSize(700, 64)
             ActionButton1:ClearAllPoints()
             ActionButton1:SetPoint('BOTTOMLEFT', MainMenuBarArtFrame, 245, 7)
         end
-    end
-
-    local UpdateBars = function()
-        SetBarLength(MultiBar2_IsVisible() and true or false)
-        if  not InCombatLockdown() then
-    		if  MultiBarBottomLeft:IsShown() then
-    			PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
-    			StanceButton1:SetPoint('LEFT', StanceBarFrame, 2, -4)
-    		else
-    			PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 7)
-    			StanceButton1:SetPoint('LEFT', StanceBarFrame, 12, -2)
-    		end
-
-    		if  MultiBarLeft:IsShown() then
-    			MultiBarLeft:SetScale(.795)
-    			MultiBarRight:SetScale(.795)
-    			MultiBarRightButton1:SetPoint('TOPRIGHT', MultiBarRight, -2, 534)
-    		else
-    			MultiBarLeft:SetScale(1)
-    			MultiBarRight:SetScale(1)
-    			MultiBarRightButton1:SetPoint('TOPRIGHT', MultiBarRight, -2, 64)
-    		end
-    	end
     end
 
     local UpdateWatchbar = function()
@@ -184,11 +169,8 @@
         local x = (v/max)*ReputationWatchBar.StatusBar:GetWidth()
         local colour = FACTION_BAR_COLORS[index]
 
-        ReputationWatchBar:SetSize(760, 6)
         ReputationWatchBar:ClearAllPoints()
         ReputationWatchBar:SetPoint('BOTTOM', 0, 55)
-
-        ReputationWatchBar.StatusBar:SetSize(760, 6)
 
 		ReputationWatchBar.spark:SetPoint('CENTER', ReputationWatchBar.StatusBar, 'LEFT', x, 2)
         ReputationWatchBar.spark:SetVertexColor(colour.r, colour.g, colour.b)
@@ -207,6 +189,31 @@
                 MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
             end
 	    end
+    end
+
+    local UpdateBars = function()
+        SetBarLength(MultiBar2_IsVisible() and true or false)
+        UpdateXP()
+        UpdateWatchbar()
+        if  not InCombatLockdown() then
+            if  MultiBarBottomLeft:IsShown() then
+                PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
+                StanceButton1:SetPoint('LEFT', StanceBarFrame, 2, -4)
+            else
+                PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 7)
+                StanceButton1:SetPoint('LEFT', StanceBarFrame, 12, -2)
+            end
+
+            if  MultiBarLeft:IsShown() then
+                MultiBarLeft:SetScale(.795)
+                MultiBarRight:SetScale(.795)
+                MultiBarRightButton1:SetPoint('TOPRIGHT', MultiBarRight, -2, 534)
+            else
+                MultiBarLeft:SetScale(1)
+                MultiBarRight:SetScale(1)
+                MultiBarRightButton1:SetPoint('TOPRIGHT', MultiBarRight, -2, 64)
+            end
+        end
     end
 
     local OnEvent = function()

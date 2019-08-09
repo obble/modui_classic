@@ -8,6 +8,7 @@
 	bag:SetPoint('BOTTOMRIGHT', -27, 240)
 	bag:SetFrameLevel(3)
 	bag:Hide()
+	for _, v in pairs({bag:GetRegions()}) do tinsert(ns.skin, v) end
 
 	bag.portrait = bag:CreateTexture(nil, 'BORDER', nil, 7)
 	bag.portrait:SetSize(64, 64)
