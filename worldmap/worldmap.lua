@@ -98,3 +98,11 @@
 		    end
 	    end
     end)
+
+    local OnShow = function(self)
+        self.BlackoutFrame:SetAlpha(0)
+    end
+
+    WorldMapFrame:HookScript('OnShow', OnShow)
+
+    --

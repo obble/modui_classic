@@ -15,20 +15,47 @@
         'Stance',
     }
 
+    local events = {
+        'PLAYER_LOGIN',
+        'CVAR_UPDATE',
+        'PLAYER_ENTERING_WORLD',
+        'PLAYER_XP_UPDATE',
+        'UPDATE_EXHAUSTION',
+        'PLAYER_LEVEL_UP'
+    }
+
     local bar = CreateFrame('Frame', 'modui_mainbar', MainMenuBar)
     bar:SetSize(1024, 128)
     bar:SetPoint'BOTTOM'
 
     bar.t = bar:CreateTexture(nil, 'BACKGROUND')
     bar.t:SetAllPoints()
+    tinsert(ns.skin, bar.t)
 
     bar.caps = CreateFrame('Frame', 'modui_endcaps', UIParent)
     bar.caps:SetPoint('BOTTOM', bar)
     bar.caps:SetFrameLevel(1)
 
-    MainMenuExpBar:SetSize(760, 8)
+    ReputationWatchBar.spark = ReputationWatchBar:CreateTexture(nil, 'OVERLAY', nil, 7)
+    ReputationWatchBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
+    ReputationWatchBar.spark:SetSize(35, 35)
+    ReputationWatchBar.spark:SetBlendMode'ADD'
+
+    MainMenuExpBar:SetSize(760, 6)
     MainMenuExpBar:ClearAllPoints()
-    MainMenuExpBar:SetPoint('BOTTOM', 0, 50)
+    MainMenuExpBar:SetPoint('BOTTOM', 0, 48)
+
+    MainMenuExpBar.spark = MainMenuExpBar:CreateTexture(nil, 'OVERLAY', nil, 7)
+    MainMenuExpBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
+    MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
+    MainMenuExpBar.spark:SetSize(35, 35)
+    MainMenuExpBar.spark:SetBlendMode'ADD'
+
+    MainMenuExpBar.sb = MainMenuExpBar:CreateTexture(nil, 'BACKGROUND', nil, -7)
+    ns.SB(MainMenuExpBar.sb)
+    MainMenuExpBar.sb:SetPoint('TOPLEFT', 0, -1)
+    MainMenuExpBar.sb:SetPoint'BOTTOMRIGHT'
+    MainMenuExpBar.sb:SetVertexColor(.5, .5, .5)
 
     MainMenuExpBar.t = MainMenuExpBar:CreateTexture(nil, 'BACKGROUND')
     ns.BD(MainMenuExpBar.t, 1, -.5)
@@ -59,7 +86,7 @@
                     -- PERFECTION!
                     if  i == 7 and v == 'MultiBarBottomRight' then
                         bu:ClearAllPoints()
-                        bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 13)
+                        bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 17)
                     end
                 end
             end
@@ -81,7 +108,7 @@
         if  not InCombatLockdown() then
     		MultiBarBottomLeftButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeft, 0, 6)
 
-                MultiBarBottomRight:SetPoint('LEFT', MultiBarBottomLeft, 'RIGHT', 43, 6)
+            MultiBarBottomRight:SetPoint('LEFT', MultiBarBottomLeft, 'RIGHT', 43, 6)
 
     		SlidingActionBarTexture0:SetPoint('TOPLEFT', PetActionBarFrame, 1, -5)
 
@@ -99,6 +126,7 @@
         for i = 0, 3 do
             _G['MainMenuXPBarTexture'..i]:Hide()
             _G['MainMenuBarTexture'..i]:Hide()
+            ReputationWatchBar.StatusBar['WatchBarTexture'..i]:SetAlpha(0)
         end
         MainMenuBarLeftEndCap:Hide()
         MainMenuBarRightEndCap:Hide()
@@ -148,9 +176,46 @@
     	end
     end
 
+    local UpdateWatchbar = function()
+        if not ReputationWatchBar:IsShown() then return end
+        local _, index = GetWatchedFactionInfo()
+        local min, max = ReputationWatchBar.StatusBar:GetMinMaxValues()
+        local v = ReputationWatchBar.StatusBar:GetValue()
+        local x = (v/max)*ReputationWatchBar.StatusBar:GetWidth()
+        local colour = FACTION_BAR_COLORS[index]
+
+        ReputationWatchBar:SetSize(760, 6)
+        ReputationWatchBar:ClearAllPoints()
+        ReputationWatchBar:SetPoint('BOTTOM', 0, 55)
+
+        ReputationWatchBar.StatusBar:SetSize(760, 6)
+
+		ReputationWatchBar.spark:SetPoint('CENTER', ReputationWatchBar.StatusBar, 'LEFT', x, 2)
+        ReputationWatchBar.spark:SetVertexColor(colour.r, colour.g, colour.b)
+    end
+
+
+    local UpdateXP = function()
+        local xp, max = UnitXP'player', UnitXPMax'player'
+		local x = (xp/max)*MainMenuExpBar:GetWidth()
+		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
+        if  event == 'PLAYER_ENTERING_WORLD' or event == 'UPDATE_EXHAUSTION' then
+		    local rest = GetRestState()
+            if  rest == 1 then
+                MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)
+            elseif rest == 2 then
+                MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
+            end
+	    end
+    end
+
     local OnEvent = function()
-        MoveBars()
-        UpdateBars()
+        if event == 'PLAYER_LOGIN' then
+            MoveBars()
+            UpdateBars()
+        else
+            UpdateXP()
+        end
     end
 
     for i, v in pairs(n) do
@@ -161,10 +226,12 @@
         end
     end
 
+    hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
+    hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
     hooksecurefunc('ActionBarController_UpdateAll', UpdateBars)
 
-    local e = CreateFrame'Frame'
-    e:RegisterEvent'PLAYER_LOGIN'
+    local  e = CreateFrame'Frame'
+    for _, v in pairs(events) do e:RegisterEvent(v) end
     e:SetScript('OnEvent', OnEvent)
 
 

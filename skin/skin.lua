@@ -5,7 +5,7 @@
     local f = CreateFrame'Frame'
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
-    ns.colour = {1, 1, 1, 1}
+    ns.colour = {MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b}
     ns.skin = {
         MinimapBorder,
         MiniMapTrackingBorder,
@@ -24,7 +24,7 @@
         PartyMemberFrame3PetFrameTexture,
         PartyMemberFrame4PetFrameTexture,
 
-        CastingBarBorder,
+        CastingBarFrame.Border,
 
         _G['TargetFrameToTTextureFrameTexture'],
     }
@@ -66,10 +66,16 @@
         end
     end
 
+    -- BAGS
     for i = 1, 12 do
-        local _, a = _G['ContainerFrame'..i]:GetRegions()
-        tinsert(ns.skin, a)
+        local bagName = 'ContainerFrame'..i
+        local _, a, b, _, c, _, d = _G[bagName]:GetRegions()
+        for _, v in pairs({a, b, c, d}) do tinsert(ns.skin, v) end
     end
+
+    -- BANK
+    local _, a = BankFrame:GetRegions()
+    tinsert(ns.skin, a)
 
     local _, a, b, c, d = ItemTextFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
@@ -131,8 +137,27 @@
         tinsert(ns.skin, v)
     end
 
-    local _, a, b, c, d = FriendsFrame:GetRegions()
+    local a, b, c, d = SkillFrame:GetRegions()
+    for _, v in pairs({a, b, c ,d}) do
+        tinsert(ns.skin, v)
+    end
+    for _, v in pairs({ReputationDetailCorner, ReputationDetailDivider}) do
+        tinsert(ns.skin, v)
+    end
+
+    local _, _, a, b, c, d = QuestLogFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
+        tinsert(ns.skin, v)
+    end
+
+    QuestLogFrame.Material = QuestLogFrame:CreateTexture(nil, 'OVERLAY', nil, 7)
+    QuestLogFrame.Material:SetTexture[[Interface\AddOns\modui_classic\art\quest\QuestBG.tga]]
+    QuestLogFrame.Material:SetSize(510, 398)
+    QuestLogFrame.Material:SetPoint('TOPLEFT', QuestLogDetailScrollFrame)
+    QuestLogFrame.Material:SetVertexColor(.9, .9, .9)
+
+    local _, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, _, q = FriendsFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q}) do
         tinsert(ns.skin, v)
     end
 
@@ -152,6 +177,10 @@
         tinsert(ns.skin, v)
     end
 
+    local a, b, c, d, e, f, _, _, _, _, _, _, g = WorldStateScoreFrame:GetRegions()
+    for _, v in pairs({a, b, c, d, e, f, g}) do
+        tinsert(ns.skin, v)
+    end
 
         -- TRADE
     local _, _, a, b, c, d = TradeFrame:GetRegions()
@@ -172,35 +201,57 @@
         tinsert(ns.skin, v)
     end
 
+    local OnEvent = function(self, event, addon)
+        if  addon == 'Blizzard_TimeManager' then
+            local a = TimeManagerClockButton:GetRegions()
+            tinsert(ns.skin, a)
+        end
+    end
+
+    local e = CreateFrame'Frame'
+    e:RegisterEvent'ADDON_LOADED'
+    e:SetScript('OnEvent', OnEvent)
+
     --todo: borders
 
     -- in classic?
-    --[[
     for _, v in pairs(
         {
-        QuestFrameGreetingPanel,
-        QuestFrameDetailPanel,
-        QuestFrameProgressPanel,
-        QuestFrameRewardPanel,
-        GossipFrameGreetingPanel
+            QuestFrameGreetingPanel,
+            QuestFrameDetailPanel,
+            QuestFrameProgressPanel,
+            QuestFrameRewardPanel,
+            GossipFrameGreetingPanel
         }
     ) do
-        for _,  j in pairs({v:GetRegions()}) do
-            -- print(j:GetName(), j:GetObjectType(), j:GetDrawLayer())
-            if  j:GetObjectType() == 'Texture' and j:GetDrawLayer() == 'BACKGROUND' then
-                tinsert(ns.skin, v)
-            end
+        v.Material = v:CreateTexture(nil, 'OVERLAY', nil, 7)
+        v.Material:SetTexture[[Interface\AddOns\modui_classic\art\quest\QuestBG.tga]]
+        v.Material:SetSize(506, 506)
+        v.Material:SetPoint('TOPLEFT', v, 24, -82)
+        v.Material:SetVertexColor(.9, .9, .9)
+
+        if  v == GossipFrameGreetingPanel or v == QuestFrameGreetingPanel then
+            v.Corner = v:CreateTexture(nil, 'OVERLAY', nil, 7)
+            v.Corner:SetTexture[[Interface\QuestFrame\UI-Quest-BotLeftPatch]]
+            v.Corner:SetSize(132, 64)
+            v.Corner:SetPoint('BOTTOMLEFT', v, 21, 68)
+            tinsert(ns.skin, v.Corner)
+        end
+
+        local a, b, c, d = v:GetRegions()
+        for _, j in pairs({a, b, c, d}) do
+            tinsert(ns.skin, j)
         end
     end
-    ]]
+
 
     -- initialise
     for _,  v in pairs(ns.skin) do
         if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
             v:SetVertexColor(
-                ns.colour[1],
-                ns.colour[2],
-                ns.colour[3]
+                MODUI_VAR['UI'].r,
+                MODUI_VAR['UI'].g,
+                MODUI_VAR['UI'].b
             )
         end
     end
@@ -215,27 +266,6 @@
         ColorPickerFrame:Show()
         ColorPickerFrame:SetPoint'CENTER'
     end
-
-    --[[f.recolourTexture = function(colour, cancel)
-        if  colour then
-            if  cancel then
-                ns.colour[1], ns.colour[2], ns.colour[3] = 0, 0, 0
-            else
-                ns.colour[1], ns.colour[2], ns.colour[3] = colour[1], colour[2], colour[3] -- ?
-            end
-        else
-            ns.colour[1], ns.colour[2], ns.colour[3] = ColorPickerFrame:GetColorRGB()
-        end
-        for _,  v in pairs(ns.skin) do
-            if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
-                v:SetVertexColor(
-                    ns.colour[1],
-                    ns.colour[2],
-                    ns.colour[3]
-                )
-            end
-        end
-    end ]]
 
     ColorPickerFrame.reset = CreateFrame('Button', 'ColorPickerFrameReset', ColorPickerFrame, 'GameMenuButtonTemplate')
     ColorPickerFrame.reset:SetSize(144, 24)
@@ -264,18 +294,18 @@
     end)
 
     ColorPickerFrame.reset:SetScript('OnClick', function()
-        ns.colour[1], ns.colour[2], ns.colour[3] = 0, 0, 0
+        MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b = 1, 1, 1
         ColorPickerFrame:SetColorRGB(
-            ns.colour[1],
-            ns.colour[2],
-            ns.colour[3]
+            MODUI_VAR['UI'].r,
+            MODUI_VAR['UI'].g,
+            MODUI_VAR['UI'].b
         )
         for _,  v in pairs(ns.skin) do
             if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
                 v:SetVertexColor(
-                    ns.colour[1],
-                    ns.colour[2],
-                    ns.colour[3]
+                MODUI_VAR['UI'].r,
+                MODUI_VAR['UI'].g,
+                MODUI_VAR['UI'].b
                 )
             end
         end
@@ -287,17 +317,38 @@
             isTitle         = true,
             notCheckable    = true,
             fontObject      = Game13Font,
-       },
-       {
-           text = 'UI Colour',
-           icon = 'Interface\\ICONS\\inv_misc_gem_variety_02',
-           func = function()
-               ColourPicker(
-                   ns.colour[1],
-                   ns.colour[2],
-                   ns.colour[3],
-                   ns.colour[4],
-                   f.recolourTexture
+        },
+        {
+            text = 'UI Colour',
+            icon = 'Interface\\ICONS\\inv_misc_gem_variety_02',
+            func = function()
+                ColourPicker(
+                    ns.colour[1],
+                    ns.colour[2],
+                    ns.colour[3],
+                    1,
+                    function(colour, cancel)
+                       if  colour then
+                           if  cancel then
+                               ns.colour[1], ns.colour[2], ns.colour[3] = MODUI_VAR['UI'].r or 1, MODUI_VAR['UI'].g or 1, MODUI_VAR['UI'].b or 1 -- fallback
+                           else
+                               ns.colour[1], ns.colour[2], ns.colour[3] = colour[1], colour[2], colour[3]
+                               MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b = colour[1], colour[2], colour[3]
+                           end
+                       else
+                           ns.colour[1], ns.colour[2], ns.colour[3] = ColorPickerFrame:GetColorRGB()
+                           MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b = ColorPickerFrame:GetColorRGB()
+                       end
+                       for _,  v in pairs(ns.skin) do
+                           if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
+                               v:SetVertexColor(
+                                   ns.colour[1],
+                                   ns.colour[2],
+                                   ns.colour[3]
+                               )
+                           end
+                       end
+                   end
                )
            end,
            notCheckable = true,
@@ -319,9 +370,9 @@
     icon:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', .5, 1)
 
     local t = icon:CreateFontString(nil, 'ARTWORK')
-    t:SetFont(STANDARD_TEXT_FONT, 36, 'OUTLINE')
-    t:SetPoint('CENTER', icon, .5, .5)
-    t:SetText'·'
+    t:SetFont(STANDARD_TEXT_FONT, 8, 'OUTLINE')
+    t:SetPoint('TOP', icon, -2, -4)
+    t:SetText'M'
     t:SetTextColor(1, 1, 1)
 
     local menu = CreateFrame('Frame', 'modoptions', UIParent, 'UIDropDownMenuTemplate')
@@ -333,5 +384,24 @@
             EasyMenu(list, menu, icon, 3, 111, 'MENU', 5)
         end
     end)
+
+    local OnEvent = function()
+        if  not MODUI_VAR['UI'] then
+            MODUI_VAR['UI'] = {r = 1, g = 1, b = 1}
+        end
+        ns.colour = {MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b} -- update this
+        for _, v in pairs(ns.skin) do
+            v:SetVertexColor(
+                MODUI_VAR['UI'].r,
+                MODUI_VAR['UI'].g,
+                MODUI_VAR['UI'].b
+            )
+        end
+    end
+
+    local e = CreateFrame'Frame'
+    e:RegisterEvent'VARIABLES_LOADED'
+    e:RegisterEvent'ADDON_LOADED'
+    e:SetScript('OnEvent', OnEvent)
 
     --

@@ -1,7 +1,11 @@
 ## Interface: 11302
 ## Title: mod ui
 ## Author: modernist
+##SavedVariablesPerCharacter: MODUI_VAR
 ## Notes: a ui
+
+#   ~load variables table prior to anything else
+core/var.lua
 
 #   ~colour modification (todo: put button skinning in here?)
 skin/skin.lua

@@ -91,7 +91,7 @@
         end
     end
 
-    -- hooksecurefunc('QuestWatch_Update', Update)
+    hooksecurefunc('QuestWatch_Update', Update)
 
     --
 

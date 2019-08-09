@@ -23,7 +23,6 @@
     bu.space:SetPoint('TOP', bu, 'BOTTOM', -2, -7)
 	bu.space:SetStatusBarColor(1, 1, 1)
 	bu.space:SetFrameLevel(bu:GetFrameLevel())
-	bu.space:SetBackdropColor(0, 0, 0)
 	bu.space:SetBackdrop(
         {bgFile = [[Interface\Buttons\WHITE8x8]],
         insets = {
@@ -34,6 +33,7 @@
             }
         }
     )
+	bu.space:SetBackdropColor(0, 0, 0)
 
 	local mask = bu:CreateMaskTexture()
 	mask:SetTexture[[Interface\Minimap\UI-Minimap-Background]]
