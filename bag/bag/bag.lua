@@ -13,7 +13,7 @@
 	bag.portrait:SetSize(64, 64)
 	bag.portrait:SetPoint('TOPLEFT', -8, 8)
 	bag.portrait:SetAlpha(1)
-	SetPortraitToTexture(bag.portrait, [[Interface\ICONS\Inv_misc_bag_30]])
+	SetPortraitToTexture(bag.portrait, [[Interface\ICONS\Inv_misc_bag_08]])
 
 	bag.name = bag:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
 	bag.name:SetFont(FONT_REGULAR, 10)
@@ -46,7 +46,7 @@
 		money:SetFrameStrata'MEDIUM'
 		money:SetFrameLevel(3)
 
-		local sort = BagItemAutoSortButton
+		--[[local sort = BagItemAutoSortButton
 		sort:SetParent(bag.topstrip)
 		sort:ClearAllPoints()
 		sort:SetPoint('TOPRIGHT', -5, -5)
@@ -54,15 +54,15 @@
 		SetInsertItemsLeftToRight(false)
 		sort:SetSize(12, 12)
 		ns.BD(sort)
-		ns.BDStone(sort, 5)
+		ns.BDStone(sort, 5)]]
 
-		local search = BagItemSearchBox
+		--[[local search = BagItemSearchBox
 		search:SetSize(68, 12)
 		search:SetParent(bag.topstrip)
 		search:ClearAllPoints()
 		search:SetPoint('RIGHT', _G['CharacterBag3Slot'], 'LEFT', -8, 0)
 		ns.BD(search)
-		ns.BDStone(search, 5)
+		ns.BDStone(search, 5)]
 
 		search.Instructions:ClearAllPoints()
 		search.Instructions:SetPoint('TOPLEFT', 16, 0)
@@ -76,7 +76,7 @@
 
 		--BagItemSearchBoxText:SetWidth(100)
 
-		BackpackTokenFrame:GetRegions():Hide()
+		BackpackTokenFrame:GetRegions():Hide()]]
 
 		for _, v in pairs({
 			ContainerFrame1MoneyFrameCopperButtonText,
@@ -86,7 +86,7 @@
 			v:SetShadowOffset(0, 0)
 		end
 
-		for i = 1, MAX_WATCHED_TOKENS do
+		--[[for i = 1, MAX_WATCHED_TOKENS do
 			local token = _G['BackpackTokenFrameToken'..i]
 			local count = _G['BackpackTokenFrameToken'..i..'Count']
 			local icon  = _G['BackpackTokenFrameToken'..i..'Icon']
@@ -105,7 +105,7 @@
 			else
 				token:SetPoint('LEFT', _G['BackpackTokenFrameToken'..(i - 1)], 'RIGHT', -7, 0)
 			end
-		end
+		end]]
 	end
 
 	local AddSparkle = function(bu)

@@ -16,7 +16,7 @@
     end
 
     local UnitColours = function(unit)
-    	if  UnitIsPlayer(unit) and not UnitHasVehicleUI(unit) then
+    	if  UnitIsPlayer(unit)then
     		local _, class = UnitClass(unit)
     		return ns.INTERNAL_CLASS_COLORS[class]
     	elseif UnitReaction(unit, 'player') then

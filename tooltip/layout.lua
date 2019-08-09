@@ -100,23 +100,17 @@
 
     local UpdateStyle = function(self)
         local _, link = self:GetItem()
-        if  link and (C_AzeriteEmpoweredItem.IsAzeriteEmpoweredItemByID(link) or C_AzeriteItem.IsAzeriteItemByID(link)) then
-            if  self.BD then
-                self.BD:ClearAllPoints()
-            end
-        else
-            if  self.BD then
-                self.BD:ClearAllPoints()
-                self.BD:SetPoint('TOPLEFT', -8.5, 10)
-                self.BD:SetPoint('BOTTOMRIGHT', 9, -10)
-                self.BD:SetBackdrop({
-                    bgFile     = '',
-                    edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
-                    edgeSize   = 18,
-                })
-                self.BD.top:Hide()
-                self.BD.bottom:Hide()
-            end
+        if  self.BD then
+            self.BD:ClearAllPoints()
+            self.BD:SetPoint('TOPLEFT', -8.5, 10)
+            self.BD:SetPoint('BOTTOMRIGHT', 9, -10)
+            self.BD:SetBackdrop({
+                bgFile     = '',
+                edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
+                edgeSize   = 18,
+            })
+            self.BD.top:Hide()
+            self.BD.bottom:Hide()
         end
     end
 

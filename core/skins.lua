@@ -43,6 +43,7 @@
     end
 
     ns.BD = function(bu, a, ix)               --  build in an anti-fuckup
+        if not bu then return end
         local f = bu
         if  f:GetObjectType() == 'Texture' then
             if not bu.BD then
@@ -127,6 +128,7 @@
     end
 
     ns.BUElements = function(bu)
+        if not bu then return end
         local c  = bu.Count or _G[bu:GetName()..'Count']
         local cd = bu.Cooldown or _G[bu:GetName()..'Cooldown']
         local i  = bu.icon or bu.Icon or bu.IconTexture or _G[bu:GetName()..'Icon'] or _G[bu:GetName()..'IconTexture']

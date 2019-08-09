@@ -37,19 +37,19 @@
             'ButtonFrameLeftTexture',       'ButtonFrameRightTexture',
             'ButtonFrameBottomTexture',     'ButtonFrameTopTexture',
         })  do
-            _G[v..j]:SetTexture(nil)
+            if _G[v..j] then _G[v..j]:SetTexture(nil) end
         end
     end
 
     local AddChat = function()
         ChatFrameChannelButton:ClearAllPoints()
-        ChatFrameChannelButton:SetPoint('BOTTOM', ChatFrame1ButtonFrame)
+        ChatFrameChannelButton:SetPoint('BOTTOM', ChatFrame1ButtonFrame, 0, 22)
 
-        ChatFrameToggleVoiceDeafenButton:ClearAllPoints()
-        ChatFrameToggleVoiceDeafenButton:SetPoint('BOTTOM', ChatFrameChannelButton, 'TOP', 0, 2)
+        --ChatFrameToggleVoiceDeafenButton:ClearAllPoints()
+        --ChatFrameToggleVoiceDeafenButton:SetPoint('BOTTOM', ChatFrameChannelButton, 'TOP', 0, 2)
 
-        ChatFrameToggleVoiceMuteButton:ClearAllPoints()
-        ChatFrameToggleVoiceMuteButton:SetPoint('BOTTOM', ChatFrameToggleVoiceDeafenButton, 'TOP', 0, 2)
+        --ChatFrameToggleVoiceMuteButton:ClearAllPoints()
+        --ChatFrameToggleVoiceMuteButton:SetPoint('BOTTOM', ChatFrameToggleVoiceDeafenButton, 'TOP', 0, 2)
 
         for i, v in pairs(CHAT_FRAMES) do
             local chat = _G[v]

@@ -48,7 +48,7 @@
 	for n, v in pairs(strings) do
 		if n == 'zone' or n == 'warnings' then
 			iterate(v, function(t)
-				t:SetFont([[Fonts\skurri.ttf]], 14)
+				t:SetFont(FONT_BOLD, 7)
 				t:SetShadowOffset(1, -1.25)
 				t:SetShadowColor(0, 0, 0, 1)
 			end)

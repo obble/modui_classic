@@ -25,15 +25,6 @@
 	bank.name.t:SetAllPoints()
 	bank.name:SetSize(35, 12)
 
-	bank.RBname = CreateFrame('Button', nil, bank)
-	bank.RBname:SetPoint('LEFT', bank.name, 'RIGHT', 6,  0)
-
-	bank.RBname.t = bank.RBname:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
-	bank.RBname.t:SetFont(STANDARD_TEXT_FONT, 12)
-	bank.RBname.t:SetText'Reagent Bank'
-	bank.RBname.t:SetPoint'LEFT'
-	bank.RBname:SetSize(bank.RBname.t:GetStringWidth(), 12)
-
 	bank.bd = CreateFrame('Frame', nil, bank)
 	ns.BD(bank.bd)
 	bank.bd:SetPoint('TOPLEFT', 8, -58)
@@ -98,7 +89,7 @@
 		end
 	end
 
-	for i = 1, 7 do
+	for i = 1, 6 do
 		local slot = BankSlotsFrame['Bag'..i]
 		local _, highlight = slot:GetChildren()
 

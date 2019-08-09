@@ -6,7 +6,7 @@
 
     local e = CreateFrame'Frame'
 
-    ns.BD(BagItemAutoSortButton)
+    --[[ns.BD(BagItemAutoSortButton)
     BagItemAutoSortButton:SetSize(15, 15)
     BagItemAutoSortButton:GetNormalTexture():SetTexCoord(.15, .85, .15, .85)
     BagItemAutoSortButton:GetNormalTexture():ClearAllPoints()
@@ -24,7 +24,7 @@
         BagItemSearchBox.Left, BagItemSearchBox.Middle, BagItemSearchBox.Right
     }) do
         v:Hide()
-    end
+    end]]
 
     local ColourBagBorders = function(bu, slotID, texture, rarity)
         local q = _G[bu:GetName()..'IconQuestTexture']
@@ -53,8 +53,6 @@
     end
 
     local ColourBankBorders = function(bu)
-            -- don't try and colour reagent bank borders if they dont exist yet
-        if ReagentBankFrame.UnlockInfo:IsShown() then return end
         local q = bu['IconQuestTexture']
         if  bu.bo then
             -- quest

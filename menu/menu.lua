@@ -19,14 +19,15 @@
     }
 
     local buttons = {
-       ['CharacterMicroButton']    = {{-12, 10}, {-12, 10}},
-       ['SpellbookMicroButton']    = {{ 12, 10}, { 12, 10}},
-       ['TalentMicroButton']       = {{-12, 40}, {-12, 40}},
-       ['QuestLogMicroButton']     = {{-12, 40}, { 12, 40}},
-       ['SocialsMicroButton']      = {{ 12, 40}, {-12, 70}},
-       ['LFGMicroButton']          = {{-12, 70}, { 12, 70}},
-       ['MainMenuMicroButton']     = {{ 12, 70}, {-12, 100}},
-       ['HelpMicroButton']         = {{-12, 100}, {12, 100}},
+       ['CharacterMicroButton']     = {{-13, 20}, {-13, 20}},
+       ['SpellbookMicroButton']     = {{ 13, 20}, { 13, 20}},
+       ['TalentMicroButton']        = {{-13, 55}, {-13, 55}},
+       ['QuestLogMicroButton']      = {{-13, 55}, { 13, 55}},
+       ['SocialsMicroButton']       = {{ 13, 55}, {-13, 90}},
+       ['LFGMicroButton']           = {{-13, 90}, { 13, 90}},
+       ['WorldMapMicroButton']      = {{-13 ,90}, { 13, 90}},
+       ['MainMenuMicroButton']      = {{ 13, 90}, {-13, 125}},
+       ['HelpMicroButton']          = {{-13, 125}, {13, 125}},
    }
 
    local BFAbuttons = {
@@ -43,7 +44,7 @@
    }
 
    local menu = CreateFrame('Button', 'moduimenuButton', _G['modui_endcaps'])
-   menu:SetPoint('CENTER', MainMenuBarArtFrame.LeftEndCap, 10, -5)
+   menu:SetPoint('LEFT', _G['modui_mainbar'].caps, 35, 0)
    menu:SetSize(21, 21)
    --menu:GetNormalTexture():SetTexture''
    ns.BUElements(menu)
@@ -54,7 +55,7 @@
    menu.t:SetTexture[[Interface\GLUES\CHARACTERCREATE\UI-CHARACTERCREATE-CLASSES]]
    menu.t:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
    menu.t:SetPoint'TOPLEFT'
-   menu.t:SetPoint('BOTTOMRIGHT', 0, 5)
+   menu.t:SetPoint('BOTTOMRIGHT')
 
    menu.arrow = menu:CreateTexture(nil, 'OVERLAY')
    menu.arrow:SetTexture[[Interface\MoneyFrame\Arrow-Right-Up]]
@@ -71,7 +72,7 @@
    menu.sb = CreateFrame('StatusBar', nil, menu)
    ns.SB(menu.sb)
    menu.sb:SetSize(22, 3)
-   menu.sb:SetPoint('TOP', menu, 'BOTTOM', 1, -5)
+   menu.sb:SetPoint('TOP', menu, 'BOTTOM', -2, -7)
    menu.sb:SetStatusBarColor(0, 1, 0)
    menu.sb:SetBackdrop(
        {bgFile = [[Interface\Buttons\WHITE8x8]],
@@ -98,8 +99,8 @@
        menu.bo:SetSize(36, 36)
        menu.bo:SetTexture[[Interface\Artifacts\Artifacts]]
        menu.bo:SetPoint'CENTER'
-       menu.bo:SetTexCoord(.25, .34, .86, .9475)
-       menu.bo:SetVertexColor(.7, .7, .7)
+       menu.bo:SetTexCoord(.5, .58, .8775, .9575)
+       menu.bo:SetVertexColor(.6, .6, .6)
    end
 
    -- only necessary if we end up resizing buttons
@@ -115,7 +116,7 @@
 
    local ShowMenu = function()
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 6)
-       for i, v in pairs(classic and buttons or BFAbuttons) do
+       for i, v in pairs(buttons) do
            local bu = _G[i]
            if  bu then -- 8.0 buffer
                bu:SetAlpha(1)
@@ -126,7 +127,7 @@
    local HideMenu = function()
        GameTooltip:Hide()
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 3)
-       for i, v in pairs(classic and buttons or BFAbuttons) do
+       for i, v in pairs(buttons) do
            local bu = _G[i]
            if  bu then -- 8.0 buffer
                bu:SetAlpha(0)
@@ -136,10 +137,7 @@
 
    local AddMenu = function()
        local l = UnitLevel'player'
-       local frames = {
-
-       }
-       for i, v in pairs(classic and buttons or BFAbuttons) do
+       for i, v in pairs(buttons) do
            local bu = _G[i]
            if  bu then
                bu:ClearAllPoints()

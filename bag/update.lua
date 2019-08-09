@@ -8,8 +8,8 @@
 	local ibag  = _G['iipbag']
 	local ibank = _G['iipbank']
 
-	SetSortBagsRightToLeft(true)
-	SetInsertItemsLeftToRight(false)
+	--SetSortBagsRightToLeft(true)
+	-- SetInsertItemsLeftToRight(false)
 
 	local grab_slots = function()
 		local numBags = 1
@@ -92,11 +92,11 @@
 				hidden = true
 			end
 		end
-		if  hidden then
+		--[[if  hidden then
 			BagItemSearchBox:Hide()
 		else
 			BagItemSearchBox:Show()
-		end
+		end]]
 	end
 
 	local AddBankSlotPurchase = function()
@@ -128,15 +128,19 @@
 
 		BankSlotsFrame:DisableDrawLayer'BORDER'
 
-		BankItemAutoSortButton:EnableMouse(false)
-		BankItemAutoSortButton:SetAlpha(0)
+		--BankItemAutoSortButton:EnableMouse(false)
+		--BankItemAutoSortButton:SetAlpha(0)
 
+		BankCloseButton:Hide()
 		BankPortraitTexture:SetTexture''
 
 		for _,  v in pairs({BankFrame:GetRegions()}) do
 			if  v:GetObjectType() == 'Texture' then
 				v:SetTexture''
 				v:SetAlpha(0)
+			elseif v:GetObjectType() == 'FontString' then
+				v:SetText''
+				v:Hide()
 			end
 		end
 
@@ -162,20 +166,7 @@
 	local HideBankArt = function()	-- previously bankArtToggle(x) (we dont need x)
 		AddBankSlotPurchase()
 		HideBank()
-		HideReagentBank()
-
-		if  ibank:GetWidth() < 200 then
-			ibank.RBname.t:SetText'R.B.'
-		end
-
-		if  BankFrame:IsShown() then
-			ibank.name.t:SetTextColor(1, 1, 1)
-			ibank.RBname.t:SetTextColor(1, .7, 0)
-			for i = 1, 2 do
-				local tab = _G['BankFrameTab'..i]
-				tab:Hide()
-			end
-		end
+		--HideReagentBank()
 
 		for _, v in pairs({BankFrameMoneyFrameInset, BankFrameMoneyFrameBorder}) do
 			v:Hide()
@@ -239,7 +230,7 @@
 
 		wipe(bankbuttons)
 
-		for i = 1, 28 do
+		for i = 1, 24 do
 			local bu = _G['BankFrameItem'..i]
 			tinsert(bankbuttons, bu)
 			ns.AddButtonStyle(bu)
@@ -271,12 +262,12 @@
 		end
 
 		if ibank:GetWidth() < 200 then
-			for i = 1, 7 do BankSlotsFrame['Bag'..i]:SetScale(.85) end
+			for i = 1, 6 do BankSlotsFrame['Bag'..i]:SetScale(.85) end
 		end
 
 		ibank:Show()
 		ibank.purchase:Show()
-		for i = 1, 7 do
+		for i = 1, 6 do
 			BankSlotsFrame['Bag'..i]:Show()
 		end
 	end
@@ -376,7 +367,7 @@
 	end
 
 	local HideBank = function()
-		for i = 1, 28 do
+		for i = 1, 24 do
 			_G['BankFrameItem'..i]:Hide()
 		end
 		for i = 5, 11 do CloseBag(i) end
@@ -384,14 +375,14 @@
 		ReAnchor()
 	end
 
-	ReagentBankFrame:HookScript('OnShow', ReAnchorReagentBank)
+	--[[ReagentBankFrame:HookScript('OnShow', ReAnchorReagentBank)
 	ReagentBankFrame:HookScript('OnHide', function()
 		if  BankFrame:IsShown() then
 			for i = 0, 11 do OpenBag(i) end
 			HideBankArt()
 			ReAnchorBank()
 		end
-	end)
+	end)]]
 
 	function UpdateContainerFrameAnchors() end
 	ToggleBackpack = ToggleBags

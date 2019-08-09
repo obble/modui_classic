@@ -4,12 +4,12 @@
 
 	local bu = MainMenuBarBackpackButton
 
-	_G['MicroButtonAndBagsBar']:Hide()
-	_G['MicroButtonAndBagsBar']:UnregisterAllEvents()
+	--_G['MicroButtonAndBagsBar']:Hide()
+	--_G['MicroButtonAndBagsBar']:UnregisterAllEvents()
 
 	bu:SetParent(_G['modui_endcaps'])
 	bu:ClearAllPoints()
-	bu:SetPoint('CENTER', MainMenuBarArtFrame.RightEndCap, -10, -5)
+	bu:SetPoint('RIGHT', _G['modui_mainbar'].caps, -35, 0)
 	bu:SetSize(21, 21)
 	bu:GetNormalTexture():SetTexture''
 	ns.BUElements(bu)
@@ -18,12 +18,22 @@
 	bu.Count:SetPoint('BOTTOM', bu, 1, 0)
 
 	bu.space = CreateFrame('StatusBar', 'modui_bagspace', bu)
-	ns.BD(bu.space, 1, -2)
 	ns.SB(bu.space)
 	bu.space:SetSize(22, 3)
-	bu.space:SetPoint('TOP', bu, 'BOTTOM', 1, -5)
+    bu.space:SetPoint('TOP', bu, 'BOTTOM', -2, -7)
 	bu.space:SetStatusBarColor(1, 1, 1)
 	bu.space:SetFrameLevel(bu:GetFrameLevel())
+	bu.space:SetBackdropColor(0, 0, 0)
+	bu.space:SetBackdrop(
+        {bgFile = [[Interface\Buttons\WHITE8x8]],
+        insets = {
+           left     =  -1,
+           right    =  -1,
+           top      =  -1,
+           bottom   =  -1,
+            }
+        }
+    )
 
 	local mask = bu:CreateMaskTexture()
 	mask:SetTexture[[Interface\Minimap\UI-Minimap-Background]]
@@ -39,8 +49,8 @@
 		bu.bo:SetSize(36, 36)
 		bu.bo:SetTexture[[Interface\Artifacts\Artifacts]]
 		bu.bo:SetPoint'CENTER'
-		bu.bo:SetTexCoord(.25, .34, .86, .9475)
-		bu.bo:SetVertexColor(.7, .7, .7)
+		bu.bo:SetTexCoord(.5, .58, .8775, .9575)
+		bu.bo:SetVertexColor(.6, .6, .6)
 	end
 
 	local ShowBags = function()

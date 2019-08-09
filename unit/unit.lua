@@ -1,4 +1,6 @@
 
+    local _, ns = ...
+
     local events = {
         'GROUP_ROSTER_UPDATE',
         'PLAYER_TARGET_CHANGED',
@@ -16,10 +18,10 @@
     for _, t in pairs(
         {
             TargetFrameNameBackground,
-            FocusFrameNameBackground
+            --FocusFrameNameBackground
         }
     ) do
-        t:SetTexture[[Interface\TARGETINGFRAME\NameplateFill]]
+        ns.SB(t)
     end
 
     local function OnEvent(self, event)
@@ -44,6 +46,6 @@
     e:SetScript('OnEvent', OnEvent)
 
     -- hooksecurefunc('UnitFrameHealthBar_Update', colour)
-    hooksecurefunc('HealthBar_OnValueChanged', function(self) AddColour(self, self.unit) end)
+    --hooksecurefunc('HealthBar_OnValueChanged', function(self) AddColour(self, self.unit) end)
 
     --
