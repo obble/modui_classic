@@ -6,6 +6,9 @@
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
     ns.colour = {MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b}
+    ns.skinb = {
+
+    }
     ns.skin = {
         MinimapBorder,
         MiniMapTrackingBorder,
@@ -205,20 +208,67 @@
         tinsert(ns.skin, v)
     end
 
-    local OnEvent = function(self, event, addon)
+    local ADDON_LOADED = function(self, event, addon)
         if  addon == 'Blizzard_TimeManager' then
             local a = TimeManagerClockButton:GetRegions()
             tinsert(ns.skin, a)
+        elseif addon == 'Blizzard_AuctionUI' then
+            local _, a, b, c, d, e, f = AuctionFrame:GetRegions()
+            for _, v in pairs({a, b, c, d, e, f}) do
+                tinsert(ns.skin, v)
+            end
+            local a, b = AuctionDressUpFrame:GetRegions()
+            local _, _, _, c = AuctionDressUpFrameCloseButton:GetRegions()
+            for _, v in pairs({a, b, c}) do tinsert(ns.skin, v) end
+            for i = 1, 15 do
+                local a = _G['AuctionFilterButton'..i]:GetNormalTexture()
+                tinsert(ns.skin, a)
+            end
+        elseif addon == 'Blizzard_CraftUI' then
+            local _, a, b, c, d = CraftFrame:GetRegions()
+            for  _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
+        elseif addon == 'Blizzard_InspectUI' then
+            local a, b, c, d = InspectPaperDollFrame:GetRegions()
+            for _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
+            local a, b, c, d = InspectHonorFrame:GetRegions()
+            for _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
+        elseif addon == 'Blizzard_MacroUI' then
+            local _, a, b, c, d = MacroFrame:GetRegions()
+            for _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
+            local a, b, c, d = MacroPopupFrame:GetRegions()
+            for _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
+        elseif addon == 'Blizzard_RaidUI' then
+            local _, a = ReadyCheckFrame:GetRegions()
+            tinsert(ns.skin, a)
+        elseif addon == 'Blizzard_TalentUI' then
+            local _, a, b, c, d = TalentFrame:GetRegions()
+            for _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
+        elseif addon == 'Blizzard_TradeSkillUI' then
+            local _, a, b, c, d = TradeSkillFrame:GetRegions()
+            for _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
+        elseif addon == 'Blizzard_TrainerUI' then
+            local _, a, b, c, d = ClassTrainerFrame:GetRegions()
+            for _, v in pairs({a, b, c, d}) do
+                tinsert(ns.skin, v)
+            end
         end
     end
 
-    local e = CreateFrame'Frame'
-    e:RegisterEvent'ADDON_LOADED'
-    e:SetScript('OnEvent', OnEvent)
-
-    --todo: borders
-
-    -- in classic?
+    -- QUESTS
     for _, v in pairs(
         {
             QuestFrameGreetingPanel,
@@ -248,17 +298,34 @@
         end
     end
 
-
-    -- initialise
-    for _,  v in pairs(ns.skin) do
-        if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
-            v:SetVertexColor(
-                MODUI_VAR['UI'].r,
-                MODUI_VAR['UI'].g,
-                MODUI_VAR['UI'].b
-            )
-        end
+    -- POP-UP (border)
+    for i = 1, 4 do
+        local v = _G['StaticPopup'..i]
+        tinsert(ns.skinb, v)
     end
+
+    -- COLOUR PICKER
+   tinsert(ns.skinb, ColorPickerFrame)
+   tinsert(ns.skin, ColorPickerFrameHeader)
+
+
+       -- MENU
+   tinsert(ns.skinb, GameMenuFrame)
+   tinsert(ns.skin, GameMenuFrameHeader)
+
+
+       -- GRAPHICS MENU
+   tinsert(ns.skinb, OptionsFrame)
+   tinsert(ns.skin, OptionsFrameHeader)
+
+
+       -- SOUND MENU
+   tinsert(ns.skinb, SoundOptionsFrame)
+   tinsert(ns.skin, SoundOptionsFrameHeader)
+
+   -- QUEST TIMER
+  tinsert(ns.skinb, QuestTimerFrame)
+  tinsert(ns.skin, QuestTimerHeader)
 
     -- colour picker
     local ColourPicker = function(r, g, b, a, callback)
@@ -389,7 +456,47 @@
         end
     end)
 
-    local OnEvent = function()
+    -- initialise
+    for _,  v in pairs(ns.skin) do
+        if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
+            v:SetVertexColor(
+                MODUI_VAR['UI'].r,
+                MODUI_VAR['UI'].g,
+                MODUI_VAR['UI'].b
+            )
+        end
+    end
+
+    for _,  v in pairs(ns.skinb) do
+        if  v and v:GetBackdropBorderColor() then
+            v:SetBackdropBorderColor(
+                MODUI_VAR['UI'].r,
+                MODUI_VAR['UI'].g,
+                MODUI_VAR['UI'].b
+            )
+        end
+    end
+
+    local OnShow = function(self)
+        for _, v in pairs(
+                {
+                    _G[self:GetName()..'Corner'],
+                    _G[self:GetName()..'Decoration']
+                }
+            ) do
+            v:SetVertexColor(
+                ns.colour[1], ns.colour[2], ns.colour[3]
+            )
+        end
+        self:SetBackdropBorderColor(
+            ns.colour[1], ns.colour[2], ns.colour[3]
+        )
+    end
+
+    local OnEvent = function(self, event, addon)
+        if  event == 'ADDON_LOADED' then
+            ADDON_LOADED(self, event, addon)
+        end
         if  not MODUI_VAR['UI'] then
             MODUI_VAR['UI'] = {r = 1, g = 1, b = 1}
         end
@@ -402,6 +509,8 @@
             )
         end
     end
+
+    hooksecurefunc('GroupLootFrame_OnShow', OnShow)
 
     local e = CreateFrame'Frame'
     e:RegisterEvent'VARIABLES_LOADED'

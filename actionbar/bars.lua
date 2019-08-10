@@ -71,8 +71,8 @@
         for i = 1, 12 do
             local bu = _G[v..'Button'..i]
             if  bu then
-                ns.BU(bu, 0, true, bu:GetHeight() - 2, bu:GetWidth() - 2)
-                ns.BUBorder(bu, 27)
+                ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
+                ns.BUBorder(bu)
                 ns.BUElements(bu)
 
                 -- placement shit is all for 8.0s wacky bars
@@ -80,13 +80,13 @@
                 if  v == 'MultiBarBottomRight' then
                     if  i == 1 then
                         bu:ClearAllPoints()
-                        bu:SetPoint('LEFT', ActionButton12, 'RIGHT', 43, 0)
+                        bu:SetPoint('LEFT', ActionButton12, 'RIGHT', 46, 0)
                     end
                 end
-                if  i > 1 and v ~= 'MultiBarLeft' then
+                if  i > 1 and (v ~= 'MultiBarLeft' or v ~= 'MultiBarRight') then
                     bu:ClearAllPoints()
                     -- pixel...
-                    bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.2, 0)
+                    bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
                     -- PERFECTION!
                     if  i == 7 and v == 'MultiBarBottomRight' then
                         bu:ClearAllPoints()
@@ -110,7 +110,11 @@
 
     local MoveBars = function()
         if  not InCombatLockdown() then
-    		MultiBarBottomLeftButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeft, 0, 6)
+            MultiBarBottomLeft:ClearAllPoints()
+            MultiBarBottomLeft:SetPoint('BOTTOMLEFT', ActionButton1, 'TOPLEFT', 0, 23)
+
+            MultiBarBottomLeftButton1:ClearAllPoints()
+            MultiBarBottomLeftButton1:SetPoint('BOTTOMLEFT', ActionButton1, 'TOPLEFT', 0, 23)
 
             MultiBarBottomRight:SetPoint('LEFT', MultiBarBottomLeft, 'RIGHT', 43, 6)
 
@@ -119,7 +123,7 @@
             StanceBarLeft:SetPoint('BOTTOMLEFT', StanceBarFrame, 0, -5)
 
             MultiBarBottomRightButton7:ClearAllPoints()
-            MultiBarBottomRightButton7:SetPoint('LEFT', MultiBarBottomRight, 0, -2)
+            MultiBarBottomRightButton7:SetPoint('BOTTOMLEFT', MultiBarBottomRightButton1, 'TOPLEFT', 0, 24)
 
             PetActionButton1:ClearAllPoints()
             PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
@@ -180,14 +184,12 @@
     local UpdateXP = function()
         local xp, max = UnitXP'player', UnitXPMax'player'
 		local x = (xp/max)*MainMenuExpBar:GetWidth()
+        local rest = GetRestState()
 		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
-        if  event == 'PLAYER_ENTERING_WORLD' or event == 'UPDATE_EXHAUSTION' then
-		    local rest = GetRestState()
-            if  rest == 1 then
-                MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)
-            elseif rest == 2 then
-                MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
-            end
+        if  rest == 1 then
+            MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)
+        elseif rest == 2 then
+            MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
 	    end
     end
 
@@ -233,6 +235,15 @@
         end
     end
 
+    for _, v in pairs(
+		{
+			MultiBarBottomLeft
+		}
+	) do
+		UIPARENT_MANAGED_FRAME_POSITIONS.v = nil
+	end
+
+    hooksecurefunc('MultiActionBar_Update', MoveBars)
     hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
     hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
     hooksecurefunc('ActionBarController_UpdateAll', UpdateBars)

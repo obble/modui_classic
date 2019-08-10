@@ -21,14 +21,17 @@
             --FocusFrameNameBackground
         }
     ) do
-        ns.SB(t)
+        t:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
     end
 
-    local function OnEvent(self, event)
-        if  UnitIsPlayer'target' then
-            local _, class  = UnitClass'target'
-            local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
-            TargetFrameNameBackground:SetVertexColor(colour.r, colour.g, colour.b)
+    local AddPlayerFrame = function()
+        for _, v in pairs(
+            {
+                PlayerFrameHealthBar,
+                PlayerFrameManaBar
+            }
+        ) do
+            ns.SB(v)
         end
         if  not PlayerFrame.bg then
             local _, class  = UnitClass'player'
@@ -39,6 +42,42 @@
             PlayerFrame.bg:SetTexture(TargetFrameNameBackground:GetTexture())
             PlayerFrame.bg:SetVertexColor(colour.r, colour.g, colour.b)
         end
+    end
+
+
+    local AddTargetFrame = function()
+        for _, v in pairs(
+            {
+                TargetFrameHealthBar,
+                TargetFrameManaBar
+            }
+        ) do
+            ns.SB(v)
+        end
+        if  UnitIsPlayer'target' then
+            local _, class  = UnitClass'target'
+            local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
+            TargetFrameNameBackground:SetVertexColor(colour.r, colour.g, colour.b)
+        end
+    end
+
+    local AddToTFrame = function()
+        for _, v in pairs(
+            {
+                TargetFrameToTHealthBar,
+                TargetFrameToTManaBar
+            }
+        ) do
+            if  v then
+                ns.SB(v)
+            end
+        end
+    end
+
+    local function OnEvent(self, event)
+        AddPlayerFrame()
+        AddTargetFrame()
+        AddToTFrame()
     end
 
     local  e = CreateFrame'Frame'

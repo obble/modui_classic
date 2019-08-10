@@ -21,10 +21,11 @@
     local CreateComboFrame = function(unit)
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if  not plate.ComboFrame then
-            plate.ComboFrame = CreateFrame('Frame', nil, plate)
+            plate.ComboFrame = CreateFrame('Frame', nil, plate.UnitFrame.healthBar)
             plate.ComboFrame:SetSize(60, 10)
-            plate.ComboFrame:SetPoint('BOTTOMLEFT', plate.UnitFrame.healthBar, 'TOPLEFT', 0, 2)
-            plate.ComboFrame.unit = unit
+            plate.ComboFrame:SetPoint('CENTER', plate.UnitFrame.healthBar, 'BOTTOM', 10, -2)
+            plate.ComboFrame:SetFrameStrata'TOOLTIP'
+            plate.ComboFrame:Hide()
             tinsert(cp, plate.ComboFrame)
 
             plate.ComboFrame.ComboPoints = {}
@@ -48,20 +49,25 @@
                 shine:SetSize(10, 11)
             end
         end
+        plate.ComboFrame.unit = unit
     end
 
-    local Update = function(plate)
-        if not plate.maxComboPoints then return end
+    local Update = function(frame)
         local points = GetComboPoints(PlayerFrame.unit, 'target')
-        if  points > 0 then
-            if not plate:IsShown() then
-                plate:Show()
-                UIFrameFadeIn(plate, COMBOFRAME_FADE_IN)
+
+        for i = 1, #frame.ComboPoints do
+            frame.ComboPoints[i]:Hide()
+        end
+
+        if  points > 0 and UnitIsUnit(frame.unit, 'target') then
+            if  not frame:IsShown() then
+                frame:Show()
+                UIFrameFadeIn(frame, COMBOFRAME_FADE_IN)
             end
             local index = 1
-            for i = 1, plate.maxComboPoints do
+            for i = 1, frame.maxComboPoints do
                 local fade = {}
-                local point = plate.ComboPoints[index]
+                local point = frame.ComboPoints[index]
                 if  i <= points then
                     if  i > last then
                         fade.mode = 'IN'
@@ -78,42 +84,34 @@
                 index = index + 1
             end
         else
-            plate.ComboPoints[1].Highlight:SetAlpha(0)
-            plate.ComboPoints[1].Shine:SetAlpha(0)
-            plate:Hide()
+            frame:Hide()
         end
         last = points
     end
 
-    local UpdateMax = function(plate)
-        plate.maxComboPoints = UnitPowerMax(PlayerFrame.unit, Enum.PowerType.ComboPoints)
+    local UpdateMax = function(frame)
+        frame.maxComboPoints = UnitPowerMax(PlayerFrame.unit, Enum.PowerType.ComboPoints)
 
-        for i = 1, #plate.ComboPoints do
-            plate.ComboPoints[i]:Hide()
+        for i = 1, #frame.ComboPoints do
+            frame.ComboPoints[i]:Hide()
         end
 
-        Update(plate)
+        Update(frame)
     end
 
     local OnEvent = function(self, event, ...)
         if event == 'NAME_PLATE_UNIT_ADDED' then
             CreateComboFrame(...)
             for _, plate in pairs(cp) do
-                if  UnitIsUnit(plate.unit, 'target') then
-                    UpdateMax(plate)
-                end
+                UpdateMax(plate)
             end
         elseif event == 'PLAYER_TARGET_CHANGED' or event == 'UNIT_POWER_FREQUENT' then
             for _, plate in pairs(cp) do
-                if  UnitIsUnit(plate.unit, 'target') then
-                    Update(plate)
-                end
+                Update(plate)
             end
     	elseif event == 'UNIT_MAXPOWER' then
             for _, plate in pairs(cp) do
-                if  UnitIsUnit(plate.unit, 'target') then
-                    UpdateMax(plate)
-                end
+                UpdateMax(plate)
             end
     	end
     end

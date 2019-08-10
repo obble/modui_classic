@@ -53,6 +53,7 @@ minimap/minimap.lua
 nameplate/aura.lua
 nameplate/colour.lua
 nameplate/combopoint.lua
+nameplate/style.lua
 nameplate/totem.lua
 
 #   ~objective tracker
