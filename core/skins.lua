@@ -177,7 +177,7 @@
         end
     end
 
-    ns.BUBorder = function(bu, size, height)
+    ns.BUBorder = function(bu, size, height, horiz, vert)
         if bu.bo then return end
         local x, y = (bu:GetWidth()/2) + 6, (bu:GetHeight()/2) + 7
 
@@ -190,40 +190,31 @@
             y = height
         end
 
-        bu.bor = CreateFrame('Frame', nil, bu)
-        bu.bor:SetFrameLevel(bu:GetFrameLevel() - 1)
-        bu.bor:SetAllPoints()
-        bu.bor:SetBackdrop({
-            bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
-            insets = { left = -2, right = -2, top = -2, bottom = -2,},
-        })
-        bu.bor:SetBackdropColor(0, 0, 0, 1)
-
         bu.bo = {}
 
         bu.bo[1] = bu:CreateTexture(nil, 'BORDER')
         bu.bo[1]:SetTexture[[Interface\Tooltips\UI-Tooltip-Border]]
-        bu.bo[1]:SetPoint('TOPLEFT', -6, 7)
+        bu.bo[1]:SetPoint('TOPLEFT', -(horiz or 6), vert or 7)
         bu.bo[1]:SetSize(x, y)
         bu.bo[1]:SetTexCoord(.5, .673, 0, 1)
         bu.bo[1]:SetVertexColor(.9, .9, .9)
 
         bu.bo[2] = bu:CreateTexture(nil, 'BORDER')
         bu.bo[2]:SetTexture[[Interface\Tooltips\UI-Tooltip-Border]]
-        bu.bo[2]:SetPoint('TOPRIGHT', 6, 7)
+        bu.bo[2]:SetPoint('TOPRIGHT', horiz or 6, vert or 7)
         bu.bo[2]:SetSize(x, y)
         bu.bo[2]:SetTexCoord(.675, .5, 0, 1)
         bu.bo[2]:SetVertexColor(.9, .9, .9)
 
         bu.bo[3] = bu:CreateTexture(nil, 'BORDER')
         bu.bo[3]:SetTexture[[Interface\Tooltips\UI-Tooltip-Border]]
-        bu.bo[3]:SetPoint('BOTTOMLEFT', -6, -7)
+        bu.bo[3]:SetPoint('BOTTOMLEFT', -(horiz or 6), -(vert or 7))
         bu.bo[3]:SetSize(x, y)
         bu.bo[3]:SetTexCoord(1, .829, 0, 1)
 
         bu.bo[4] = bu:CreateTexture(nil, 'BORDER')
         bu.bo[4]:SetTexture[[Interface\Tooltips\UI-Tooltip-Border]]
-        bu.bo[4]:SetPoint('BOTTOMRIGHT', 6, -7)
+        bu.bo[4]:SetPoint('BOTTOMRIGHT', horiz or 6, -(vert or 7))
         bu.bo[4]:SetSize(x, y)
         bu.bo[4]:SetTexCoord(.82, 1, 0, 1)
     end

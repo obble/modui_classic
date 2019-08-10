@@ -6,34 +6,6 @@
     local build     = tonumber(string.sub(GetBuildInfo() , 1, 2))
     local classic   = build < 1 and true or false
 
-    -- TODO:
-    --  colour wheel for skin (default: dark?)
-    --  toggle:
-    --      aura:
-    --          statusbars
-    --          numerics
-    --      chat:
-    --      combat text (todo)
-    --          formatting
-    --          modifiers on strings
-    --          style
-    --          url
-    --      mainbar
-    --      one-bag
-    --      nameplate
-    --          castbar (nb: not working rn)
-    --          combo
-    --          totem
-    --      pvp (todo)
-    --      raid (todo)
-    --      tooltip
-    --      tracker for quest
-    --      unit frame (to finish):
-    --          display options
-    --          text numeric options
-    --          smooth bars (?)
-    --          class colour biz
-
     local CLASS_ICON_TCOORDS = {
         ['WARRIOR']		= {0, .25, .025, .225},
         ['MAGE']		= {.26, .5, .025, .225},

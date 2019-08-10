@@ -148,6 +148,7 @@
             MainMenuExpBar:SetSize(760, 8)
             ReputationWatchBar:SetSize(760, 6)
             ReputationWatchBar.StatusBar:SetSize(760, 6)
+            ExhaustionLevelFillBar:SetSize(760, 6)
             bar.t:SetTexture[[Interface/Addons/modui_classic/art/mainbar/ActionBarArtLarge]]
             bar.t:SetPoint('BOTTOM', -111, -11)
             bar.caps:SetSize(950, 64)
@@ -157,6 +158,7 @@
             MainMenuExpBar:SetSize(500, 8)
             ReputationWatchBar:SetSize(500, 6)
             ReputationWatchBar.StatusBar:SetSize(500, 6)
+            ExhaustionLevelFillBar:SetSize(500, 6)
             bar.t:SetTexture[[Interface/Addons/modui_classic/art/mainbar/ActionBarArtSmall]]
             bar.t:SetPoint('BOTTOM', -237, -11)
             bar.caps:SetSize(700, 64)
@@ -180,11 +182,17 @@
         ReputationWatchBar.spark:SetVertexColor(colour.r, colour.g, colour.b)
     end
 
+    local UpdateExhaustion = function()
+        local xp, max = UnitXP'player', UnitXPMax'player'
+        local x = ((xp + GetXPExhaustion())/max)*MainMenuExpBar:GetWidth()
+        ExhaustionTick:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 0)
+    end
 
     local UpdateXP = function()
         local xp, max = UnitXP'player', UnitXPMax'player'
 		local x = (xp/max)*MainMenuExpBar:GetWidth()
         local rest = GetRestState()
+        UpdateExhaustion()
 		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
         if  rest == 1 then
             MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)

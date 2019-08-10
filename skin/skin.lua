@@ -5,7 +5,7 @@
     local f = CreateFrame'Frame'
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
-    ns.colour = {MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b}
+    ns.colour = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
     ns.skinb = {
 
     }
@@ -98,7 +98,12 @@
     end
 
     for _,  v in pairs({LootFrame:GetRegions()}) do
-        if  v ~= LootFramePortraitOverlay then
+        if  v:GetObjectType() == 'Texture' and v ~= LootFramePortraitOverlay then
+            tinsert(ns.skin, v)
+        end
+    end
+    for _,  v in pairs({LootFrameInset:GetRegions()}) do
+        if  v:GetObjectType() == 'Texture' then
             tinsert(ns.skin, v)
         end
     end
@@ -109,21 +114,40 @@
     end
 
     for _, v in pairs({MerchantFrame:GetRegions()}) do
-        if v ~= MerchantFramePortrait then
+        if v:GetObjectType() == 'Texture' and v ~= MerchantFramePortrait then
+            tinsert(ns.skin, v)
+        end
+    end
+    for _,  v in pairs({MerchantFrameInset:GetRegions()}) do
+        if  v:GetObjectType() == 'Texture' then
             tinsert(ns.skin, v)
         end
     end
 
+
     tinsert(ns.skin, MerchantBuyBackItemNameFrame)
 
     local _, a, b, c, d = OpenMailFrame:GetRegions()
-   for _, v in pairs({a, b, c, d}) do
-       tinsert(ns.skin, v)
-   end
+    for _, v in pairs({a, b, c, d}) do
+        tinsert(ns.skin, v)
+    end
 
-   local _, a, b, c, d = MailFrame:GetRegions()
-   for _, v in pairs({a, b, c, d}) do
-       tinsert(ns.skin, v)
+    -- pet stable
+    for _,  v in pairs({PetStableFrame:GetRegions()}) do
+        if  v:GetObjectType() == 'Texture' and v ~= PetStableFramePortrait then
+            tinsert(ns.skin, v)
+        end
+    end
+
+   for _,  v in pairs({MailFrame:GetRegions()}) do
+       if  v:GetObjectType() == 'Texture' and v:GetTexture() ~= [[Interface\MailFrame\Mail-Icon]] then
+           tinsert(ns.skin, v)
+       end
+   end
+   for _,  v in pairs({MailFrameInset:GetRegions()}) do
+       if  v:GetObjectType() == 'Texture' then
+           tinsert(ns.skin, v)
+       end
    end
 
    for i = 1, MIRRORTIMER_NUMTIMERS do
@@ -163,9 +187,10 @@
     QuestLogFrame.Material:SetPoint('TOPLEFT', QuestLogDetailScrollFrame)
     QuestLogFrame.Material:SetVertexColor(.9, .9, .9)
 
-    local _, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, _, q = FriendsFrame:GetRegions()
-    for _, v in pairs({a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q}) do
-        tinsert(ns.skin, v)
+    for _, v in pairs({FriendsFrame:GetRegions()}) do
+        if v:GetObjectType() == 'Texture' and v ~= FriendsFrameIcon then
+            tinsert(ns.skin, v)
+        end
     end
 
     local _, a, b, c, d = SpellBookFrame:GetRegions()
@@ -278,6 +303,10 @@
             GossipFrameGreetingPanel
         }
     ) do
+        for _, j in pairs({v:GetRegions()}) do
+            tinsert(ns.skin, j)
+        end
+
         v.Material = v:CreateTexture(nil, 'OVERLAY', nil, 7)
         v.Material:SetTexture[[Interface\AddOns\modui_classic\art\quest\QuestBG.tga]]
         v.Material:SetSize(506, 506)
@@ -290,11 +319,6 @@
             v.Corner:SetSize(132, 64)
             v.Corner:SetPoint('BOTTOMLEFT', v, 21, 68)
             tinsert(ns.skin, v.Corner)
-        end
-
-        local a, b, c, d = v:GetRegions()
-        for _, j in pairs({a, b, c, d}) do
-            tinsert(ns.skin, j)
         end
     end
 
@@ -365,18 +389,18 @@
     end)
 
     ColorPickerFrame.reset:SetScript('OnClick', function()
-        MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b = 1, 1, 1
+        MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b = 1, 1, 1
         ColorPickerFrame:SetColorRGB(
-            MODUI_VAR['UI'].r,
-            MODUI_VAR['UI'].g,
-            MODUI_VAR['UI'].b
+            MODUI_VAR['theme'].r,
+            MODUI_VAR['theme'].g,
+            MODUI_VAR['theme'].b
         )
         for _,  v in pairs(ns.skin) do
             if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
                 v:SetVertexColor(
-                MODUI_VAR['UI'].r,
-                MODUI_VAR['UI'].g,
-                MODUI_VAR['UI'].b
+                MODUI_VAR['theme'].r,
+                MODUI_VAR['theme'].g,
+                MODUI_VAR['theme'].b
                 )
             end
         end
@@ -401,14 +425,14 @@
                     function(colour, cancel)
                        if  colour then
                            if  cancel then
-                               ns.colour[1], ns.colour[2], ns.colour[3] = MODUI_VAR['UI'].r or 1, MODUI_VAR['UI'].g or 1, MODUI_VAR['UI'].b or 1 -- fallback
+                               ns.colour[1], ns.colour[2], ns.colour[3] = MODUI_VAR['theme'].r or 1, MODUI_VAR['theme'].g or 1, MODUI_VAR['theme'].b or 1 -- fallback
                            else
                                ns.colour[1], ns.colour[2], ns.colour[3] = colour[1], colour[2], colour[3]
-                               MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b = colour[1], colour[2], colour[3]
+                               MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b = colour[1], colour[2], colour[3]
                            end
                        else
                            ns.colour[1], ns.colour[2], ns.colour[3] = ColorPickerFrame:GetColorRGB()
-                           MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b = ColorPickerFrame:GetColorRGB()
+                           MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b = ColorPickerFrame:GetColorRGB()
                        end
                        for _,  v in pairs(ns.skin) do
                            if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
@@ -448,21 +472,26 @@
 
     local menu = CreateFrame('Frame', 'modoptions', UIParent, 'UIDropDownMenuTemplate')
 
-    icon:SetScript('OnClick', function()
+    local OnClick = function()
         if  DropDownList1:IsShown() then
             DropDownList1:Hide()
         else
             EasyMenu(list, menu, icon, 3, 111, 'MENU', 5)
         end
-    end)
+    end
+
+    icon:SetScript('OnClick', OnClick)
+
+    SLASH_MODUI1 = '/modui'
+    SlashCmdList.MODUI = OnClick
 
     -- initialise
     for _,  v in pairs(ns.skin) do
         if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
             v:SetVertexColor(
-                MODUI_VAR['UI'].r,
-                MODUI_VAR['UI'].g,
-                MODUI_VAR['UI'].b
+                MODUI_VAR['theme'].r,
+                MODUI_VAR['theme'].g,
+                MODUI_VAR['theme'].b
             )
         end
     end
@@ -470,9 +499,9 @@
     for _,  v in pairs(ns.skinb) do
         if  v and v:GetBackdropBorderColor() then
             v:SetBackdropBorderColor(
-                MODUI_VAR['UI'].r,
-                MODUI_VAR['UI'].g,
-                MODUI_VAR['UI'].b
+                MODUI_VAR['theme'].r,
+                MODUI_VAR['theme'].g,
+                MODUI_VAR['theme'].b
             )
         end
     end
@@ -497,15 +526,15 @@
         if  event == 'ADDON_LOADED' then
             ADDON_LOADED(self, event, addon)
         end
-        if  not MODUI_VAR['UI'] then
-            MODUI_VAR['UI'] = {r = 1, g = 1, b = 1}
+        if  not MODUI_VAR['theme'] then
+            MODUI_VAR['theme'] = {r = 1, g = 1, b = 1}
         end
-        ns.colour = {MODUI_VAR['UI'].r, MODUI_VAR['UI'].g, MODUI_VAR['UI'].b} -- update this
+        ns.colour = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b} -- update this
         for _, v in pairs(ns.skin) do
             v:SetVertexColor(
-                MODUI_VAR['UI'].r,
-                MODUI_VAR['UI'].g,
-                MODUI_VAR['UI'].b
+                MODUI_VAR['theme'].r,
+                MODUI_VAR['theme'].g,
+                MODUI_VAR['theme'].b
             )
         end
     end

@@ -62,7 +62,10 @@
         if v > .5 then
             r = (1 - v)*2
             g = 1
-        else
+        elseif v < .2 then
+			r = 1
+			g = 0
+		else
             r = 1
             g = v*2
         end
