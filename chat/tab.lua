@@ -55,8 +55,16 @@
         end
     end
 
-    hooksecurefunc('FCF_SetWindowName',   NameTab)
-    hooksecurefunc('FCFDock_UpdateTabs',  UpdateTab)
+    local OnEvent = function()
+        if  MODUI_VAR['elements']['chat'].enable and MODUI_VAR['elements']['chat'].style then
+            hooksecurefunc('FCF_SetWindowName',   NameTab)
+            hooksecurefunc('FCFDock_UpdateTabs',  UpdateTab)
+        end
+    end
+
+    local e = CreateFrame'Frame'
+    e:RegisterEvent'PLAYER_LOGIN'
+    e:SetScript('OnEvent', OnEvent)
 
 
     --

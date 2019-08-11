@@ -69,3 +69,6 @@ unit/unit.lua
 
 #   ~world map
 worldmap/worldmap.lua
+
+#   ~options
+options/options.lua

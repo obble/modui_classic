@@ -443,20 +443,6 @@
         end
     end
 
-    local OnEvent = function(self, event, ...)
-        if  event == 'PLAYER_LOGIN' then
-            PLAYER_LOGIN()
-        elseif event == 'COMBAT_LOG_EVENT_UNFILTERED' then
-            COMBAT_LOG_EVENT_UNFILTERED()
-        elseif event == 'NAME_PLATE_UNIT_REMOVED' then
-            NAME_PLATE_UNIT_REMOVED(...)
-        elseif event == 'NAME_PLATE_UNIT_ADDED' then
-            NAME_PLATE_UNIT_ADDED(...)
-        elseif event == 'PLAYER_TARGET_CHANGED' then
-            PLAYER_TARGET_CHANGED()
-        end
-    end
-
     local OnUpdate = function()
         if not next(timer) then return end
         local current = GetTime()
@@ -480,8 +466,24 @@
         end
     end
 
+    local OnEvent = function(self, event, ...)
+        if  MODUI_VAR['elements']['ecastbar'].enable then
+            if  event == 'PLAYER_LOGIN' then
+                PLAYER_LOGIN()
+                e:SetScript('OnUpdate', OnUpdate)
+            elseif event == 'COMBAT_LOG_EVENT_UNFILTERED' then
+                COMBAT_LOG_EVENT_UNFILTERED()
+            elseif event == 'NAME_PLATE_UNIT_REMOVED' then
+                NAME_PLATE_UNIT_REMOVED(...)
+            elseif event == 'NAME_PLATE_UNIT_ADDED' then
+                NAME_PLATE_UNIT_ADDED(...)
+            elseif event == 'PLAYER_TARGET_CHANGED' then
+                PLAYER_TARGET_CHANGED()
+            end
+        end
+    end
+
     e:RegisterEvent'PLAYER_LOGIN'
     e:SetScript('OnEvent',  OnEvent)
-    e:SetScript('OnUpdate', OnUpdate)
 
     --

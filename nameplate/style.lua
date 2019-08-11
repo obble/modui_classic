@@ -32,8 +32,10 @@
     end
 
     local OnEvent = function(self, event, ...)
-       local base = ...
-       AddElements(base.UnitFrame)
+        if MODUI_VAR['elements']['nameplate'].enable then
+            local base = ...
+            AddElements(base.UnitFrame)
+        end
    end
 
    local e = CreateFrame'Frame'

@@ -163,12 +163,14 @@
     end
 
     local OnEvent = function(_, event, unit)
-        local  plate = C_NamePlate.GetNamePlateForUnit(unit)
-        if not plate then return end
-        if  event == 'NAME_PLATE_UNIT_ADDED' then
-            CreateTotem(plate)
+        if  MODUI_VAR['elements']['nameplate'].enable and MODUI_VAR['elements']['nameplate'].totem then
+            local  plate = C_NamePlate.GetNamePlateForUnit(unit)
+            if not plate then return end
+            if  event == 'NAME_PLATE_UNIT_ADDED' then
+                CreateTotem(plate)
+            end
+            UpdateTotem(plate, unit)
         end
-        UpdateTotem(plate, unit)
     end
 
     local  e = CreateFrame'Frame'

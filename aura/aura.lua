@@ -51,7 +51,7 @@
         },
     }
 
-    local AbbrevTime = function(time, f)
+    local AbbrevTime = function(bu, time)
         local h, m, s, text
         if  time <= 0 then
             text = ''
@@ -73,7 +73,7 @@
 
     local UpdateSB = function(self, duration, expiration)
         self.sb:Hide()
-        if  expiration and duration > 0 then
+        if  MODUI_VAR['elements']['aura'].statusbars and expiration and duration > 0 then
             -- local p = duration/expiration
             self.sb:SetMinMaxValues(0, duration)
             self.sb:SetValue(expiration)
@@ -85,7 +85,11 @@
     local OnUpdate = function(self, elapsed)
     	if  self.expiration then
     		self.expiration = max(self.expiration - elapsed, 0)
-    		self:SetText(self.expiration > 0 and AbbrevTime(self.expiration) or '')
+            if  MODUI_VAR['elements']['aura'].values then
+                self:SetText(self.expiration > 0 and AbbrevTime(self, self.expiration) or '')
+            else
+                self:SetFormattedText(SecondsToTimeAbbrev(self.expiration))
+            end
             UpdateSB(self, self.duration, self.expiration)
     	end
     end
@@ -226,7 +230,7 @@
     end
 
     local AddHeader = function()
-        e:UnregisterAllEvents()
+        if not MODUI_VAR['elements']['aura'].enable then return end
         RemoveBuffFrame()
         for i ,v in pairs(layout) do
             local unit, filter = i:match'(.-)|(.+)'
@@ -236,7 +240,7 @@
         end
     end
 
-    e:RegisterEvent'PLAYER_ENTERING_WORLD'
+    e:RegisterEvent'PLAYER_LOGIN'
     e:SetScript('OnEvent', AddHeader)
 
     --

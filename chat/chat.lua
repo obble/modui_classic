@@ -4,17 +4,6 @@
 
     local FONT_REGULAR = ns.FONT_REGULAR
 
-    DEFAULT_CHATFRAME_ALPHA  = .25
-    CHAT_FRAME_FADE_OUT_TIME = .1
-    CHAT_FRAME_FADE_TIME     = .1
-    CHAT_FONT_HEIGHTS        = {
-        [1]  = 8,  [2]  = 9,  [3]  = 10,
-        [4]  = 11, [5]  = 12, [6]  = 13,
-        [7]  = 14, [8]  = 15, [9]  = 16,
-        [10] = 17, [11] = 18, [12] = 19,
-        [13] = 20, [14] = 21, [15] = 22,
-    }
-
     local HideChatElements = function(v)
         for _, j in pairs({
             _G[v..'ButtonFrameUpButton'], _G[v..'ButtonFrameDownButton'],
@@ -45,11 +34,26 @@
         ChatFrameChannelButton:ClearAllPoints()
         ChatFrameChannelButton:SetPoint('BOTTOM', ChatFrame1ButtonFrame, 0, 22)
 
-        --ChatFrameToggleVoiceDeafenButton:ClearAllPoints()
-        --ChatFrameToggleVoiceDeafenButton:SetPoint('BOTTOM', ChatFrameChannelButton, 'TOP', 0, 2)
-
-        --ChatFrameToggleVoiceMuteButton:ClearAllPoints()
-        --ChatFrameToggleVoiceMuteButton:SetPoint('BOTTOM', ChatFrameToggleVoiceDeafenButton, 'TOP', 0, 2)
+        DEFAULT_CHATFRAME_ALPHA  = .25
+        CHAT_FRAME_FADE_OUT_TIME = .1
+        CHAT_FRAME_FADE_TIME     = .1
+        CHAT_FONT_HEIGHTS        = {
+            [1]     = 8,
+            [2]     = 9,
+            [3]     = 10,
+            [4]     = 11,
+            [5]     = 12,
+            [6]     = 13,
+            [7]     = 14,
+            [8]     = 15,
+            [9]     = 16,
+            [10]    = 17,
+            [11]    = 18,
+            [12]    = 19,
+            [13]    = 20,
+            [14]    = 21,
+            [15]    = 22,
+        }
 
         for i, v in pairs(CHAT_FRAMES) do
             local chat = _G[v]
@@ -101,10 +105,15 @@
         end
     end
 
-    hooksecurefunc('FCF_OpenTemporaryWindow', AddChat)
+    local OnEvent = function()
+        if   MODUI_VAR['elements']['chat'].enable and MODUI_VAR['elements']['chat'].style then
+            AddChat()
+            hooksecurefunc('FCF_OpenTemporaryWindow', AddChat)
+        end
+    end
 
     local e = CreateFrame'Frame'
-    e:RegisterEvent'PLAYER_ENTERING_WORLD'
-    e:SetScript('OnEvent', AddChat)
+    e:RegisterEvent'PLAYER_LOGIN'
+    e:SetScript('OnEvent', OnEvent)
 
     --

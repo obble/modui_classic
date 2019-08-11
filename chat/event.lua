@@ -2,30 +2,34 @@
 
     local _, ns = ...
 
-    FOREIGN_SERVER_LABEL            = '—'
-
-    CHAT_GUILD_GET                  = '|Hchannel:Guild|hG|h. %s:\32'
-    CHAT_OFFICER_GET                = '|Hchannel:o|hO|h. %s:\32'
-    CHAT_RAID_GET                   = '|Hchannel:raid|hR|h. %s:\32'
-    CHAT_RAID_WARNING_GET           = 'RW. %s:\32'
-    CHAT_RAID_LEADER_GET            = '|Hchannel:raid|hRL|h. %s:\32'
-    CHAT_INSTANCE_CHAT_GET          = '|Hchannel:INSTANCE_CHAT|hIns|h. %s:\32'
-    CHAT_INSTANCE_CHAT_LEADER_GET   = '|Hchannel:INSTANCE_CHAT|hIL|h. %s:\32'
-    CHAT_BATTLEGROUND_GET           = '|Hchannel:Battleground|hBG|h. %s:\32'
-    CHAT_BATTLEGROUND_LEADER_GET    = '|Hchannel:Battleground|hBL|h. %s:\32'
-    CHAT_PARTY_GET                  = '|Hchannel:party|hP|h. %s:\32'
-    CHAT_PARTY_GUIDE_GET            = '|Hchannel:party|hDG|h. %s:\32'
-    CHAT_MONSTER_PARTY_GET          = '|Hchannel:raid|hR|h. %s:\32'
-
-        -- this is a global change, affects lootframe etc. too.
-    _G.GOLD_AMOUNT   = '|cffffffff%d|r|TInterface\\MONEYFRAME\\UI-GoldIcon:14:14:2:0|t'
-    _G.SILVER_AMOUNT = '|cffffffff%d|r|TInterface\\MONEYFRAME\\UI-SilverIcon:14:14:2:0|t'
-    _G.COPPER_AMOUNT = '|cffffffff%d|r|TInterface\\MONEYFRAME\\UI-CopperIcon:14:14:2:0|t'
+    local hooks = {}
 
     local SYSMSG = function(self, event, _, text)
         if  event == 'UI_INFO_MESSAGE' then         -- send info messages to chat
             ChatFrame1:AddMessage(text, 1, 1, 0, 1)
         end
+    end
+
+    local AddStringsAndChannelLabels = function()
+        FOREIGN_SERVER_LABEL            = '—'
+
+        CHAT_GUILD_GET                  = '|Hchannel:Guild|hG|h. %s:\32'
+        CHAT_OFFICER_GET                = '|Hchannel:o|hO|h. %s:\32'
+        CHAT_RAID_GET                   = '|Hchannel:raid|hR|h. %s:\32'
+        CHAT_RAID_WARNING_GET           = 'RW. %s:\32'
+        CHAT_RAID_LEADER_GET            = '|Hchannel:raid|hRL|h. %s:\32'
+        CHAT_INSTANCE_CHAT_GET          = '|Hchannel:INSTANCE_CHAT|hIns|h. %s:\32'
+        CHAT_INSTANCE_CHAT_LEADER_GET   = '|Hchannel:INSTANCE_CHAT|hIL|h. %s:\32'
+        CHAT_BATTLEGROUND_GET           = '|Hchannel:Battleground|hBG|h. %s:\32'
+        CHAT_BATTLEGROUND_LEADER_GET    = '|Hchannel:Battleground|hBL|h. %s:\32'
+        CHAT_PARTY_GET                  = '|Hchannel:party|hP|h. %s:\32'
+        CHAT_PARTY_GUIDE_GET            = '|Hchannel:party|hDG|h. %s:\32'
+        CHAT_MONSTER_PARTY_GET          = '|Hchannel:raid|hR|h. %s:\32'
+
+            -- this is a global change, affects lootframe etc. too.
+        _G.GOLD_AMOUNT   = '|cffffffff%d|r|TInterface\\MONEYFRAME\\UI-GoldIcon:14:14:2:0|t'
+        _G.SILVER_AMOUNT = '|cffffffff%d|r|TInterface\\MONEYFRAME\\UI-SilverIcon:14:14:2:0|t'
+        _G.COPPER_AMOUNT = '|cffffffff%d|r|TInterface\\MONEYFRAME\\UI-CopperIcon:14:14:2:0|t'
     end
 
     local events = {
@@ -99,18 +103,6 @@
         },
     }
 
-    for event, filters in pairs(events) do
-        ChatFrame_AddMessageEventFilter(event, function(f, event, t, ...)
-            for k, v in pairs(filters) do
-                if  t:match(k) then
-                    t = t:gsub(k, v)
-                    return nil, t, ...
-                end
-            end
-        end)
-    end
-
-    local hooks = {}
     local AddMessage = function(self, t, ...)
         local _, size   = self:GetFont()
         local _, class  = UnitClass'player'
@@ -142,23 +134,55 @@
         return hooks[self](self, t, ...)
     end
 
-    for i, v in pairs(CHAT_FRAMES) do
-        if  not v:find'2' then
-            local chat = _G[v]
-    		hooks[chat] = chat.AddMessage
-    		chat.AddMessage = AddMessage
+    local AddEventFilters = function()
+        for event, filters in pairs(events) do
+            ChatFrame_AddMessageEventFilter(event, function(f, event, t, ...)
+                for k, v in pairs(filters) do
+                    if  t:match(k) then
+                        t = t:gsub(k, v)
+                        return nil, t, ...
+                    end
+                end
+            end)
         end
     end
 
-    local TemporaryWindow = function(chat)
+    local AddNewMessage = function(chat)
         hooks[chat] = chat.AddMessage
         chat.AddMessage = AddMessage
     end
 
-    UIErrorsFrame:UnregisterEvent'UI_ERROR_MESSAGE'
-    --UIErrorsFrame:SetScript('OnEvent', SYSMSG)
+    local AddMessageHooks = function()
+        for i, v in pairs(CHAT_FRAMES) do
+            if  not v:find'2' then
+                local chat = _G[v]
+                AddNewMessage(chat)
+            end
+        end
+        hooksecurefunc('FCF_SetTemporaryWindowType', AddNewMessage)
+    end
 
-    hooksecurefunc('FCF_SetTemporaryWindowType', TemporaryWindow)
+    local OnEvent = function()
+        if  not MODUI_VAR['elements']['error'].enable then
+            UIErrorsFrame:UnregisterEvent'UI_ERROR_MESSAGE'
+        end
+
+        if  MODUI_VAR['elements']['chat'].enable then
+            if  MODUI_VAR['elements']['chat'].sysmsg then
+                UIErrorsFrame:SetScript('OnEvent', SYSMSG)
+            end
+
+            if  MODUI_VAR['elements']['chat'].events then
+                AddEventFilters()
+                AddMessageHooks()
+                AddStringsAndChannelLabels()
+            end
+        end
+    end
+
+    local e = CreateFrame'Frame'
+    e:RegisterEvent'PLAYER_LOGIN'
+    e:SetScript('OnEvent', OnEvent)
 
 
     --

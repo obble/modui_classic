@@ -7,21 +7,21 @@
 
     local coord = CreateFrame('Frame', nil, WorldMapFrame)
     coord:SetFrameLevel(WorldMapFrame:GetFrameLevel() + 2)
-    coord:SetPoint('TOPLEFT', WorldMapFrame, 30, -100)
+    coord:SetPoint('BOTTOM', WorldMapFrame, 8, 10)
     coord:SetSize(200, 16)
 
     coord.Player = coord:CreateFontString(nil, 'OVERLAY')
-    coord.Player:SetFont(STANDARD_TEXT_FONT, 15, 'OUTLINE')
+    coord.Player:SetFont(STANDARD_TEXT_FONT, 13, 'OUTLINE')
     coord.Player:SetShadowOffset(0, -0)
-    coord.Player:SetJustifyH'LEFT'
-    coord.Player:SetPoint'TOPLEFT'
+    coord.Player:SetJustifyH'CENTER'
+    coord.Player:SetPoint('BOTTOM', -100, 0)
     coord.Player:SetTextColor(1, 1, 1)
 
     coord.Cursor = coord:CreateFontString(nil, 'OVERLAY')
-    coord.Cursor:SetFont(STANDARD_TEXT_FONT, 15, 'OUTLINE')
+    coord.Cursor:SetFont(STANDARD_TEXT_FONT, 13, 'OUTLINE')
     coord.Cursor:SetShadowOffset(0, -0)
-    coord.Cursor:SetJustifyH'LEFT'
-    coord.Cursor:SetPoint('TOPLEFT', coord.Player, 'BOTTOMLEFT', 0, -2)
+    coord.Cursor:SetJustifyH'CENTER'
+    coord.Cursor:SetPoint('BOTTOM', 100, 0)
     coord.Cursor:SetTextColor(1, 1, 1)
 
     coord:SetScript('OnUpdate', function(self, elapsed)
@@ -99,10 +99,14 @@
 	    end
     end)
 
-    local OnShow = function(self)
-        self.BlackoutFrame:SetAlpha(0)
-    end
+    WorldMapFrame:SetScale(.8)
+    WorldMapFrame.BlackoutFrame:EnableMouse(false)
+    WorldMapFrame.BlackoutFrame:SetAlpha(0)
 
-    WorldMapFrame:HookScript('OnShow', OnShow)
+    WorldMapFrame.ScrollContainer.GetCursorPosition = function(frame)
+        local x, y = MapCanvasScrollControllerMixin.GetCursorPosition(frame)
+        local s = WorldMapFrame:GetScale()
+        return x/s, y/s
+    end
 
     --

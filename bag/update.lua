@@ -5,9 +5,6 @@
 	local size, spacing = 28, 9
 	local buttons, bankbuttons = {}, {}
 
-	local ibag  = _G['iipbag']
-	local ibank = _G['iipbank']
-
 	--SetSortBagsRightToLeft(true)
 	-- SetInsertItemsLeftToRight(false)
 
@@ -100,21 +97,22 @@
 	end
 
 	local AddBankSlotPurchase = function()
+		local bank 		= _G['modbank']
 		local num, full = GetNumBankSlots()
 		local cost      = GetBankSlotCost(num)
 
-		ibank.purchase:Hide()
+		bank.purchase:Hide()
 
 		if not full then
-			ibank.purchase:Show()
+			bank.purchase:Show()
 
-			_G['iipBankPurchaseSilverButton']:Hide()
-			_G['iipBankPurchaseCopperButton']:Hide()
+			_G['modBankPurchaseSilverButton']:Hide()
+			_G['modBankPurchaseCopperButton']:Hide()
 
-			MoneyFrame_Update(ibank.purchase, cost)
+			MoneyFrame_Update(bank.purchase, cost)
 
-			ibank.purchase:SetScript('OnClick', function()
-				PlaySound'igMainMenuOption'
+			bank.purchase:SetScript('OnClick', function()
+				--PlaySound'igMainMenuOption'
 				StaticPopup_Show'CONFIRM_BUY_BANK_SLOT'
 			end)
 		end
@@ -208,6 +206,7 @@
 	end
 
 	local ReAnchor = function()
+		local bag = _G['modbag']
 		wipe(buttons)
 		HideBagSmall()
 		for f = 1, grab_slots() do
@@ -220,12 +219,13 @@
 			end
 			ns.ColourUpdate(_G[con])
 		end
-		MoveButtons(buttons, ibag)
-		ibag:Show()
+		MoveButtons(buttons, bag)
+		bag:Show()
 	end
 
 	local cachedBankWidth, cachedBankHeight				-- setup bank
 	local ReAnchorBank = function(noMoving)
+		local bank = _G['modbank']
 		for _, button in pairs(bankbuttons) do button:Hide() end
 
 		wipe(bankbuttons)
@@ -253,76 +253,38 @@
 		end
 
 		if not noMoving then
-			MoveButtons(bankbuttons, ibank)
-			cachedBankWidth  = ibank:GetWidth()
-			cachedBankHeight = ibank:GetHeight()
+			MoveButtons(bankbuttons, bank)
+			cachedBankWidth  = bank:GetWidth()
+			cachedBankHeight = bank:GetHeight()
 		else
-			ibank:SetWidth(cachedBankWidth)
-			ibank:SetHeight(cachedBankHeight)
+			bank:SetWidth(cachedBankWidth)
+			bank:SetHeight(cachedBankHeight)
 		end
 
-		if ibank:GetWidth() < 200 then
+		if bank:GetWidth() < 200 then
 			for i = 1, 6 do BankSlotsFrame['Bag'..i]:SetScale(.85) end
 		end
 
-		ibank:Show()
-		ibank.purchase:Show()
+		bank:Show()
+		bank.purchase:Show()
 		for i = 1, 6 do
 			BankSlotsFrame['Bag'..i]:Show()
 		end
 	end
 
-	local reagentMoved = false
-	local cachedReagentBankWidth, cachedReagentBankHeight
-	local ReAnchorReagentBank = function()
-		for _, button in pairs(bankbuttons) do button:Hide() end
-
-		wipe(bankbuttons)
-
-		for i = 1, 98 do
-			local bu = _G['ReagentBankFrameItem'..i]
-			tinsert(bankbuttons, bu)
-			ns.AddButtonStyle(bu)
-			ns.BankColourUpdate(bu)
-			bu:Show()
-		end
-
-		if not reagentMoved then
-			MoveButtons(bankbuttons, ibank)
-			ReagentBankFrameUnlockInfo:SetParent(_G['ReagentBankFrameItem1'])
-			ReagentBankFrameUnlockInfo:SetFrameStrata'HIGH'
-			ReagentBankFrameUnlockInfo:ClearAllPoints()
-			ReagentBankFrameUnlockInfo:SetPoint('TOPLEFT', ibank, 0, -55)
-			ReagentBankFrameUnlockInfo:SetPoint('BOTTOMRIGHT', ibank, -2, 20)
-			ReagentBankFrameUnlockInfoText:SetSize(200, 64)
-			ReagentBankFrameUnlockInfoText:SetFontObject'GameFontHighlight'
-			cachedReagentBankWidth  = ibank:GetWidth()
-			cachedReagentBankHeight = ibank:GetHeight()
-			reagentMoved = true
-		else
-			ibank:SetSize(cachedReagentBankWidth, cachedReagentBankHeight)
-		end
-
-		ReagentBankFrame.DespositButton:ClearAllPoints()	-- lolwat typo
-		ReagentBankFrame.DespositButton:SetPoint('BOTTOM', ibank, 0, 6)
-		ReagentBankFrame.DespositButton:SetScale(.8)
-
-		ibank:Show()
-		ibank.purchase:Hide()
-		for i = 1, 7 do
-			BankSlotsFrame['Bag'..i]:Hide()
-		end
-	end
-
 	local CloseBags = function()					-- toggle functions
+		local bag  = _G['modbag']
+		local bank  = _G['modbank']
 		HideBankArt()
 		for i = 0, 11 do CloseBag(i) end
-		for _, v in pairs({ibag, ibank}) do v:Hide() end
+		for _, v in pairs({bag, bank}) do v:Hide() end
 	end
 
 	local CloseBags2 = function()
+		local bag  = _G['modbag']
+		local bagnk = _G['modbank']
 		CloseBankFrame()
-		for _, v in pairs({ibag, ibank}) do v:Hide() end
+		for _, v in pairs({bag, bank}) do v:Hide() end
 	end
 
 	local OpenBags = function()
@@ -337,63 +299,67 @@
 		else OpenBags() end
 	end
 
-	for i = 1, 5 do
-		local bag = _G['ContainerFrame'..i]
-		hooksecurefunc(bag, 'Show', ReAnchor)
-		hooksecurefunc(bag, 'Hide', CloseBags2)
-	end
-
-	hooksecurefunc(BankFrame, 'Show', function()
-		for i = 0, 11 do OpenBag(i) end
-		ReAnchorBank()
-		HideBankArt()
-	end)
-
-	hooksecurefunc(BankFrame, 'Hide', function()
-		CloseBags()
-		HideBankArt()
-	end)
-
-	BagSlotButton_OnClick = function(self)
-		local id = self:GetID()
-		local hadItem = PutItemInBag(id)
-		return
-	end
-
-	BankFrameItemButtonBag_OnClick = function(self, button)
-		local id = self:GetInventorySlot()
-		local hadItem = PutItemInBag(id)
-		if not hadItem then return end
-	end
-
 	local HideBank = function()
+		local bank = _G['modbank']
 		for i = 1, 24 do
 			_G['BankFrameItem'..i]:Hide()
 		end
 		for i = 5, 11 do CloseBag(i) end
-		ibank:Hide()
+		bank:Hide()
 		ReAnchor()
 	end
 
-	--[[ReagentBankFrame:HookScript('OnShow', ReAnchorReagentBank)
-	ReagentBankFrame:HookScript('OnHide', function()
-		if  BankFrame:IsShown() then
-			for i = 0, 11 do OpenBag(i) end
-			HideBankArt()
-			ReAnchorBank()
+	local AddUpdates = function()
+		for i = 1, 5 do
+			local bag = _G['ContainerFrame'..i]
+			hooksecurefunc(bag, 'Show', ReAnchor)
+			hooksecurefunc(bag, 'Hide', CloseBags2)
 		end
-	end)]]
 
-	function UpdateContainerFrameAnchors() end
-	ToggleBackpack = ToggleBags
-	ToggleBag      = ToggleBags
-	OpenAllBags    = OpenBags
-	OpenBackpack   = OpenBags
-	CloseAllBags   = CloseBags
+		hooksecurefunc(BankFrame, 'Show', function()
+			for i = 0, 11 do OpenBag(i) end
+			ReAnchorBank()
+			HideBankArt()
+		end)
 
-	hooksecurefunc('ContainerFrame_Update', HideBagSmall)
+		hooksecurefunc(BankFrame, 'Hide', function()
+			CloseBags()
+			HideBankArt()
+		end)
 
-	ibag.CloseButton:SetScript('OnClick', ToggleBags)
-	ibank.CloseButton:SetScript('OnClick', function() HideBank() CloseBankFrame() HideBankArt() end)
+		BagSlotButton_OnClick = function(self)
+			local id = self:GetID()
+			local hadItem = PutItemInBag(id)
+			return
+		end
+
+		BankFrameItemButtonBag_OnClick = function(self, button)
+			local id = self:GetInventorySlot()
+			local hadItem = PutItemInBag(id)
+			if not hadItem then return end
+		end
+
+		function UpdateContainerFrameAnchors() end
+		ToggleBackpack = ToggleBags
+		ToggleBag      = ToggleBags
+		OpenAllBags    = OpenBags
+		OpenBackpack   = OpenBags
+		CloseAllBags   = CloseBags
+
+		hooksecurefunc('ContainerFrame_Update', HideBagSmall)
+
+		_G['modbag'].CloseButton:SetScript('OnClick', ToggleBags)
+		_G['modbank'].CloseButton:SetScript('OnClick', function() HideBank() CloseBankFrame() HideBankArt() end)
+	end
+
+	local OnEvent = function()
+		if  MODUI_VAR['elements']['onebag'].enable then
+			AddUpdates()
+		end
+	end
+
+	local e = CreateFrame'Frame'
+	e:RegisterEvent'PLAYER_LOGIN'
+	e:SetScript('OnEvent', OnEvent)
 
 	--

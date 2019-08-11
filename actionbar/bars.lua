@@ -17,96 +17,10 @@
 
     local events = {
         'PLAYER_LOGIN',
-        'CVAR_UPDATE',
-        'PLAYER_ENTERING_WORLD',
         'PLAYER_XP_UPDATE',
         'UPDATE_EXHAUSTION',
         'PLAYER_LEVEL_UP'
     }
-
-    local bar = CreateFrame('Frame', 'modui_mainbar', MainMenuBar)
-    bar:SetSize(1024, 128)
-    bar:SetPoint'BOTTOM'
-
-    bar.t = bar:CreateTexture(nil, 'BACKGROUND')
-    bar.t:SetAllPoints()
-    tinsert(ns.skin, bar.t)
-
-    bar.caps = CreateFrame('Frame', 'modui_endcaps', UIParent)
-    bar.caps:SetPoint('BOTTOM', bar)
-    bar.caps:SetFrameLevel(1)
-
-    ReputationWatchBar:SetSize(760, 6)
-
-    ReputationWatchBar.StatusBar:SetSize(760, 6)
-
-    ReputationWatchBar.spark = ReputationWatchBar:CreateTexture(nil, 'OVERLAY', nil, 7)
-    ReputationWatchBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
-    ReputationWatchBar.spark:SetSize(35, 35)
-    ReputationWatchBar.spark:SetBlendMode'ADD'
-
-    MainMenuExpBar:SetSize(760, 6)
-    MainMenuExpBar:ClearAllPoints()
-    MainMenuExpBar:SetPoint('BOTTOM', 0, 48)
-
-    MainMenuExpBar.spark = MainMenuExpBar:CreateTexture(nil, 'OVERLAY', nil, 7)
-    MainMenuExpBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
-    MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
-    MainMenuExpBar.spark:SetSize(35, 35)
-    MainMenuExpBar.spark:SetBlendMode'ADD'
-
-    MainMenuExpBar.sb = MainMenuExpBar:CreateTexture(nil, 'BACKGROUND', nil, -7)
-    ns.SB(MainMenuExpBar.sb)
-    MainMenuExpBar.sb:SetPoint('TOPLEFT', 0, -1)
-    MainMenuExpBar.sb:SetPoint'BOTTOMRIGHT'
-    MainMenuExpBar.sb:SetVertexColor(.5, .5, .5)
-
-    MainMenuExpBar.t = MainMenuExpBar:CreateTexture(nil, 'BACKGROUND')
-    ns.BD(MainMenuExpBar.t, 1, -.5)
-    MainMenuExpBar.t:SetHeight(1)
-    MainMenuExpBar.t:SetPoint('BOTTOMLEFT', MainMenuExpBar, 'TOPLEFT')
-    MainMenuExpBar.t:SetPoint('BOTTOMRIGHT', MainMenuExpBar, 'TOPRIGHT')
-
-    for _, v in pairs(n) do
-        for i = 1, 12 do
-            local bu = _G[v..'Button'..i]
-            if  bu then
-                ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
-                ns.BUBorder(bu)
-                ns.BUElements(bu)
-
-                -- placement shit is all for 8.0s wacky bars
-                -- and needs sorting for classic
-                if  v == 'MultiBarBottomRight' then
-                    if  i == 1 then
-                        bu:ClearAllPoints()
-                        bu:SetPoint('LEFT', ActionButton12, 'RIGHT', 46, 0)
-                    end
-                end
-                if  i > 1 and (v ~= 'MultiBarLeft' or v ~= 'MultiBarRight') then
-                    bu:ClearAllPoints()
-                    -- pixel...
-                    bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
-                    -- PERFECTION!
-                    if  i == 7 and v == 'MultiBarBottomRight' then
-                        bu:ClearAllPoints()
-                        bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 17)
-                    end
-                end
-            end
-        end
-    end
-
-    for _, v in pairs(x) do
-        for i = 1, 10 do
-            local bu = _G[v..'Button'..i]
-            if bu then
-                ns.BU(bu, 0, true, bu:GetHeight() - 2, bu:GetWidth() - 2)
-                ns.BUBorder(bu, 24)
-                ns.BUElements(bu)
-            end
-        end
-    end
 
     local MoveBars = function()
         if  not InCombatLockdown() then
@@ -127,10 +41,14 @@
 
             PetActionButton1:ClearAllPoints()
             PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
+
+            MainMenuBarVehicleLeaveButton:ClearAllPoints()
+            MainMenuBarVehicleLeaveButton:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', -5, 30)
     	end
     end
 
     local SetBarLength = function(shorten)
+        local bar = _G['modui_mainbar']
         for i = 0, 3 do
             _G['MainMenuXPBarTexture'..i]:Hide()
             _G['MainMenuBarTexture'..i]:Hide()
@@ -196,12 +114,14 @@
 		local x = (xp/max)*MainMenuExpBar:GetWidth()
         local rest = GetRestState()
         UpdateExhaustion()
-		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
-        if  rest == 1 then
-            MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)
-        elseif rest == 2 then
-            MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
-	    end
+        if _G['modui_mainbar'] then
+    		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
+            if  rest == 1 then
+                MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)
+            elseif rest == 2 then
+                MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
+    	    end
+        end
     end
 
     local UpdateBars = function()
@@ -229,35 +149,124 @@
         end
     end
 
-    local OnEvent = function()
-        if event == 'PLAYER_LOGIN' then
-            MoveBars()
-            UpdateBars()
-        else
-            UpdateXP()
+    local AddBars = function()
+        local bar = CreateFrame('Frame', 'modui_mainbar', MainMenuBar)
+        bar:SetSize(1024, 128)
+        bar:SetPoint'BOTTOM'
+
+        bar.t = bar:CreateTexture(nil, 'BACKGROUND')
+        bar.t:SetAllPoints()
+        tinsert(ns.skin, bar.t)
+
+        bar.caps = CreateFrame('Frame', 'modui_endcaps', UIParent)
+        bar.caps:SetPoint('BOTTOM', bar)
+        bar.caps:SetFrameLevel(1)
+
+        ReputationWatchBar:SetSize(760, 6)
+
+        ReputationWatchBar.StatusBar:SetSize(760, 6)
+
+        ReputationWatchBar.spark = ReputationWatchBar:CreateTexture(nil, 'OVERLAY', nil, 7)
+        ReputationWatchBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
+        ReputationWatchBar.spark:SetSize(35, 35)
+        ReputationWatchBar.spark:SetBlendMode'ADD'
+
+        MainMenuExpBar:SetSize(760, 6)
+        MainMenuExpBar:ClearAllPoints()
+        MainMenuExpBar:SetPoint('BOTTOM', 0, 48)
+
+        MainMenuExpBar.spark = MainMenuExpBar:CreateTexture(nil, 'OVERLAY', nil, 7)
+        MainMenuExpBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
+        MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
+        MainMenuExpBar.spark:SetSize(35, 35)
+        MainMenuExpBar.spark:SetBlendMode'ADD'
+
+        MainMenuExpBar.sb = MainMenuExpBar:CreateTexture(nil, 'BACKGROUND', nil, -7)
+        ns.SB(MainMenuExpBar.sb)
+        MainMenuExpBar.sb:SetPoint('TOPLEFT', 0, -1)
+        MainMenuExpBar.sb:SetPoint'BOTTOMRIGHT'
+        MainMenuExpBar.sb:SetVertexColor(.5, .5, .5)
+
+        MainMenuExpBar.t = MainMenuExpBar:CreateTexture(nil, 'BACKGROUND')
+        ns.BD(MainMenuExpBar.t, 1, -.5)
+        MainMenuExpBar.t:SetHeight(1)
+        MainMenuExpBar.t:SetPoint('BOTTOMLEFT', MainMenuExpBar, 'TOPLEFT')
+        MainMenuExpBar.t:SetPoint('BOTTOMRIGHT', MainMenuExpBar, 'TOPRIGHT')
+
+        for _, v in pairs(n) do
+            for i = 1, 12 do
+                local bu = _G[v..'Button'..i]
+                if  bu then
+                    ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
+                    ns.BUBorder(bu)
+                    ns.BUElements(bu)
+
+                    -- TODO: all our placement needs *MAJOR* streamlining
+                    -- but i dont have time rn
+                    if  v == 'MultiBarBottomRight' then
+                        if  i == 1 then
+                            bu:ClearAllPoints()
+                            bu:SetPoint('LEFT', ActionButton12, 'RIGHT', 46, 0)
+                        end
+                    end
+                    if  i > 1 and (v ~= 'MultiBarLeft' or v ~= 'MultiBarRight') then
+                        bu:ClearAllPoints()
+                        -- pixel...
+                        bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
+                        -- PERFECTION!
+                        if  i == 7 and v == 'MultiBarBottomRight' then
+                            bu:ClearAllPoints()
+                            bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 17)
+                        end
+                    end
+                end
+            end
         end
+
+        for _, v in pairs(x) do
+            for i = 1, 10 do
+                local bu = _G[v..'Button'..i]
+                if bu then
+                    ns.BU(bu, 0, true, bu:GetHeight() - 2, bu:GetWidth() - 2)
+                    ns.BUBorder(bu, 24)
+                    ns.BUElements(bu)
+                end
+            end
+        end
+
+        for i, v in pairs(n) do
+            if  i > 1 then -- skip 'action'
+                local bar = _G[v]
+                bar:HookScript('OnShow', UpdateBars)
+                bar:HookScript('OnHide', UpdateBars)
+            end
+        end
+
+        for _, v in pairs(
+            {
+                MultiBarBottomLeft
+            }
+        ) do
+            UIPARENT_MANAGED_FRAME_POSITIONS.v = nil
+        end
+
+        hooksecurefunc('MultiActionBar_Update', MoveBars)
+        hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
+        hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
+        hooksecurefunc('ActionBarController_UpdateAll', UpdateBars)
     end
 
-    for i, v in pairs(n) do
-        if  i > 1 then -- skip 'action'
-            local bar = _G[v]
-            bar:HookScript('OnShow', UpdateBars)
-            bar:HookScript('OnHide', UpdateBars)
+    local OnEvent = function(self, event)
+        if  MODUI_VAR['elements']['mainbar'].enable then
+            if  event == 'PLAYER_LOGIN' then
+                AddBars()
+                MoveBars()
+                UpdateBars()
+            else
+                UpdateXP()
+            end
         end
     end
-
-    for _, v in pairs(
-		{
-			MultiBarBottomLeft
-		}
-	) do
-		UIPARENT_MANAGED_FRAME_POSITIONS.v = nil
-	end
-
-    hooksecurefunc('MultiActionBar_Update', MoveBars)
-    hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
-    hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
-    hooksecurefunc('ActionBarController_UpdateAll', UpdateBars)
 
     local  e = CreateFrame'Frame'
     for _, v in pairs(events) do e:RegisterEvent(v) end

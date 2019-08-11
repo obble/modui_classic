@@ -54,24 +54,32 @@
         end,
     }
 
-	for _, e in next, events do
-		ChatFrame_AddMessageEventFilter(e, function(self, event, t, ...)
-			for i = 1, #patterns do
-				local text, match = string.gsub(t, patterns[i], '|cfffade94|Hurl:%1|h%1|h|r')
-				if match > 0 then return false, text, ... end
+	local OnEvent = function()
+		if  MODUI_VAR['elements']['chat'].enable and  MODUI_VAR['elements']['chat'].url then
+			for _, e in next, events do
+				ChatFrame_AddMessageEventFilter(e, function(self, event, t, ...)
+					for i = 1, #patterns do
+						local text, match = string.gsub(t, patterns[i], '|cfffade94|Hurl:%1|h%1|h|r')
+						if match > 0 then return false, text, ... end
+					end
+				end)
 			end
-		end)
+
+			local hook = ItemRefTooltip.SetHyperlink
+			ItemRefTooltip.SetHyperlink = function(self, link, ...)
+				if  tostring(link):sub(1, 4) == 'url:' then
+					URL = string.sub(link, 5)
+					StaticPopup_Show'URL_COPY_DIALOG'
+					return
+				end
+				hook(self, link, ...)
+			end
+		end
 	end
 
-	local hook = ItemRefTooltip.SetHyperlink
-	ItemRefTooltip.SetHyperlink = function(self, link, ...)
-		if  tostring(link):sub(1, 4) == 'url:' then
-			URL = string.sub(link, 5)
-			StaticPopup_Show'URL_COPY_DIALOG'
-			return
-		end
-		hook(self, link, ...)
-	end
+	local e = CreateFrame'Frame'
+    e:RegisterEvent'PLAYER_LOGIN'
+    e:SetScript('OnEvent', OnEvent)
 
 
 	--

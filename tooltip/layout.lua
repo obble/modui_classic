@@ -114,17 +114,25 @@
         end
     end
 
-    for _, v in next, tooltips do
-    	local f = _G[v]
-        ns.BD(f)
-    	f:HookScript('OnShow',             AddBackdrop)
-    	f:HookScript('OnHide',             AddBackdrop)
-    	f:HookScript('OnTooltipCleared',   AddBackdrop)
+    local OnEvent = function(self, event)
+        if  MODUI_VAR['elements']['tooltip'].enable then
+            for _, v in next, tooltips do
+                local f = _G[v]
+                ns.BD(f)
+                f:HookScript('OnShow',             AddBackdrop)
+                f:HookScript('OnHide',             AddBackdrop)
+                f:HookScript('OnTooltipCleared',   AddBackdrop)
+            end
+
+            hooksecurefunc('GameTooltip_UpdateStyle',       UpdateStyle)
+            hooksecurefunc('GameTooltip_SetBackdropStyle',  UpdateStyle)
+            hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
+        end
     end
 
-    hooksecurefunc('GameTooltip_UpdateStyle',       UpdateStyle)
-    hooksecurefunc('GameTooltip_SetBackdropStyle',  UpdateStyle)
-    hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
+    local e = CreateFrame'Frame'
+    e:RegisterEvent'PLAYER_LOGIN'
+    e:SetScript('OnEvent', OnEvent)
 
 
     --

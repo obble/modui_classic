@@ -43,78 +43,8 @@
        ['MainMenuMicroButton']          = {{-12, 170}, {12, 170}},
    }
 
-   local menu = CreateFrame('Button', 'moduimenuButton', _G['modui_endcaps'])
-   menu:SetPoint('LEFT', _G['modui_mainbar'].caps, 35, 0)
-   menu:SetSize(21, 21)
-   --menu:GetNormalTexture():SetTexture''
-   ns.BUElements(menu)
-   menu:RegisterForClicks'AnyUp'
-   menu:SetFrameLevel(2)
-
-   menu.t = menu:CreateTexture(nil, 'ARTWORK')
-   menu.t:SetTexture[[Interface\GLUES\CHARACTERCREATE\UI-CHARACTERCREATE-CLASSES]]
-   menu.t:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
-   menu.t:SetPoint'TOPLEFT'
-   menu.t:SetPoint('BOTTOMRIGHT')
-
-   menu.arrow = menu:CreateTexture(nil, 'OVERLAY')
-   menu.arrow:SetTexture[[Interface\MoneyFrame\Arrow-Right-Up]]
-   menu.arrow:SetSize(16, 16)
-   menu.arrow:SetTexCoord(1, 0, 0, 0, 1, 1, 0, 1)
-   menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 3)
-
-   menu.mouseover = CreateFrame('Button', nil, menu)
-   menu.mouseover:SetWidth(60)
-   menu.mouseover:SetHeight(200)
-   menu.mouseover:SetPoint('BOTTOM', menu, 'TOP')
-   menu.mouseover:SetFrameLevel(0)
-
-   menu.sb = CreateFrame('StatusBar', nil, menu)
-   ns.SB(menu.sb)
-   menu.sb:SetSize(22, 3)
-   menu.sb:SetPoint('TOP', menu, 'BOTTOM', -2, -7)
-   menu.sb:SetStatusBarColor(0, 1, 0)
-   menu.sb:SetBackdrop(
-       {bgFile = [[Interface\Buttons\WHITE8x8]],
-       insets = {
-          left     =  -1,
-          right    =  -1,
-          top      =  -1,
-          bottom   =  -1,
-           }
-       }
-   )
-   menu.sb:SetBackdropColor(0, 0, 0)
-   menu.sb.updateInterval = 0
-
-   local mask = menu:CreateMaskTexture()
-   mask:SetTexture[[Interface\Minimap\UI-Minimap-Background]]
-   mask:SetPoint('TOPLEFT', -3, 3)
-   mask:SetPoint('BOTTOMRIGHT', 3, -3)
-
-   menu.t:AddMaskTexture(mask)
-
-   if  not menu.bo then
-       menu.bo = menu:CreateTexture(nil, 'OVERLAY')
-       menu.bo:SetSize(36, 36)
-       menu.bo:SetTexture[[Interface\Artifacts\Artifacts]]
-       menu.bo:SetPoint'CENTER'
-       menu.bo:SetTexCoord(.5, .58, .8775, .9575)
-       menu.bo:SetVertexColor(.6, .6, .6)
-   end
-
-   -- only necessary if we end up resizing buttons
-   --[[MicroButtonPortrait:SetWidth(14)
-   MicroButtonPortrait:SetHeight(21)
-   MicroButtonPortrait:SetPoint('TOP', 0, -22)]]
-
-   --[[KeyRingButton:SetParent(ContainerFrame1)
-   KeyRingButton:ClearAllPoints()
-   KeyRingButton:SetPoint('TOPLEFT', ContainerFrame1, -25, -2)]]
-
-   -- UpdateTalentButton = function() end ??
-
-   local ShowMenu = function()
+   local ShowMicroButtons = function()
+       local menu = _G['moduimenuButton']
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 6)
        for i, v in pairs(buttons) do
            local bu = _G[i]
@@ -124,7 +54,8 @@
        end
    end
 
-   local HideMenu = function()
+   local HideMicroButtons = function(self)
+       local menu = _G['moduimenuButton']
        GameTooltip:Hide()
        menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 2, 3)
        for i, v in pairs(buttons) do
@@ -135,8 +66,9 @@
        end
    end
 
-   local AddMenu = function()
+   local PositionMicroButtons = function()
        local l = UnitLevel'player'
+       local menu = _G['moduimenuButton']
        for i, v in pairs(buttons) do
            local bu = _G[i]
            if  bu then
@@ -145,8 +77,8 @@
                bu:SetAlpha(0)
                bu:SetFrameLevel(11)
 
-               bu:HookScript('OnEnter', ShowMenu)
-               bu:HookScript('OnLeave', HideMenu)
+               bu:HookScript('OnEnter', ShowMicroButtons)
+               bu:HookScript('OnLeave', HideMicroButtons)
            end
        end
        for _, f in pairs(
@@ -157,6 +89,22 @@
        ) do
            if  f then
                f:Hide()
+           end
+       end
+   end
+
+   local UpdateLatency = function(self, elapsed)
+       if  self.updateInterval > 0 then
+           self.updateInterval = self.updateInterval - elapsed
+       else
+           self.updateInterval = PERFORMANCEBAR_UPDATE_INTERVAL
+           local _, _, latency = GetNetStats()
+           if  latency > PERFORMANCEBAR_MEDIUM_LATENCY then
+               self:SetStatusBarColor(1, 0, 0)
+           elseif latency > PERFORMANCEBAR_LOW_LATENCY then
+               self:SetStatusBarColor(1, 1, 0)
+           else
+               self:SetStatusBarColor(0, 1, 0)
            end
        end
    end
@@ -177,47 +125,108 @@
        end
    end
 
+   local AddMenu = function()
+       local menu = CreateFrame('Button', 'moduimenuButton', _G['modui_mainbar'].caps)
+       menu:SetPoint('LEFT', _G['modui_mainbar'].caps, 35, 0)
+       menu:SetSize(21, 21)
+       --menu:GetNormalTexture():SetTexture''
+       ns.BUElements(menu)
+       menu:RegisterForClicks'AnyUp'
+       menu:SetFrameLevel(2)
 
-   menu:SetScript('OnEnter', function()
-       ShowMenu()
-       GameTooltip:ClearLines()
-       GameTooltip:SetOwner(menu, 'ANCHOR_LEFT', -25, 12)
-       GameTooltip:AddLine(MAINMENU_BUTTON)
+       menu.t = menu:CreateTexture(nil, 'ARTWORK')
+       menu.t:SetTexture[[Interface\GLUES\CHARACTERCREATE\UI-CHARACTERCREATE-CLASSES]]
+       menu.t:SetTexCoord(unpack(CLASS_ICON_TCOORDS[class]))
+       menu.t:SetPoint'TOPLEFT'
+       menu.t:SetPoint('BOTTOMRIGHT')
 
-       --GameTooltip:AddLine' '
+       menu.arrow = menu:CreateTexture(nil, 'OVERLAY')
+       menu.arrow:SetTexture[[Interface\MoneyFrame\Arrow-Right-Up]]
+       menu.arrow:SetSize(16, 16)
+       menu.arrow:SetTexCoord(1, 0, 0, 0, 1, 1, 0, 1)
+       menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 0, 3)
 
-       GameTooltip:Show()
-   end)
-   menu:SetScript('OnLeave', HideMenu)
-   menu.mouseover:SetScript('OnEnter', ShowMenu)
-   menu.mouseover:SetScript('OnLeave', HideMenu)
+       menu.mouseover = CreateFrame('Button', nil, menu)
+       menu.mouseover:SetWidth(60)
+       menu.mouseover:SetHeight(200)
+       menu.mouseover:SetPoint('BOTTOM', menu, 'TOP')
+       menu.mouseover:SetFrameLevel(0)
 
-   menu:SetScript('OnClick', function()
-       ToggleCharacter'PaperDollFrame'
-   end)
+       menu.sb = CreateFrame('StatusBar', nil, menu)
+       ns.SB(menu.sb)
+       menu.sb:SetSize(22, 3)
+       menu.sb:SetPoint('TOP', menu, 'BOTTOM', -2, -7)
+       menu.sb:SetStatusBarColor(0, 1, 0)
+       menu.sb:SetBackdrop(
+           {bgFile = [[Interface\Buttons\WHITE8x8]],
+           insets = {
+              left     =  -1,
+              right    =  -1,
+              top      =  -1,
+              bottom   =  -1,
+               }
+           }
+       )
+       menu.sb:SetBackdropColor(0, 0, 0)
+       menu.sb.updateInterval = 0
 
-   menu.sb:SetScript('OnUpdate', function(self, elapsed)
-       if  self.updateInterval > 0 then
-           self.updateInterval = self.updateInterval - elapsed
-       else
-           self.updateInterval = PERFORMANCEBAR_UPDATE_INTERVAL
-           local _, _, latency = GetNetStats()
-           if  latency > PERFORMANCEBAR_MEDIUM_LATENCY then
-               menu.sb:SetStatusBarColor(1, 0, 0)
-           elseif latency > PERFORMANCEBAR_LOW_LATENCY then
-               menu.sb:SetStatusBarColor(1, 1, 0)
-           else
-               menu.sb:SetStatusBarColor(0, 1, 0)
-           end
+       local mask = menu:CreateMaskTexture()
+       mask:SetTexture[[Interface\Minimap\UI-Minimap-Background]]
+       mask:SetPoint('TOPLEFT', -3, 3)
+       mask:SetPoint('BOTTOMRIGHT', 3, -3)
+
+       menu.t:AddMaskTexture(mask)
+
+       if  not menu.bo then
+           menu.bo = menu:CreateTexture(nil, 'OVERLAY')
+           menu.bo:SetSize(36, 36)
+           menu.bo:SetTexture[[Interface\Artifacts\Artifacts]]
+           menu.bo:SetPoint'CENTER'
+           menu.bo:SetTexCoord(.5, .58, .8775, .9575)
+           menu.bo:SetVertexColor(.6, .6, .6)
        end
-   end)
+
+       --[[KeyRingButton:SetParent(ContainerFrame1)
+       KeyRingButton:ClearAllPoints()
+       KeyRingButton:SetPoint('TOPLEFT', ContainerFrame1, -25, -2)]]
+
+       menu:SetScript('OnEnter', function()
+           ShowMicroButtons()
+           GameTooltip:ClearLines()
+           GameTooltip:SetOwner(menu, 'ANCHOR_LEFT', -25, 12)
+           GameTooltip:AddLine(MAINMENU_BUTTON)
+
+           --GameTooltip:AddLine' '
+
+           GameTooltip:Show()
+       end)
+
+       menu:SetScript('OnLeave', HideMicroButtons)
+
+       menu.sb:SetScript('OnUpdate', UpdateLatency)
+
+       menu.mouseover:SetScript('OnEnter', ShowMicroButtons)
+       menu.mouseover:SetScript('OnLeave', HideMicroButtons)
+
+       menu:SetScript('OnClick', function()
+           ToggleCharacter'PaperDollFrame'
+       end)
+   end
+
+   local OnEvent = function(self, event)
+       if  MODUI_VAR['elements']['mainbar'].enable then
+           if  event == 'PLAYER_LOGIN' then
+               AddMenu()
+               hooksecurefunc('UpdateMicroButtons', PositionMicroButtons)
+           end
+           PositionMicroButtons()
+       end
+   end
 
    local e = CreateFrame'Frame'
    e:RegisterEvent'PLAYER_LOGIN'
    e:RegisterEvent'PLAYER_LEVEL_UP'
-   e:SetScript('OnEvent', AddMenu)
-
-   hooksecurefunc('UpdateMicroButtons', AddMenu)
+   e:SetScript('OnEvent', OnEvent)
    -- hooksecurefunc('MainMenuMicroButton_ShowAlert', AddAlerts)
 
     --

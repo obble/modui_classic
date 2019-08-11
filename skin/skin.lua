@@ -6,9 +6,7 @@
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
     ns.colour = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
-    ns.skinb = {
-
-    }
+    ns.skinb = {}
     ns.skin = {
         MinimapBorder,
         MiniMapTrackingBorder,
@@ -127,11 +125,6 @@
 
     tinsert(ns.skin, MerchantBuyBackItemNameFrame)
 
-    local _, a, b, c, d = OpenMailFrame:GetRegions()
-    for _, v in pairs({a, b, c, d}) do
-        tinsert(ns.skin, v)
-    end
-
     -- pet stable
     for _,  v in pairs({PetStableFrame:GetRegions()}) do
         if  v:GetObjectType() == 'Texture' and v ~= PetStableFramePortrait then
@@ -139,16 +132,27 @@
         end
     end
 
-   for _,  v in pairs({MailFrame:GetRegions()}) do
-       if  v:GetObjectType() == 'Texture' and v:GetTexture() ~= [[Interface\MailFrame\Mail-Icon]] then
-           tinsert(ns.skin, v)
-       end
-   end
-   for _,  v in pairs({MailFrameInset:GetRegions()}) do
-       if  v:GetObjectType() == 'Texture' then
-           tinsert(ns.skin, v)
-       end
-   end
+    -- mail
+    for _,  v in pairs({MailFrame:GetRegions()}) do
+        if  v:GetObjectType() == 'Texture' and v:GetTexture() ~= [[Interface\MailFrame\Mail-Icon]] then
+            tinsert(ns.skin, v)
+        end
+    end
+    for _,  v in pairs({MailFrameInset:GetRegions()}) do
+        if  v:GetObjectType() == 'Texture' then
+            tinsert(ns.skin, v)
+        end
+    end
+    for _,  v in pairs({OpenMailFrame:GetRegions()}) do
+        if  v:GetObjectType() == 'Texture' and v ~= OpenMailFrameIcon then
+            tinsert(ns.skin, v)
+        end
+    end
+    for _,  v in pairs({OpenMailFrameInset:GetRegions()}) do
+        if  v:GetObjectType() == 'Texture' then
+            tinsert(ns.skin, v)
+        end
+    end
 
    for i = 1, MIRRORTIMER_NUMTIMERS do
         local m = _G['MirrorTimer'..i]
@@ -209,10 +213,20 @@
         tinsert(ns.skin, v)
     end
 
+    -- scoreboard
     local a, b, c, d, e, f, _, _, _, _, _, _, g = WorldStateScoreFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e, f, g}) do
         tinsert(ns.skin, v)
     end
+
+    -- worldmap
+    for _, v in pairs({WorldMapFrame.BorderFrame:GetRegions()}) do
+        if v:GetObjectType() == 'Texture' then
+            tinsert(ns.skin, v)
+        end
+    end
+
+
 
         -- TRADE
     local _, _, a, b, c, d = TradeFrame:GetRegions()
@@ -413,6 +427,20 @@
         end
     end)
 
+    local icon = CreateFrame('Button', 'modcolourmenu', MainMenuBarBackpackButton)
+    icon:SetSize(16, 16)
+    icon:ClearAllPoints()
+    icon:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', .5, 1)
+
+    local t = icon:CreateFontString(nil, 'ARTWORK')
+    t:SetFont(STANDARD_TEXT_FONT, 8, 'OUTLINE')
+    t:SetPoint('TOP', icon, -2, -4)
+    t:SetJustifyH'CENTER'
+    t:SetText'M'
+    t:SetTextColor(1, 1, 1)
+
+    local menu = CreateFrame('Frame', 'modoptions', UIParent, 'UIDropDownMenuTemplate')
+
     local list = {
         {
             text            = 'modui',
@@ -450,6 +478,15 @@
                                )
                            end
                        end
+                       for _,  v in pairs(ns.skinb) do
+                           if  v and v:GetBackdropBorderColor() then
+                               v:SetBackdropBorderColor(
+                                   MODUI_VAR['theme'].r,
+                                   MODUI_VAR['theme'].g,
+                                   MODUI_VAR['theme'].b
+                               )
+                           end
+                       end
                    end
                )
            end,
@@ -460,24 +497,12 @@
            text = 'Toggle Elements',
            icon = 'Interface\\PaperDollInfoFrame\\UI-EquipmentManager-Toggle',
            func = function()
+               _G['modui_elementsmenu']:Show()
            end,
            notCheckable = true,
            fontObject = Game13Font,
        }
     }
-
-    local icon = CreateFrame('Button', 'modcolourmenu', MainMenuBarBackpackButton)
-    icon:SetSize(16, 16)
-    icon:ClearAllPoints()
-    icon:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', .5, 1)
-
-    local t = icon:CreateFontString(nil, 'ARTWORK')
-    t:SetFont(STANDARD_TEXT_FONT, 8, 'OUTLINE')
-    t:SetPoint('TOP', icon, -2, -4)
-    t:SetText'M'
-    t:SetTextColor(1, 1, 1)
-
-    local menu = CreateFrame('Frame', 'modoptions', UIParent, 'UIDropDownMenuTemplate')
 
     local OnClick = function()
         if  DropDownList1:IsShown() then
@@ -491,27 +516,6 @@
 
     SLASH_MODUI1 = '/modui'
     SlashCmdList.MODUI = OnClick
-
-    -- initialise
-    for _,  v in pairs(ns.skin) do
-        if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
-            v:SetVertexColor(
-                MODUI_VAR['theme'].r,
-                MODUI_VAR['theme'].g,
-                MODUI_VAR['theme'].b
-            )
-        end
-    end
-
-    for _,  v in pairs(ns.skinb) do
-        if  v and v:GetBackdropBorderColor() then
-            v:SetBackdropBorderColor(
-                MODUI_VAR['theme'].r,
-                MODUI_VAR['theme'].g,
-                MODUI_VAR['theme'].b
-            )
-        end
-    end
 
     local OnShow = function(self)
         for _, v in pairs(
@@ -543,6 +547,25 @@
                 MODUI_VAR['theme'].g,
                 MODUI_VAR['theme'].b
             )
+        end
+        -- initialise
+        for _,  v in pairs(ns.skin) do
+            if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
+                v:SetVertexColor(
+                    MODUI_VAR['theme'].r,
+                    MODUI_VAR['theme'].g,
+                    MODUI_VAR['theme'].b
+                )
+            end
+        end
+        for _,  v in pairs(ns.skinb) do
+            if  v and v:GetBackdropBorderColor() then
+                v:SetBackdropBorderColor(
+                    MODUI_VAR['theme'].r,
+                    MODUI_VAR['theme'].g,
+                    MODUI_VAR['theme'].b
+                )
+            end
         end
     end
 

@@ -2,20 +2,27 @@
 
     local _, ns = ...
 
-    local AddZoom = function()
-        if not arg1 then return end
-        if arg1 > 0 and Minimap:GetZoom() < 5 then
+    local AddZoom = function(self, delta)
+        if delta > 0 and Minimap:GetZoom() < 5 then
             Minimap:SetZoom(Minimap:GetZoom() + 1)
-        elseif arg1 < 0 and Minimap:GetZoom() > 0 then
+        elseif delta < 0 and Minimap:GetZoom() > 0 then
             Minimap:SetZoom(Minimap:GetZoom() - 1)
         end
     end
 
-    local z = CreateFrame('Frame', nil, Minimap)
-    z:SetAllPoints()
-    z:EnableMouse(false)
-    z:EnableMouseWheel(true)
-    z:SetScript('OnMouseWheel', AddZoom)
+    Minimap:EnableMouseWheel(true)
+    Minimap:SetScript('OnMouseWheel', AddZoom)
+
+
+    for _, v in pairs(
+        {
+            MinimapZoomIn,
+            MinimapZoomOut
+        }
+    ) do
+        v:Hide()
+    end
+
 
     local t     = MiniMapTrackingButton or MiniMapTrackingFrame
     local time  = TimeManagerClockButton or GameTimeFrame
@@ -30,7 +37,7 @@
     end
 
     MiniMapMailFrame:ClearAllPoints()
-    MiniMapMailFrame:SetPoint('TOPRIGHT', Minimap, 2, -33)
+    MiniMapMailFrame:SetPoint('TOPRIGHT', Minimap, 4, -5)
 
     MinimapZoneText:ClearAllPoints()
     MinimapZoneText:SetPoint('TOP', Minimap, -2, 17)
@@ -40,8 +47,6 @@
             GameTimeFrame,
             MinimapBorderTop,
             MinimapToggleButton,
-            MinimapZoomIn,
-    	    MinimapZoomOut,
             MiniMapWorldMapButton,
         }
     ) do

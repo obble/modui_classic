@@ -2,45 +2,73 @@
 
 	local _, ns = ...
 
-	--  colour wheel for skin (default: dark?)
     --  toggle:
-    --      aura:
-    --          statusbars
-    --          numerics
-    --      chat:
+	--		enemy castbars
+	--      nameplate:
+	--          combo
+	--          totem
+	--			classcolours on friendlies
+
+	-- TODO:
     --      combat text (todo)
     --          formatting
     --          modifiers on strings
     --          style
     --          url
-    --      mainbar
-    --      one-bag
-    --      nameplate
-    --          castbar (nb: not working rn)
-    --          combo
-    --          totem
-    --      pvp (todo)
-    --      raid (todo)
-    --      tooltip
-    --      tracker for quest
-    --      unit frame (to finish):
-    --          display options
-    --          text numeric options
-    --          smooth bars (?)
-    --          class colour biz
+    --      pvp
+    --      raid
 
 	MODUI_VAR = {
 		['elements'] = {
+			all = true,
+			aura = {
+				enable 			= true,
+				statusbars 		= true,
+				values			= true,
+			},
+			chat = {
+				enable			= true,
+				events			= true,
+				style			= true,
+				url				= true,
+				sysmsg			= false, -- objective text goes in chat window
+			},
+			ecastbar = {
+				enable			= true,
+			},
+			error = {
+				enable			= false,
+				quick			= true,
+			},
+			mainbar = {
+				enable			= true,
+			},
+			nameplate = {
+				enable			= true,
+				aura			= true,
+				combo			= true,
+				friendlyclass 	= false,
+				totem			= true,
+			},
+			onebag = {
+				enable			= true,
+				greys			= true,
+			},
+			tooltip = {
+				enable			= true,
+			},
+			tracker = {
+				enable 			= true,
+			},
 			unit = {
-				enable 	= true,
-				player 	= true,
-				target 	= true,
-				party 	= true,
-				tot		= true,
-				pet 	= true,
-				--raid (tbd)
-				vcolour	= true,
-				rcolour = true,
+				enable 			= true,
+				player 			= true,
+				target 			= true,
+				party 			= true,
+				tot				= true,
+				pet 			= true,
+				vcolour			= true,
+				rcolour 		= true,
 			},
 		},
 		['statusbar'] = {

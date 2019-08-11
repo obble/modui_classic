@@ -1,7 +1,6 @@
 
 
     local _, ns = ...
-    local e = CreateFrame'Frame'
 
     local classifications = {
     	worldboss  = ' Boss',
@@ -114,12 +113,9 @@
         	local name, icon, count, dtype, duration, expiration, _, _, _, id = UnitAura(unit, index, filter)
         	if id then AddID(STAT_CATEGORY_SPELL, id) end
         end)
-
-        e:UnregisterAllEvents()
     end
 
-    --  format tooltip
-    GameTooltip:HookScript('OnTooltipSetUnit', function(self)
+    local AddContents = function(self)
     	local _, unit = self:GetUnit()
     	if not unit then return end
 
@@ -151,10 +147,18 @@
                 line:Hide()
             end
         end
-    end)
+    end
 
-    e:RegisterEvent'PLAYER_ENTERING_WORLD'
-    e:SetScript('OnEvent', AddIDHooks)
+    local OnEvent = function(self, event)
+        if  MODUI_VAR['elements']['tooltip'].enable then
+            AddIDHooks()
+            GameTooltip:HookScript('OnTooltipSetUnit', AddContents)
+        end
+    end
+
+    local e = CreateFrame'Frame'
+    e:RegisterEvent'PLAYER_LOGIN'
+    e:SetScript('OnEvent', OnEvent)
 
 
     --

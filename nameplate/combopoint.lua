@@ -100,20 +100,22 @@
     end
 
     local OnEvent = function(self, event, ...)
-        if event == 'NAME_PLATE_UNIT_ADDED' then
-            CreateComboFrame(...)
-            for _, plate in pairs(cp) do
-                UpdateMax(plate)
-            end
-        elseif event == 'PLAYER_TARGET_CHANGED' or event == 'UNIT_POWER_FREQUENT' then
-            for _, plate in pairs(cp) do
-                Update(plate)
-            end
-    	elseif event == 'UNIT_MAXPOWER' then
-            for _, plate in pairs(cp) do
-                UpdateMax(plate)
-            end
-    	end
+        if  MODUI_VAR['elements']['nameplate'].enable and MODUI_VAR['elements']['nameplate'].combo then
+            if event == 'NAME_PLATE_UNIT_ADDED' then
+                CreateComboFrame(...)
+                for _, plate in pairs(cp) do
+                    UpdateMax(plate)
+                end
+            elseif event == 'PLAYER_TARGET_CHANGED' or event == 'UNIT_POWER_FREQUENT' then
+                for _, plate in pairs(cp) do
+                    Update(plate)
+                end
+        	elseif event == 'UNIT_MAXPOWER' then
+                for _, plate in pairs(cp) do
+                    UpdateMax(plate)
+                end
+        	end
+        end
     end
 
     local e = CreateFrame'Frame'

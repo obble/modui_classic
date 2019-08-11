@@ -21,27 +21,27 @@
     	QuestLog_Update()
     end
 
-    local function SetHighlightColor(self)
+    local SetHighlightColor = function(self)
     	self.header:SetTextColor(1, .8, 0)
     	for _, t in ipairs(self.objective) do
     		t:SetTextColor(1, 1, 1)
     	end
     end
 
-    local function SetNormalColor(self)
+    local SetNormalColor = function(self)
     	self.header:SetTextColor(.75, .61, 0)
     	for _, t in ipairs(self.objective) do
     		t:SetTextColor(.8, .8, .8)
     	end
     end
 
-    local function OnEnter(self)
+    local OnEnter = function(self)
     	if  not self.completed then
     		SetHighlightColor(self)
     	end
     end
 
-    local function OnLeave(self)
+    local OnLeave = function(self)
     	SetNormalColor(self)
     end
 
@@ -91,7 +91,15 @@
         end
     end
 
-    hooksecurefunc('QuestWatch_Update', Update)
+    local OnEvent = function()
+        if  MODUI_VAR['elements']['tracker'].enable then
+            hooksecurefunc('QuestWatch_Update', Update)
+        end
+    end
+
+    local e = CreateFrame'Frame'
+    e:RegisterEvent'PLAYER_LOGIN'
+    e:SetScript('OnEvent', OnEvent)
 
     --
 
