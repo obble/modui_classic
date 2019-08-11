@@ -184,8 +184,11 @@
 
     local UpdateExhaustion = function()
         local xp, max = UnitXP'player', UnitXPMax'player'
-        local x = ((xp + GetXPExhaustion())/max)*MainMenuExpBar:GetWidth()
-        ExhaustionTick:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 0)
+        local threshold = GetXPExhaustion()
+        if  threshold then
+            local x = ((xp + threshold)/max)*MainMenuExpBar:GetWidth()
+            ExhaustionTick:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 0)
+        end
     end
 
     local UpdateXP = function()

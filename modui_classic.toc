@@ -15,6 +15,7 @@ core/colour.lua
 core/functions.lua
 core/text.lua
 core/skins.lua
+core/tables.lua
 
 #   ~insert templates
 templates.xml

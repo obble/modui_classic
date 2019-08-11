@@ -10,12 +10,13 @@
 	bank:SetPoint('BOTTOMRIGHT', bag, 'BOTTOMLEFT', -20, 0)
 	bank:SetFrameLevel(5)
 	bank:Hide()
+	for _, v in pairs({bank:GetRegions()}) do tinsert(ns.skin, v) end
 
 	bank.portrait = bank:CreateTexture(nil, 'BORDER', nil, 7)
 	bank.portrait:SetSize(64, 64)
 	bank.portrait:SetPoint('TOPLEFT', -8, 8)
 	bank.portrait:SetAlpha(1)
-	SetPortraitToTexture(bank.portrait, UnitFactionGroup'player' == 'Alliance' and [[Interface\ICONS\Garrison_goldchestalliance]] or [[Interface\ICONS\Garrison_goldchesthorde]])
+	SetPortraitToTexture(bank.portrait, [[Interface\ICONS\Inv_misc_coin_02]])
 
 	bank.name = CreateFrame('Button', nil, bank)
 	bank.name:SetPoint('TOPLEFT', 65, -5)
@@ -36,6 +37,7 @@
 	bank.bd.t:SetHorizTile(true)
 	bank.bd.t:SetVertTile(true)
 	bank.bd.t:SetVertexColor(.8, .8, .8)
+	tinsert(ns.skin, bank.bd.t)
 
 	bank.space = CreateFrame('StatusBar', nil, bank.bd)
 	ns.SB(bank.space)

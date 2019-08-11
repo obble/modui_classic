@@ -242,11 +242,18 @@
             for _, v in pairs({a, b, c, d, e, f}) do
                 tinsert(ns.skin, v)
             end
-            local a, b = AuctionDressUpFrame:GetRegions()
-            local _, _, _, c = AuctionDressUpFrameCloseButton:GetRegions()
-            for _, v in pairs({a, b, c}) do tinsert(ns.skin, v) end
+            local a, b = SideDressUpFrame:GetRegions()
+            for _, v in pairs({a, b}) do
+                tinsert(ns.skin, v)
+            end
+            local _, _, _, _, a = SideDressUpModelCloseButton:GetRegions()
+            tinsert(ns.skin, a)
             for i = 1, 15 do
                 local a = _G['AuctionFilterButton'..i]:GetNormalTexture()
+                tinsert(ns.skin, a)
+            end
+            for _, v in pairs({BidCloseButton, BidBidButton, BidBuyoutButton}) do
+                local a = v:GetRegions()
                 tinsert(ns.skin, a)
             end
         elseif addon == 'Blizzard_CraftUI' then

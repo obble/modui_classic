@@ -156,7 +156,7 @@
 
 		slot:UnregisterEvent'ITEM_PUSH'
 		slot:SetNormalTexture''
-		-- slot:SetCheckedTexture''
+		slot:SetCheckedTexture''
 		slot:SetHighlightTexture''
 		slot:SetParent(bag)
 		slot:SetSize(16, 12)
@@ -172,7 +172,7 @@
 		icon:SetTexCoord(.1, .9, .225, .775)
 
 		if  i == 0 then
-			slot:SetPoint('RIGHT', BagItemAutoSortButton, 'LEFT', -8, 0)
+			slot:SetPoint('RIGHT', iipbag.topstrip, 0, 3)
 		else
 			slot:SetPoint('RIGHT', _G['CharacterBag'..(i - 1)..'Slot'], 'LEFT', -9, 0)
 		end

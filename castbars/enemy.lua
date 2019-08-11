@@ -5,6 +5,8 @@
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
     -- if build > 1 then return end -- BfA dont need this
 
+    -- TODO: level check against parented unit UnitLevel for cast-time?
+
     local GUIDs             = {}
     local timer             = {}
     local frames            = {}
@@ -31,166 +33,19 @@
 
     local e = CreateFrame'Frame'
 
-    local channeledspells = {
-        -- MISC
-        [GetSpellInfo(746)] = 7,        -- First Aid
-        [GetSpellInfo(13278)] = 4,      -- Gnomish Death Ray
-        [GetSpellInfo(20577)] = 10,     -- Cannibalize
-
-        -- DRUID
-        [GetSpellInfo(17401)] = 9.5,    -- Hurricane
-        [GetSpellInfo(740)] = 9.5,      -- Tranquility
-
-        -- HUNTER
-        [GetSpellInfo(6197)] = 60,      -- Eagle Eye
-        --[GetSpellInfo(1002)] = 60,      -- Eyes of the Beast
-        --[GetSpellInfo(20900)] = 3,      -- Aimed Shot TODO: verify
-
-        -- MAGE
-        [GetSpellInfo(5143)] = 4.5,     -- Arcane Missiles
-        [GetSpellInfo(10)] = 7.5,       -- Blizzard
-        [GetSpellInfo(12051)] = 8,      -- Evocation
-
-        -- PRIEST
-        [GetSpellInfo(15407)] = 3,      -- Mind Flay
-        [GetSpellInfo(2096)] = 60,      -- Mind Vision
-        [GetSpellInfo(605)] = 3,        -- Mind Control
-
-        -- WARLOCK
-        [GetSpellInfo(689)] = 4.5,      -- Drain Life
-        [GetSpellInfo(5138)] = 4.5,     -- Drain Mana
-        [GetSpellInfo(1120)] = 14.5,    -- Drain Soul
-        [GetSpellInfo(5740)] = 7.5,     -- Rain of Fire
-        [GetSpellInfo(1949)] = 15,      -- Hellfire
-        [GetSpellInfo(755)] = 10,       -- Health Funnel
-    }
-
-    local castdecreases = {
-        -- WARLOCK
-        [1714] = 50,    -- Curse of Tongues Rank 1
-        [11719] = 60,   -- Curse of Tongues Rank 2
-
-        -- ROGUE
-        [5760] = 40,    -- Mind-Numbing Poison Rank 1
-        [8692] = 50,    -- Mind-Numbing Poison Rank 2
-        [25810] = 50,   -- Mind-Numbing Poison Rank 2 incorrect?
-        [11398] = 60,   -- Mind-Numbing Poison Rank 3
-
-        -- ITEMS
-        [17331] = 10,   -- Fang of the Crystal Spider
-    }
-
-    local talentdecreases = {
-        [GetSpellInfo(403)] = 1,        -- Lightning Bolt
-        [GetSpellInfo(421)] = 1,        -- Chain Lightning
-        [GetSpellInfo(6353)] = 2,       -- Soul Fire
-        [GetSpellInfo(116)] = .5,      -- Frostbolt
-        [GetSpellInfo(133)] = .5,      -- Fireball
-        [GetSpellInfo(686)] = .5,      -- Shadow Bolt
-        [GetSpellInfo(348)] = .5,      -- Immolate
-        [GetSpellInfo(331)] = .5,      -- Healing Wave
-        [GetSpellInfo(585)] = .5,      -- Smite
-        [GetSpellInfo(14914)] = .5,    -- Holy Fire
-        [GetSpellInfo(2054)] = .5,     -- Heal
-        [GetSpellInfo(25314)] = .5,    -- Greater Heal
-        [GetSpellInfo(8129)] = .5,     -- Mana Burn
-        [GetSpellInfo(5176)] = .5,     -- Wrath
-        [GetSpellInfo(2912)] = .5,     -- Starfire
-        [GetSpellInfo(5185)] = .5,     -- Healing Touch
-        [GetSpellInfo(2645)] = 2,       -- Ghost Wolf
-        [GetSpellInfo(691)] = 4,        -- Summon Felhunter
-        [GetSpellInfo(688)] = 4,        -- Summon Imp
-        [GetSpellInfo(697)] = 4,        -- Summon Voidwalker
-        [GetSpellInfo(712)] = 4,        -- Summon Succubus
-    }
-
-    local CC = {
-        [GetSpellInfo(5211)] = 1,       -- Bash
-        [GetSpellInfo(24394)] = 1,      -- Intimidation
-        [GetSpellInfo(853)] = 1,        -- Hammer of Justice
-        [GetSpellInfo(22703)] = 1,      -- Inferno Effect (Summon Infernal)
-        [GetSpellInfo(408)] = 1,        -- Kidney Shot
-        [GetSpellInfo(12809)] = 1,      -- Concussion Blow
-        [GetSpellInfo(20253)] = 1,      -- Intercept Stun
-        [GetSpellInfo(20549)] = 1,      -- War Stomp
-        [GetSpellInfo(2637)] = 1,       -- Hibernate
-        [GetSpellInfo(3355)] = 1,       -- Freezing Trap
-        [GetSpellInfo(19386)] = 1,      -- Wyvern Sting
-        [GetSpellInfo(118)] = 1,        -- Polymorph
-        [GetSpellInfo(28271)] = 1,      -- Polymorph: Turtle
-        [GetSpellInfo(28272)] = 1,      -- Polymorph: Pig
-        [GetSpellInfo(20066)] = 1,      -- Repentance
-        [GetSpellInfo(1776)] = 1,       -- Gouge
-        [GetSpellInfo(6770)] = 1,       -- Sap
-        [GetSpellInfo(1513)] = 1,       -- Scare Beast
-        [GetSpellInfo(8122)] = 1,       -- Psychic Scream
-        [GetSpellInfo(2094)] = 1,       -- Blind
-        [GetSpellInfo(5782)] = 1,       -- Fear
-        [GetSpellInfo(5484)] = 1,       -- Howl of Terror
-        [GetSpellInfo(6358)] = 1,       -- Seduction
-        [GetSpellInfo(5246)] = 1,       -- Intimidating Shout
-        [GetSpellInfo(6789)] = 1,       -- Death Coil
-        [GetSpellInfo(9005)] = 1,       -- Pounce
-        [GetSpellInfo(1833)] = 1,       -- Cheap Shot
-        [GetSpellInfo(16922)] = 1,      -- Improved Starfire
-        [GetSpellInfo(19410)] = 1,      -- Improved Concussive Shot
-        [GetSpellInfo(12355)] = 1,      -- Impact
-        [GetSpellInfo(20170)] = 1,      -- Seal of Justice Stun
-        [GetSpellInfo(15269)] = 1,      -- Blackout
-        [GetSpellInfo(18093)] = 1,      -- Pyroclasm
-        [GetSpellInfo(12798)] = 1,      -- Revenge Stun
-        [GetSpellInfo(5530)] = 1,       -- Mace Stun
-        [GetSpellInfo(19503)] = 1,      -- Scatter Shot
-        [GetSpellInfo(605)] = 1,        -- Mind Control
-        [GetSpellInfo(7922)] = 1,       -- Charge Stun
-        [GetSpellInfo(18469)] = 1,      -- Counterspell - Silenced
-        [GetSpellInfo(15487)] = 1,      -- Silence
-        [GetSpellInfo(18425)] = 1,      -- Kick - Silenced
-        [GetSpellInfo(24259)] = 1,      -- Spell Lock
-        [GetSpellInfo(18498)] = 1,      -- Shield Bash - Silenced
-
-        -- ITEMS
-        [GetSpellInfo(13327)] = 1,      -- Reckless Charge
-        [GetSpellInfo(1090)] = 1,       -- Sleep
-        [GetSpellInfo(5134)] = 1,       -- Flash Bomb Fear
-        [GetSpellInfo(19821)] = 1,      -- Arcane Bomb Silence
-        [GetSpellInfo(4068)] = 1,       -- Iron Grenade
-        [GetSpellInfo(19769)] = 1,      -- Thorium Grenade
-        [GetSpellInfo(13808)] = 1,      -- M73 Frag Grenade
-        [GetSpellInfo(4069)] = 1,       -- Big Iron Bomb
-        [GetSpellInfo(12543)] = 1,      -- Hi-Explosive Bomb
-        [GetSpellInfo(4064)] = 1,       -- Rough Copper Bomb
-        [GetSpellInfo(12421)] = 1,      -- Mithril Frag Bomb
-        [GetSpellInfo(19784)] = 1,      -- Dark Iron Bomb
-        [GetSpellInfo(4067)] = 1,       -- Big Bronze Bomb
-        [GetSpellInfo(4066)] = 1,       -- Small Bronze Bomb
-        [GetSpellInfo(4065)] = 1,       -- Large Copper Bomb
-        [GetSpellInfo(13237)] = 1,      -- Goblin Mortar
-        [GetSpellInfo(835)] = 1,        -- Tidal Charm
-        [GetSpellInfo(13181)] = 1,      -- Gnomish Mind Control Cap
-        [GetSpellInfo(12562)] = 1,      -- The Big One
-        [GetSpellInfo(15283)] = 1,      -- Stunning Blow (Weapon Proc)
-        [GetSpellInfo(56)] = 1,         -- Stun (Weapon Proc)
-        [GetSpellInfo(26108)] = 1,      -- Glimpse of Madness
-    }
-
     local InitializeNewFrame = function(frame)
-        -- Some of the points set by SmallCastingBarFrameTemplate doesn't
-        -- work well when user modify castbar size, so set our own points instead
         frame.Border:ClearAllPoints()
         frame.Icon:ClearAllPoints()
         frame.Text:ClearAllPoints()
         frame.Icon:SetPoint('LEFT', frame, -35, 0)
         frame.Text:SetPoint'CENTER'
-        frame.Flash:SetAlpha(0) -- we don't use this atm
+        frame.Flash:SetAlpha(0)
 
-        -- Clear any scripts inherited from frame template
         frame:SetScript('OnLoad', nil)
         frame:SetScript('OnEvent', nil)
         frame:SetScript('OnUpdate', nil)
         frame:SetScript('OnShow', nil)
 
-        -- Add cast countdown timer
         frame.Timer = frame:CreateFontString(nil, 'OVERLAY')
         frame.Timer:SetTextColor(1, 1, 1)
         frame.Timer:SetFontObject'SystemFont_Shadow_Small'
@@ -209,26 +64,27 @@
         local rows = parent.auraRows or 0
         if parent.haveToT or parent.haveElite then
             if  parent.buffsOnTop or rows <= 1 then
-                castbar:SetPoint('CENTER', TargetFrame, -18, -75)
+                castbar:SetPoint('CENTER', TargetFrame, -8, -75)
             else
-                castbar:SetPoint('CENTER', TargetFrame, -18, -100)
+                castbar:SetPoint('CENTER', TargetFrame, -8, -100)
             end
         else
             if  not parent.buffsOnTop and rows > 0 then
-                castbar:SetPoint('CENTER', TargetFrame, -18, -100)
+                castbar:SetPoint('CENTER', TargetFrame, -8, -100)
             else
-                castbar:SetPoint('CENTER', TargetFrame, -18, -50)
+                castbar:SetPoint('CENTER', TargetFrame, -8, -50)
             end
         end
     end
 
     local SetCastbarIconAndText = function(castbar, cast)
-        name = cast.rank and cast.name..' ('..cast.rank..')' or cast.name
+        --name = cast.rank and cast.name..' ('..cast.rank..')' or cast.name
+        name = cast.name
         -- Update text + icon if it has changed
         if  castbar.Text:GetText() ~= name then
             castbar.Icon:SetTexture(cast.icon)
             castbar.Text:SetText(name)
-            castbar.Timer:SetPoint('RIGHT', castbar, name:len() >= 19 and 20 or 6, 0)
+            castbar.Timer:SetPoint('RIGHT', castbar, 23, 0)
         end
     end
 
@@ -466,8 +322,10 @@
             end
         else -- normal pushback
             if  not cast.isChanneled then
-                cast.max = cast.max + .5
-                cast.endTime = cast.endTime + .5
+                cast.pushback = cast.pushback or 1
+                cast.max = cast.max + cast.pushback
+                cast.endTime = cast.endTime + cast.pushback
+                cast.pushback = max(cast.pushback - .2, .2)
             else
                 -- channels are reduced by 25%
                 cast.max = cast.max - (cast.max*25)/100
@@ -527,39 +385,49 @@
     end
 
     local COMBAT_LOG_EVENT_UNFILTERED = function()
-        local _, event, _, srcGUID, _, srcFlags, _, dstGUID,  _, dstFlags, _, spellid, name, _, _, _, _, resisted, blocked, absorbed = CombatLogGetCurrentEventInfo()
+        local _, event, _, srcGUID, _, srcFlags, _, dstGUID,  _, dstFlags, _, _, name, _, damage, _, resisted, blocked, absorbed = CombatLogGetCurrentEventInfo()
         if  event == 'SPELL_CAST_START' then
+            local  spellid = ns.cast[name]
+            if not spellid then return end -- nb: keep an eye on how this table loop affects performance
             local _, _, icon, time = GetSpellInfo(spellid)
             if not time or time == 0 then return end
 
-            if  talentdecreases[name] then
+            local talentdecrease = ns.talentdecrease[name]
+            if  talentdecrease then
                 if  bit.band(srcFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
-                    time = time - (talentdecreases[name]*1000)
+                    time = time - (talentdecrease*1000)
                 end
             end
 
             return StoreCast(srcGUID, name, icon, time, GetSpellSubtext(spellid))
         elseif event == 'SPELL_CAST_SUCCESS' then
-            local time = channeledspells[name]
-            if  time then
-                return StoreCast(srcGUID, name, GetSpellTexture(spellid), time*1000, nil, true)
+            -- channeled spells start here
+            local spell = ns.channelled[name]
+            if  spell then
+                return StoreCast(srcGUID, name, GetSpellTexture(spell[2]), spell[1]*1000, nil, true)
             end
             return DeleteCast(srcGUID)
         elseif event == 'SPELL_AURA_APPLIED' then
-            if  castdecreases[spellid] then
-                return CastPushback(dstGUID, castdecreases[spellid])
-            elseif CC[name] then
+            local decrease  = ns.decrease[name]
+            local increase  = ns.delay[name]
+            local cc        = ns.CC[name]
+            if  decrease then
+                return CastPushback(dstGUID, decrease)
+            elseif increase then
+                return CastPushback(dstGUID, increase, true)
+            elseif cc then
                 return DeleteCast(dstGUID)
             end
         elseif event == 'SPELL_AURA_REMOVED' then
-            if  channeledspells[name] then
+            local increase  = ns.delay[name]
+            if  ns.channelled[name] then
                 return DeleteCast(srcGUID)
-            elseif castdecreases[spellid] then
-                return CastPushback(dstGUID, castdecreases[spellid], true)
+            elseif increase then
+                return CastPushback(dstGUID, increase, true)
             end
         elseif event == 'SPELL_CAST_FAILED' then
             if  srcGUID == UnitGUID'player' then
-                if  not (CastingInfo or UnitCastingInfo)'player' then
+                if  not CastingInfo'player' then
                     return DeleteCast(srcGUID)
                 end
             else
