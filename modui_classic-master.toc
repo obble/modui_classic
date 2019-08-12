@@ -1,0 +1,74 @@
+## Interface: 11302
+## Title: mod ui
+## Author: modernist
+##SavedVariablesPerCharacter: MODUI_VAR
+## Notes: a ui
+
+#   ~load variables table prior to anything else
+core/var.lua
+
+#   ~colour modification (todo: put button skinning in here?)
+skin/skin.lua
+
+#   ~shared functions & overall UI biz
+core/colour.lua
+core/functions.lua
+core/text.lua
+core/skins.lua
+core/tables.lua
+
+#   ~insert templates
+templates.xml
+
+#   ~action bar and buttons
+actionbar/bars.lua
+
+#   ~buffs
+aura/aura.lua
+
+#   ~castbars for target and nameplates
+castbars/enemy.lua
+
+#   ~chat
+chat/chat.lua
+chat/cmd.lua
+chat/event.lua
+chat/tab.lua
+chat/url.lua
+
+#   ~one bag system
+bag/menu.lua
+bag/bag/bag.lua
+bag/button.lua
+bag/bank/bank.lua
+bag/tools/greys.lua
+bag/update.lua
+
+#   ~micromenu
+menu/menu.lua
+
+#   ~minimap
+minimap/minimap.lua
+
+#   ~nameplates
+nameplate/aura.lua
+nameplate/colour.lua
+nameplate/combopoint.lua
+nameplate/style.lua
+nameplate/totem.lua
+
+#   ~objective tracker
+quest/quest.lua
+
+#   ~tooltip
+tooltip/content.lua
+tooltip/layout.lua
+
+#   ~unitframes
+unit/unit.lua
+
+#   ~world map
+worldmap/worldmap.lua
+
+#   ~options
+options/options.lua

@@ -132,7 +132,7 @@
 			icon:SetTexCoord(.1, .9, .4, .6)
 
 			if  i == 0 then
-				slot:SetPoint('RIGHT', modbag.topstrip, 0, 3)
+				slot:SetPoint('RIGHT', bag.topstrip, 0, 3)
 			else
 				slot:SetPoint('RIGHT', _G['CharacterBag'..(i - 1)..'Slot'], 'LEFT', -9, 0)
 			end
@@ -143,7 +143,7 @@
 			slot:SetScript('OnLeave', function(self)
 				IterateForSparkle(self, false)
 			end)
-			
+
 			slot:SetScript('OnClick', nil)
 		end
 

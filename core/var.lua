@@ -2,13 +2,6 @@
 
 	local _, ns = ...
 
-    --  toggle:
-	--		enemy castbars
-	--      nameplate:
-	--          combo
-	--          totem
-	--			classcolours on friendlies
-
 	-- TODO:
     --      combat text (todo)
     --          formatting

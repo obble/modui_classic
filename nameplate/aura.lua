@@ -2,8 +2,6 @@
 
     local _, ns = ...
 
-
-
     local events = {
         'NAME_PLATE_UNIT_ADDED',
         'UNIT_AURA'

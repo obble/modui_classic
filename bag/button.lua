@@ -52,19 +52,23 @@
         end
     end
 
-    local ColourBankBorders = function(bu)
+    local ColourBankBorders = function(bu, name)
         local q = bu['IconQuestTexture']
         if  bu.bo then
             -- quest
             for i, v in pairs(bu.bo) do
-                if  q and q:IsShown() then
-                    bu.bo[i]:SetVertexColor(248/255, 98/255, 86/255)
-                -- uncommon+
-                elseif bu.quality and bu.quality > 1 and BAG_ITEM_QUALITY_COLORS[bu.quality] then
-                    local colour = BAG_ITEM_QUALITY_COLORS[bu.quality]
-                    bu.bo[i]:SetVertexColor(colour.r, colour.g, colour.b)
+                if name then
+                    if  q and q:IsShown() then
+                        bu.bo[i]:SetVertexColor(248/255, 98/255, 86/255)
+                    -- uncommon+
+                    elseif bu.quality and bu.quality > 1 and BAG_ITEM_QUALITY_COLORS[bu.quality] then
+                        local colour = BAG_ITEM_QUALITY_COLORS[bu.quality]
+                        bu.bo[i]:SetVertexColor(colour.r, colour.g, colour.b)
+                    else
+                        bu.bo[i]:SetVertexColor(1, 1, 1)
+                    end
                 else
-                    bu.bo[i]:SetVertexColor(1, 1, 1)
+                    bu.bo[i]:SetVertexColor(.2, .2, .2)
                 end
             end
         end
@@ -97,7 +101,7 @@
             bu.name, _, bu.quality = GetItemInfo(bu.ilink)
         end
 
-        ColourBankBorders(bu)
+        ColourBankBorders(bu, bu.name)
     end
 
     ns.AddButtonStyle = function(bu)

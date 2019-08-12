@@ -144,7 +144,7 @@
        menu.arrow:SetTexture[[Interface\MoneyFrame\Arrow-Right-Up]]
        menu.arrow:SetSize(16, 16)
        menu.arrow:SetTexCoord(1, 0, 0, 0, 1, 1, 0, 1)
-       menu.arrow:SetPoint('BOTTOM', menu, 'TOP', 0, 3)
+       menu.arrow:SetPoint('BOTTOM', menu, 'TOP', -1, 3)
 
        menu.mouseover = CreateFrame('Button', nil, menu)
        menu.mouseover:SetWidth(60)

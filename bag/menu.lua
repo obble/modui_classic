@@ -71,7 +71,7 @@
 		mask:SetPoint('TOPLEFT', -3, 3)
 		mask:SetPoint('BOTTOMRIGHT', 3, -3)
 
-		-- bu:GetCheckedTexture():SetTexture''
+		bu:GetCheckedTexture():SetTexture''
 
 		MainMenuBarBackpackButtonIconTexture:AddMaskTexture(mask)
 
