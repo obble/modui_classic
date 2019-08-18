@@ -8,7 +8,7 @@
 core/var.lua
 
 #   ~colour modification (todo: put button skinning in here?)
-skin/skin.lua
+theme/theme.lua
 
 #   ~shared functions & overall UI biz
 core/colour.lua

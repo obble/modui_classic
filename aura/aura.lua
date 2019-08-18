@@ -35,10 +35,10 @@
             direction       = '+',
             position        = {
                 'TOPRIGHT',
-                ObjectiveTrackerFrame,
+                Minimap,
                 'TOPLEFT',
-                -48,
-                -7,
+                -22,
+                -200,
             },
         },
         ['weapons|NA']      =   {
@@ -120,7 +120,6 @@
     	if  name then
     		self:SetNormalTexture(icon)
     		self.Count:SetText(count > 1 and count or '')
-
 
             self.debuff     = false
             self.duration   = duration
@@ -234,7 +233,7 @@
         RemoveBuffFrame()
         for i ,v in pairs(layout) do
             local unit, filter = i:match'(.-)|(.+)'
-            if unit then
+            if  unit then
                 AddHeader(unit, filter, v)
             end
         end

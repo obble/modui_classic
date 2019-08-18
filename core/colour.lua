@@ -6,12 +6,9 @@
 	local colour   = RAID_CLASS_COLORS[class]
 
 	local INTERNAL_CLASS_COLORS = {
-		['DEMONHUNTER'] = {r = 135/255, g = 044/255, b = 214/255, colorStr = 'ff872cd6'},
-		['DEATHKNIGHT'] = {r = 210/255, g = 020/255, b = 070/255, colorStr = 'ffd21446'},
 		['DRUID']       = {r = 255/255, g = 110/255, b = 063/255, colorStr = 'ffff6e3f'},
 		['HUNTER']      = {r = 140/255, g = 220/255, b = 105/255, colorStr = 'ff8cdc69'},
 		['MAGE']        = {r = 000/255, g = 194/255, b = 255/255, colorStr = 'ff00c2ff'},
-		['MONK']        = {r = 000/255, g = 255/255, b = 120/255, colorStr = 'ff00ff78'},
 		['PALADIN']     = {r = 255/255, g = 095/255, b = 168/255, colorStr = 'ffff5fa8'},
 		['PRIEST']      = {r = 255/255, g = 255/255, b = 255/255, colorStr = 'ffffffff'},
 		['ROGUE']       = {r = 255/255, g = 232/255, b = 000/255, colorStr = 'ffffe800'},
@@ -19,6 +16,8 @@
 		['WARLOCK']     = {r = 140/255, g = 118/255, b = 238/255, colorStr = 'ff8c76ee'},
 		['WARRIOR']     = {r = 214/255, g = 148/255, b = 110/255, colorStr = 'ffd6946e'}
 	}
+
+	RAID_CLASS_COLORS['SHAMAN'] = {r = 050/255, g = 111/255, b = 255/255, colorStr = 'ff326fff'}
 
 	local CUSTOM_FACTION_BAR_COLORS = {
 		[1] = {r = 1, g = .2, b = .2},	-- hated

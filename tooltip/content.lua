@@ -9,9 +9,48 @@
     	elite      = ' Elite',
     }
 
+    local tooltips = {
+        GameTooltip,
+        ItemRefTooltip
+    }
+
+    local FormatCurrency = function(amount)
+    	local gold   = floor(math.abs(amount) / 10000)
+    	local silver = mod(floor(math.abs(amount) / 100), 100)
+    	local copper = mod(floor(math.abs(amount)), 100)
+    	if  gold ~= 0 then
+    		return format('%s'..'|cffffd700'..GOLD_AMOUNT_SYMBOL..'|r'..' %s'..'|cffc7c7cfs|r'..' %s'..'|cffeda55fc|r', gold, silver, copper)
+    	elseif silver ~= 0 then
+    		return format('%s'..'|cffc7c7cf'..SILVER_AMOUNT_SYMBOL..'|r'..' %s'..'|cffeda55fc|r', silver, copper)
+    	else
+    		return format('%s'..'|cffeda55f'..COPPER_AMOUNT_SYMBOL..'|r', copper)
+    	end
+    end
+
     local AddID = function(type, id)
         GameTooltip:AddLine(string.format('%s '..ID..': |cffd083cd%s|r', type, id))
     	GameTooltip:Show()
+    end
+
+    local AddPrice = function(tooltip, count, id)
+        local _, item
+
+        if  id then
+    	    item = id
+        else
+            _, item = tooltip:GetItem()
+        end
+
+    	local _, _, _, _, _, _, _, _, _, _, price =  GetItemInfo(item)
+
+    	if  price and price > 0 then
+    		tooltip:AddDoubleLine(SELL_PRICE..': ', FormatCurrency(count and price*count or price), nil, nil, nil, 1, 1, 1)
+            -- tooltip:AddDoubleLine(SELL_PRICE..': ', GetCoinText(count and price*count or price), nil, nil, nil, 1, 1, 1)
+    	end
+
+    	if  tooltip:IsShown() then
+            tooltip:Show()
+        end
     end
 
     local UnitColours = function(unit)
@@ -83,7 +122,7 @@
         return classifications[UnitClassification(unit)] or ''
     end
 
-    local AddIDHooks = function(unit)
+    local AddHooks = function(unit)
         hooksecurefunc(GameTooltip, 'SetAction', function(self)
         	local _, _, id = self:GetSpell()
         	if id then
@@ -104,15 +143,107 @@
         	AddID(STAT_CATEGORY_SPELL, id)
         end)
 
-        hooksecurefunc(GameTooltip, 'SetBagItem', function(self, container, slot)
-        	local id = GetContainerItemID(container, slot)
-        	if id then AddID(HELPFRAME_ITEM_TITLE, id) end
+        hooksecurefunc(GameTooltip, 'SetUnitAura', function(self, unit, index, filter)
+            local name, icon, count, dtype, duration, expiration, _, _, _, id = UnitAura(unit, index, filter)
+            if id then AddID(STAT_CATEGORY_SPELL, id) end
         end)
 
-        hooksecurefunc(GameTooltip, 'SetUnitAura', function(self, unit, index, filter)
-        	local name, icon, count, dtype, duration, expiration, _, _, _, id = UnitAura(unit, index, filter)
-        	if id then AddID(STAT_CATEGORY_SPELL, id) end
-        end)
+        for _, v in pairs(tooltips) do
+            hooksecurefunc(v, 'SetAuctionItem', function(self, type, index)
+            	local _, _, count = GetAuctionItemInfo(type, index)
+            	AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetAuctionSellItem', function(self)
+            	local _, _, count = GetAuctionSellItemInfo()
+            	AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetBagItem', function(self, container, slot)
+            	local id = GetContainerItemID(container, slot)
+                local _, count = GetContainerItemInfo(container, slot)
+            	if id then AddID(HELPFRAME_ITEM_TITLE, id) end
+            	AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetCraftItem', function(self, skill, slot)
+                local count = 1
+                if slot then _, _, count = GetCraftReagentInfo(skill, slot) end
+            	AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetHyperLink', function(self, link, count)
+            	count = tonumber(count)
+            	if  not count or count < 1 then
+            		local owner = self:GetOwner()
+            		count = owner and tonumber(owner.count)
+            		if  not count or count < 1 then
+            			count = 1
+            		end
+            	end
+                AddPrice(self, count)
+            end
+
+            hooksecurefunc(v, 'SetIventoryItem', function(self, unit, slot)
+                if type(slot) ~= 'number' or slot < 0 then return end
+            	local count = 1
+            	if  slot < 20 or slot > 39 and slot < 68 then
+            		count = GetInventoryItemCount(unit, slot)
+            	end
+            	AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetLootItem', function(self, slot)
+                local _, _, count = GetLootSlotInfo(slot)
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetLootRollItem', function(self, id)
+                local _, _, count = GetLootRollItemInfo(id)
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetMerchantItem', function(self, slot)
+                local _, _, _, count = GetMerchantItemInfo(slot)
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetMerchantCostItem', function(self, index, item)
+                local _, count = GetMerchantItemCostItem(index, item)
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetQuestItem', function(self, type, slot)
+                local _, _, count = GetQuestItemInfo(type, slot)
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetQuestLogItem', function(self, _, index)
+                local _, _, count = GetQuestLogRewardInfo(index)
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetSendMailItem', index)
+            	local _, _, count = GetSendMailItem(index)
+                AddPrice(count)
+            end)
+
+            hooksecurefunc(v, 'SetTradePlayerItem', function(self, index)
+                local _, _, count = GetTradePlayerItemInfo(index)
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetTradeSkillItem', function(self, skill, slot)
+            	local count = 1
+            	if  slot then _, _, count = GetTradeSkillReagentInfo(skill, slot) end
+                AddPrice(self, count)
+            end)
+
+            hooksecurefunc(v, 'SetTradeTargetItem', function(self, index)
+            	local _, _, count = GetTradeTargetItemInfo(index)
+                AddPrice(self, count)
+            end)
+        end
     end
 
     local AddContents = function(self)
@@ -135,7 +266,7 @@
                 AddGuild(unit, line, Guild)
             end
             --  line 3:  level
-            if t:find(TOOLTIP_UNIT_LEVEL) then
+            if t:find(TOOLTIP_UNIT_LEVEL or 'Level %s') then
                 local classification = AddClassification(unit)
                 line:SetText(t..classification)
             end
@@ -151,7 +282,7 @@
 
     local OnEvent = function(self, event)
         if  MODUI_VAR['elements']['tooltip'].enable then
-            AddIDHooks()
+            AddHooks()
             GameTooltip:HookScript('OnTooltipSetUnit', AddContents)
         end
     end

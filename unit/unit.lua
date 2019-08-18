@@ -91,6 +91,20 @@
         end
     end
 
+    local AddPartyFrame = function()
+        for i = 1, 4 do
+            for _, v in pairs(
+                {
+                    _G['PartyMemberFrame'..i..'HealthBar'],
+                    _G['PartyMemberFrame'..i..'ManaBar']
+                }
+            ) do
+                ns.BD(v)
+                ns.SB(v)
+            end
+        end
+    end
+
     local AddHealthTextColour = function(t, statusbar)
         local min, max = statusbar:GetMinMaxValues()
         local v = statusbar:GetValue()

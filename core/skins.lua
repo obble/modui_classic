@@ -217,6 +217,10 @@
         bu.bo[4]:SetPoint('BOTTOMRIGHT', horiz or 6, -(vert or 7))
         bu.bo[4]:SetSize(x, y)
         bu.bo[4]:SetTexCoord(.82, 1, 0, 1)
+
+        for i = 1, 4 do
+            tinsert(ns.skinbu, bu.bo[i])
+        end
     end
 
     ns.BDStone = function(bu, x, path)

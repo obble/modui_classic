@@ -56,6 +56,22 @@
 		IterateForSparkle(self, false)
 	end
 
+	local ShowBags = function(self)
+        for i = 0, 3 do
+            local s = _G['CharacterBag'..i..'Slot']
+            s:SetAlpha(1)
+            s:EnableMouse(true)
+        end
+    end
+
+    local HideBags = function(self)
+        for i = 0, 3 do
+            local s = _G['CharacterBag'..i..'Slot']
+            s:SetAlpha(0)
+            s:EnableMouse(false)
+        end
+    end
+
 	local AddBag = function()
 		local bag = CreateFrame('Frame', 'modbag', UIParent, 'ButtonFrameTemplate')
 		bag:SetPoint('BOTTOMRIGHT', -27, 240)
@@ -110,6 +126,49 @@
 			v:SetShadowOffset(0, 0)
 		end
 
+		if  MODUI_VAR['elements']['mainbar'].enable then
+			for i = 0, 3 do
+				local slot = _G['CharacterBag'..i..'Slot']
+				local icon = _G['CharacterBag'..i..'SlotIconTexture']
+
+				slot:UnregisterEvent'ITEM_PUSH'
+				slot:SetNormalTexture''
+				slot:SetCheckedTexture''
+				slot:SetHighlightTexture''
+				slot:SetSize(16, 12)
+				slot:SetFrameStrata'MEDIUM'
+				slot:SetParent(bag.topstrip)
+				slot:ClearAllPoints()
+
+				ns.BD(slot)
+				ns.BDStone(slot, 5)
+
+				slot.IconBorder:SetAlpha(0)
+
+				icon:SetTexCoord(.1, .9, .4, .6)
+
+				if  i == 0 then
+					slot:SetPoint('RIGHT', bag.topstrip, 0, 3)
+				else
+					slot:SetPoint('RIGHT', _G['CharacterBag'..(i - 1)..'Slot'], 'LEFT', -9, 0)
+				end
+
+				slot:SetScript('OnEnter', function(self)
+					IterateForSparkle(self, true)
+				end)
+				slot:SetScript('OnLeave', function(self)
+					IterateForSparkle(self, false)
+				end)
+
+				slot:SetScript('OnClick', nil)
+			end
+		end
+
+		MainMenuBarBackpackButton:HookScript('OnEnter', OnEnter)
+		MainMenuBarBackpackButton:HookScript('OnLeave', OnLeave)
+	end
+
+	local AddBagSlots = function()
 		for i = 0, 3 do
 			local slot = _G['CharacterBag'..i..'Slot']
 			local icon = _G['CharacterBag'..i..'SlotIconTexture']
@@ -118,42 +177,71 @@
 			slot:SetNormalTexture''
 			slot:SetCheckedTexture''
 			slot:SetHighlightTexture''
-			slot:SetParent(bag)
-			slot:SetSize(16, 12)
+			slot:SetSize(16, 16)
 			slot:SetFrameStrata'MEDIUM'
-			slot:SetParent(bag.topstrip)
 			slot:ClearAllPoints()
 
-			ns.BD(slot)
-			ns.BDStone(slot, 5)
+			local mask = slot:CreateMaskTexture()
+	        mask:SetTexture[[Interface\Minimap\UI-Minimap-Background]]
+	        mask:SetPoint('TOPLEFT', -3, 3)
+	        mask:SetPoint('BOTTOMRIGHT', 3, -3)
+
+	        icon:AddMaskTexture(mask)
+
+	        if  not slot.bo then
+	            slot.bo = slot:CreateTexture(nil, 'OVERLAY')
+	            slot.bo:SetSize(36, 36)
+	            slot.bo:SetTexture[[Interface\Artifacts\Artifacts]]
+	            slot.bo:SetPoint'CENTER'
+	            slot.bo:SetTexCoord(.5, .58, .8775, .9575)
+	            slot.bo:SetDesaturated(1)
+	        end
 
 			slot.IconBorder:SetAlpha(0)
 
 			icon:SetTexCoord(.1, .9, .4, .6)
 
 			if  i == 0 then
-				slot:SetPoint('RIGHT', bag.topstrip, 0, 3)
+				slot:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', 0, 15)
 			else
-				slot:SetPoint('RIGHT', _G['CharacterBag'..(i - 1)..'Slot'], 'LEFT', -9, 0)
+				slot:SetPoint('BOTTOM', _G['CharacterBag'..(i - 1)..'Slot'], 'TOP', 0, 3)
 			end
 
 			slot:SetScript('OnEnter', function(self)
 				IterateForSparkle(self, true)
+				ShowBags()
 			end)
 			slot:SetScript('OnLeave', function(self)
 				IterateForSparkle(self, false)
+				HideBags()
 			end)
 
 			slot:SetScript('OnClick', nil)
 		end
 
-		MainMenuBarBackpackButton:HookScript('OnEnter', OnEnter)
-		MainMenuBarBackpackButton:HookScript('OnLeave', OnLeave)
+		local bu = MainMenuBarBackpackButton
+		bu.mouseover = CreateFrame('Button', nil, bu)
+		bu.mouseover:SetSize(30, 100)
+		bu.mouseover:SetPoint('BOTTOM', bu, 'TOP')
+		bu.mouseover:SetFrameLevel(10)
+		bu.mouseover:SetScript('OnEnter', ShowBags)
+		bu.mouseover:SetScript('OnLeave', HideBags)
+
+		bu:HookScript('OnEnter', function()
+			IterateForSparkle(self, true)
+			ShowBags()
+		end)
+		bu:HookScript('OnLeave', function(self)
+			IterateForSparkle(self, false)
+			HideBags()
+		end)
 	end
 
 	local OnEvent = function()
 		if  MODUI_VAR['elements']['onebag'].enable then
 			AddBag()
+		elseif  MODUI_VAR['elements']['mainbar'].enable then
+			AddBagSlots()
 		end
 	end
 

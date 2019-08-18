@@ -40,7 +40,7 @@
             MultiBarBottomRightButton7:SetPoint('BOTTOMLEFT', MultiBarBottomRightButton1, 'TOPLEFT', 0, 24)
 
             PetActionButton1:ClearAllPoints()
-            PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
+            PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, 8)
 
             MainMenuBarVehicleLeaveButton:ClearAllPoints()
             MainMenuBarVehicleLeaveButton:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', -5, 30)
@@ -114,7 +114,7 @@
 		local x = (xp/max)*MainMenuExpBar:GetWidth()
         local rest = GetRestState()
         UpdateExhaustion()
-        if _G['modui_mainbar'] then
+        if  _G['modui_mainbar'] then
     		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
             if  rest == 1 then
                 MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)
@@ -131,10 +131,15 @@
         if  not InCombatLockdown() then
             if  MultiBarBottomLeft:IsShown() then
                 PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
-                StanceButton1:SetPoint('LEFT', StanceBarFrame, 2, -4)
+
+                StanceButton1:ClearAllPoints()
+                StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, 8)
             else
+                PetActionButton1:ClearAllPoints()
                 PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 7)
-                StanceButton1:SetPoint('LEFT', StanceBarFrame, 12, -2)
+
+                StanceButton1:ClearAllPoints()
+                StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, 8)
             end
 
             if  MultiBarLeft:IsShown() then
@@ -209,6 +214,7 @@
                             bu:SetPoint('LEFT', ActionButton12, 'RIGHT', 46, 0)
                         end
                     end
+                    
                     if  i > 1 and (v ~= 'MultiBarLeft' or v ~= 'MultiBarRight') then
                         bu:ClearAllPoints()
                         -- pixel...
@@ -226,9 +232,9 @@
         for _, v in pairs(x) do
             for i = 1, 10 do
                 local bu = _G[v..'Button'..i]
-                if bu then
-                    ns.BU(bu, 0, true, bu:GetHeight() - 2, bu:GetWidth() - 2)
-                    ns.BUBorder(bu, 24)
+                if  bu then
+                    ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
+                    ns.BUBorder(bu)
                     ns.BUElements(bu)
                 end
             end
@@ -244,7 +250,9 @@
 
         for _, v in pairs(
             {
-                MultiBarBottomLeft
+                MultiBarBottomLeft,
+                PetActionBarFrame,
+                StanceBarFrame
             }
         ) do
             UIPARENT_MANAGED_FRAME_POSITIONS.v = nil

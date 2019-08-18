@@ -5,9 +5,10 @@
     local f = CreateFrame'Frame'
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
-    ns.colour = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
-    ns.skinb = {}
-    ns.skin = {
+    ns.colour   = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
+    ns.colou_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
+
+    ns.skin     = {
         MinimapBorder,
         MiniMapTrackingBorder,
         MiniMapMailBorder,
@@ -29,6 +30,8 @@
 
         _G['TargetFrameToTTextureFrameTexture'],
     }
+    ns.skinbu   = {}
+    ns.skinb    = {}
 
     -- 8.0?
     if  build > 1 then
@@ -373,14 +376,18 @@
   tinsert(ns.skin, QuestTimerHeader)
 
     -- colour picker
-    local ColourPicker = function(r, g, b, a, callback)
+    local ColourPicker = function(r, g, b, a, callback, theme)
         ColorPickerFrame:SetColorRGB(r, g, b)
         ColorPickerFrame.hasOpacity = false
         ColorPickerFrame.func = callback
         ColorPickerFrame:Hide()
-        ColorPickerFrame.modui = true
         ColorPickerFrame:Show()
         ColorPickerFrame:SetPoint'CENTER'
+        if  theme then
+            ColorPickerFrame.theme  = true
+        else
+            ColorPickerFrame.button = true
+        end
     end
 
     ColorPickerFrame.reset = CreateFrame('Button', 'ColorPickerFrameReset', ColorPickerFrame, 'GameMenuButtonTemplate')
@@ -398,7 +405,7 @@
             OpacitySliderFrame:Hide()
             self:SetWidth(305)
             end
-        if ColorPickerFrame.modui then
+        if ColorPickerFrame.theme then
             self:SetHeight(220)
             ColorPickerFrame.reset:Show()
         end
@@ -406,7 +413,8 @@
 
     ColorPickerFrame:SetScript('OnHide', function()
         ColorPickerFrame.reset:Hide()
-        ColorPickerFrame.modui = false
+        ColorPickerFrame.theme  = false
+        ColorPickerFrame.button = false
     end)
 
     ColorPickerFrame.reset:SetScript('OnClick', function()
@@ -494,13 +502,53 @@
            fontObject = Game13Font,
        },
        {
-           text = 'Toggle Elements',
-           icon = 'Interface\\PaperDollInfoFrame\\UI-EquipmentManager-Toggle',
+           text = 'Button Colour',
+           icon = 'Interface\\ICONS\\inv_misc_gem_variety_01',
            func = function()
-               _G['modui_elementsmenu']:Show()
-           end,
-           notCheckable = true,
-           fontObject = Game13Font,
+               ColourPicker(
+                   ns.colour_bu[1],
+                   ns.colour_bu[2],
+                   ns.colour_bu[3],
+                   1,
+                   function(colour, cancel)
+                      if  colour then
+                          if  cancel then
+                              ns.colour_bu[1] = MODUI_VAR['theme_bu'].r or 1,
+                              ns.colour_bu[2] = MODUI_VAR['theme'].g or 1,
+                              ns.colour_bu[3] = MODUI_VAR['theme'].b or 1
+                          else
+                              ns.colour_bu[1], ns.colour_bu[2], ns.colour_bu[3] = colour[1], colour[2], colour[3]
+                              MODUI_VAR['theme_bu'].r = colour[1]
+                              MODUI_VAR['theme_bu'].g = colour[2]
+                              MODUI_VAR['theme_bu'].b = colour[3]
+                          end
+                      else
+                          ns.colour_bu[1], ns.colour_bu[2], ns.colour_bu[3] = ColorPickerFrame:GetColorRGB()
+                          MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b = ColorPickerFrame:GetColorRGB()
+                      end
+                      for _,  v in pairs(ns.skinbu) do
+                          if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
+                              v:SetVertexColor(
+                                  ns.colour_bu[1],
+                                  ns.colour_bu[2],
+                                  ns.colour_bu[3]
+                              )
+                          end
+                      end
+                  end
+              )
+          end,
+          notCheckable = true,
+          fontObject = Game13Font,
+      },
+      {
+          text = 'Toggle Elements',
+          icon = 'Interface\\PaperDollInfoFrame\\UI-EquipmentManager-Toggle',
+          func = function()
+              _G['modui_elementsmenu']:Show()
+          end,
+          notCheckable = true,
+          fontObject = Game13Font,
        }
     }
 
@@ -537,18 +585,18 @@
         if  event == 'ADDON_LOADED' then
             ADDON_LOADED(self, event, addon)
         end
+
         if  not MODUI_VAR['theme'] then
             MODUI_VAR['theme'] = {r = 1, g = 1, b = 1}
         end
-        ns.colour = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b} -- update this
-        for _, v in pairs(ns.skin) do
-            v:SetVertexColor(
-                MODUI_VAR['theme'].r,
-                MODUI_VAR['theme'].g,
-                MODUI_VAR['theme'].b
-            )
+
+        if  not MODUI_VAR['theme_bu'] then
+            MODUI_VAR['theme_bu'] = {r = .9, g = .9, b = .9}
         end
-        -- initialise
+
+        ns.colour = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b} -- update this
+        ns.colour_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
+
         for _,  v in pairs(ns.skin) do
             if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
                 v:SetVertexColor(
@@ -564,6 +612,15 @@
                     MODUI_VAR['theme'].r,
                     MODUI_VAR['theme'].g,
                     MODUI_VAR['theme'].b
+                )
+            end
+        end
+        for _,  v in pairs(ns.skinbu) do
+            if  v then
+                v:SetVertexColor(
+                    MODUI_VAR['theme_bu'].r,
+                    MODUI_VAR['theme_bu'].g,
+                    MODUI_VAR['theme_bu'].b
                 )
             end
         end

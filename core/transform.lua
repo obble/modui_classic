@@ -10,7 +10,7 @@
 	local tip = CreateFrame('GAMETOOLTIP', 'modmount', nil, 'GameTooltipTemplate')
     tip:SetOwner(UIParent, 'ANCHOR_NONE')
 
-    local dismount = function()
+    local AddAutoDismount = function()
         for i = -1, 16 do
             local j = GetPlayerBuff(i)
             tip:ClearLines()
@@ -23,7 +23,7 @@
         end
     end
 
-    local fishing = function()
+    local AddAutoFishing = function()
         for bag = 0, NUM_BAG_SLOTS do
             for slot = 1, GetContainerNumSlots(bag) do
                 local link = GetContainerItemLink(bag, slot)
@@ -40,7 +40,7 @@
         end
     end
 
-    local shapeshift = function()
+    local AddAutoShapeshift = function()
         for i = 1, GetNumShapeshiftForms() do
             local _, name, active = GetShapeshiftFormInfo(i)
             if  active ~= nil then
@@ -50,22 +50,23 @@
         end
     end
 
-	local OnEvent = function(self, event, msg)
+	local OnEvent = function(self, event, t)
         if  event =='UI_ERROR_MESSAGE' then
-            if string.find(msg, 'mounted') or string.find(msg, 'while silenced') then
-                dismount()
-            elseif string.find(msg, 'Fishing Pole') then
-                fishing()
-            elseif string.find(msg, 'shapeshift') then
-                shapeshift()
+            if  string.find(t, 'mounted')
+			or  string.find(t, 'while silenced') then
+                AddAutoDismount()
+            elseif string.find(t, 'Fishing Pole') then
+                AddAutoFishing()
+            elseif string.find(t, 'shapeshift') then
+                AddAutoShapeshift()
             end
         else
             local _, g1 = GetGossipOptions()
-            if g1 == 'taxi' then dismount() end
+            if g1 == 'taxi' then AddAutoDismount() end
         end
     end
 
-    local e = CreateFrame'Frame'
+    local  e = CreateFrame'Frame'
 	for _, v in pairs(events) do e:RegisterEvent(v) end
     e:SetScript('OnEvent', OnEvent)
 
