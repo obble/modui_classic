@@ -42,7 +42,7 @@
             PlayerFrame.bg = PlayerFrame:CreateTexture()
             PlayerFrame.bg:SetPoint('TOPLEFT', PlayerFrameBackground)
             PlayerFrame.bg:SetPoint('BOTTOMRIGHT', PlayerFrameBackground, 0, 22)
-            PlayerFrame.bg:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
+            --PlayerFrame.bg:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
             PlayerFrame.bg:SetVertexColor(colour.r, colour.g, colour.b)
         end
 
@@ -130,7 +130,7 @@
 
         TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
 
-        TargetFrameNameBackground:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
+        --TargetFrameNameBackground:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
 
         TargetFrame.Elite = TargetFrameTextureFrame:CreateTexture(nil, 'BORDER')
         TargetFrame.Elite:SetTexture[[Interface\AddOns\modui_classic\art\unitframe\UI-TargetingFrame-Elite]]
@@ -314,16 +314,20 @@
     end
 
     local UpdateTargetNameClassColour = function()
+        --[[
         if  UnitIsPlayer'target' then
             local _, class  = UnitClass'target'
             local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
             TargetFrameNameBackground:SetVertexColor(colour.r, colour.g, colour.b)
         end
+        --]]
     end
 
     local UpdatePartyTextClassColour = function()
         for i = 1, MAX_PARTY_MEMBERS do
             local name = _G['PartyMemberFrame'..i..'Name']
+
+            --[[
             if  UnitIsPlayer('party'..i) then
                 local _, class  = UnitClass('party'..i)
                 local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
@@ -331,8 +335,9 @@
                     name:SetTextColor(colour.r, colour.g, colour.b)
                 end
             else
-                name:SetTextColor(1, .8, 0)
-            end
+            --]]
+
+            name:SetTextColor(1, .8, 0)
         end
     end
 
@@ -381,11 +386,7 @@
         local colour = RAID_CLASS_COLORS[class]
         local name   = UnitName'targettarget'
 
-        if  UnitIsPlayer'targettarget' then
-            TargetFrameToTTextureFrameName:SetTextColor(colour.r, colour.g, colour.b)
-        else
-            TargetFrameToTTextureFrameName:SetTextColor(1, .8, 0)
-        end
+        TargetFrameToTTextureFrameName:SetTextColor(1, .8, 0)
 
         TargetFrameToTTextureFrameName:ClearAllPoints()
         TargetFrameToTTextureFrameName:SetPoint('BOTTOMLEFT', TargetFrameToTTextureFrame, 49, 0)
