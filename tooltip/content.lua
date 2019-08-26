@@ -41,15 +41,17 @@
             _, item = tooltip:GetItem()
         end
 
-    	local _, _, _, _, _, _, _, _, _, _, price =  GetItemInfo(item)
+        if  item then
+        	local _, _, _, _, _, _, _, _, _, _, price = GetItemInfo(item)
 
-    	if  price and price > 0 then
-    		tooltip:AddDoubleLine(SELL_PRICE..': ', FormatCurrency(count and price*count or price), nil, nil, nil, 1, 1, 1)
-            -- tooltip:AddDoubleLine(SELL_PRICE..': ', GetCoinText(count and price*count or price), nil, nil, nil, 1, 1, 1)
-    	end
+        	if  price and price > 0 then
+        		tooltip:AddDoubleLine(SELL_PRICE..': ', FormatCurrency(count and price*count or price), nil, nil, nil, 1, 1, 1)
+                -- tooltip:AddDoubleLine(SELL_PRICE..': ', GetCoinText(count and price*count or price), nil, nil, nil, 1, 1, 1)
+        	end
 
-    	if  tooltip:IsShown() then
-            tooltip:Show()
+        	if  tooltip:IsShown() then
+                tooltip:Show()
+            end
         end
     end
 
