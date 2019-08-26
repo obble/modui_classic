@@ -1,6 +1,9 @@
 
     local _, ns = ...
 
+    -- local LCD = LibStub'LibClassicDurations'
+    -- LCD:Register'modui'
+
     local events = {
         'PLAYER_LOGIN',
         'GROUP_ROSTER_UPDATE',
@@ -135,6 +138,23 @@
         end
     end
 
+    local AddAuraDuration = function(self, unit, index, filter)
+        local name, _, _, _, duration, expiration, caster, _, _, spellid = UnitBuff(unit, index, filter)
+
+        local durationnew, expirationnew = LCD:GetAuraDurationByUnit(unit, spellid, caster, name)
+        if  duration == 0 and durationnew then
+            duration    = durationnew
+            expiration  = expirationnew
+        end
+
+        if  expiration and expiration ~= 0 then
+            local start = expiration - duration
+            CooldownFrame_Set(self.cooldown, start, duration, true)
+        else
+            CooldownFrame_Clear(self.cooldown)
+        end
+    end
+
     local UpdateTargetNameClassColour = function()
         if  UnitIsPlayer'target' then
             local _, class  = UnitClass'target'
@@ -239,6 +259,10 @@
         if  MODUI_VAR['elements']['unit'].target then
             UpdateTargetNameClassColour()
         end
+
+        --if  MODUI_VAR['elements']['unit'].auras then
+        --    hooksecurefunc('CompactUnitFrame_UtilSetBuff', AddAuraDuration)
+        --end
 
         if  MODUI_VAR['elements']['unit'].party then
             UpdatePartyTextClassColour()

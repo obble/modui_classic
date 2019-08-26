@@ -48,6 +48,13 @@
 				enable			= true,
 				greys			= true,
 			},
+			statusbar = {
+				health 			= {r = 0, g =  1, b =   0},
+				mana 			= {r = 0, g =  0, b =   1},
+				rage			= {r = 1, g =  0, b =   0},
+				focus			= {r = 1, g = .5, b = .25},
+				energy			= {r = 1, g =  1, b =   0},
+			},
 			tooltip = {
 				enable			= true,
 			},
@@ -61,6 +68,7 @@
 				party 			= true,
 				tot				= true,
 				pet 			= true,
+				auras			= true,
 				vcolour			= true,
 				rcolour 		= true,
 			},

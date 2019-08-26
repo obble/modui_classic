@@ -172,7 +172,7 @@
             	AddPrice(self, count)
             end)
 
-            hooksecurefunc(v, 'SetHyperLink', function(self, link, count)
+            --[[hooksecurefunc(v, 'SetHyperLink', function(self, link, count)
             	count = tonumber(count)
             	if  not count or count < 1 then
             		local owner = self:GetOwner()
@@ -182,16 +182,16 @@
             		end
             	end
                 AddPrice(self, count)
-            end
+            end)]]
 
-            hooksecurefunc(v, 'SetIventoryItem', function(self, unit, slot)
+            --[[hooksecurefunc(v, 'SetIventoryItem', function(self, unit, slot)
                 if type(slot) ~= 'number' or slot < 0 then return end
             	local count = 1
             	if  slot < 20 or slot > 39 and slot < 68 then
             		count = GetInventoryItemCount(unit, slot)
             	end
             	AddPrice(self, count)
-            end)
+            end)]]
 
             hooksecurefunc(v, 'SetLootItem', function(self, slot)
                 local _, _, count = GetLootSlotInfo(slot)
@@ -223,7 +223,7 @@
                 AddPrice(self, count)
             end)
 
-            hooksecurefunc(v, 'SetSendMailItem', index)
+            hooksecurefunc(v, 'SetSendMailItem', function(index)
             	local _, _, count = GetSendMailItem(index)
                 AddPrice(count)
             end)

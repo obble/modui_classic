@@ -513,9 +513,9 @@
                    function(colour, cancel)
                       if  colour then
                           if  cancel then
-                              ns.colour_bu[1] = MODUI_VAR['theme_bu'].r or 1,
-                              ns.colour_bu[2] = MODUI_VAR['theme'].g or 1,
-                              ns.colour_bu[3] = MODUI_VAR['theme'].b or 1
+                              ns.colour_bu[1] = MODUI_VAR['theme_bu'].r or 1
+                              ns.colour_bu[2] = MODUI_VAR['theme_bu'].g or 1
+                              ns.colour_bu[3] = MODUI_VAR['theme_bu'].b or 1
                           else
                               ns.colour_bu[1], ns.colour_bu[2], ns.colour_bu[3] = colour[1], colour[2], colour[3]
                               MODUI_VAR['theme_bu'].r = colour[1]

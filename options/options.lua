@@ -168,6 +168,17 @@
             true
         )
         add(
+            'Cast Spells on Button Down',
+            function(self)
+                MODUI_VAR['elements']['mainbar'].keypress = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['mainbar'].keypress and true or false,
+            1, .8, 0,
+            nil,
+            true
+        )
+        add(
             'Aura',
             function(self)
                 MODUI_VAR['elements']['aura'].enable = self:GetChecked() and true or false
@@ -175,8 +186,8 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton3'],
-                        _G['modui_checkbutton4']
+                        _G['modui_checkbutton4'],
+                        _G['modui_checkbutton5']
                     }
                 )
             end,
@@ -213,9 +224,9 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton6'],
                         _G['modui_checkbutton7'],
                         _G['modui_checkbutton8'],
+                        _G['modui_checkbutton9'],
                     }
                 )
             end,
@@ -298,10 +309,10 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton13'],
                         _G['modui_checkbutton14'],
                         _G['modui_checkbutton15'],
                         _G['modui_checkbutton16'],
+                        _G['modui_checkbutton17'],
                     }
                 )
             end,
@@ -383,13 +394,14 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton20'],
                         _G['modui_checkbutton21'],
                         _G['modui_checkbutton22'],
                         _G['modui_checkbutton23'],
                         _G['modui_checkbutton24'],
                         _G['modui_checkbutton25'],
                         _G['modui_checkbutton26'],
+                        _G['modui_checkbutton27'],
+                        _G['modui_checkbutton28'],
                     }
                 )
             end,
@@ -449,6 +461,17 @@
                 ShowReload()
             end,
              MODUI_VAR['elements']['unit'].pet and true or false,
+            1, 1, 1,
+            true,
+            MODUI_VAR['elements']['unit'].enable and true or false
+        )
+        add(
+            'Cooldowns on Auras',
+            function(self)
+                MODUI_VAR['elements']['unit'].auras = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['unit'].auras and true or false,
             1, 1, 1,
             true,
             MODUI_VAR['elements']['unit'].enable and true or false

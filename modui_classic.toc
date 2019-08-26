@@ -10,6 +10,14 @@ core/var.lua
 #   ~colour modification (todo: put button skinning in here?)
 theme/theme.lua
 
+#   ~libraries
+#libraries/LibStub/LibStub.lua
+#libraries/CallbackHandler-1.0/CallbackHandler-1.0.lua
+#libraries/LibClassicDuration/core.lua
+#libraries/LibClassicDuration/classAbilities.lua
+#libraries/LibClassicDuration/diminishingReturns.lua
+#libraries/LibClassicDuration/npcAbilities.lua
+
 #   ~shared functions & overall UI biz
 core/colour.lua
 core/functions.lua

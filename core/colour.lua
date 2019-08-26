@@ -17,8 +17,6 @@
 		['WARRIOR']     = {r = 214/255, g = 148/255, b = 110/255, colorStr = 'ffd6946e'}
 	}
 
-	RAID_CLASS_COLORS['SHAMAN'] = {r = 050/255, g = 111/255, b = 255/255, colorStr = 'ff326fff'}
-
 	local CUSTOM_FACTION_BAR_COLORS = {
 		[1] = {r = 1, g = .2, b = .2},	-- hated
 		[2] = {r = 1, g = .2, b = .2},	-- hostile
@@ -29,6 +27,32 @@
 		[7]	= {r = .3, g = 1, b = .4},	-- revered
 		[8]	= {r = .3, g = 1, b = .5},	-- exalted
 	}
+
+	local AddPowerColour = function()
+		PowerBarColor['MANA'] 	= {
+			r = MODUI_VAR['elements']['statusbar']['mana'].r or 0,
+			g = MODUI_VAR['elements']['statusbar']['mana'].g or 0,
+			b = MODUI_VAR['elements']['statusbar']['mana'].b or 1,
+		}
+		PowerBarColor['RAGE'] 	= {
+			r = MODUI_VAR['elements']['statusbar']['rage'].r or 1,
+			g = MODUI_VAR['elements']['statusbar']['rage'].g or 0,
+			b = MODUI_VAR['elements']['statusbar']['rage'].b or 0,
+			fullPowerAnim = true
+		}
+		PowerBarColor['FOCUS'] 	= {
+			r = MODUI_VAR['elements']['statusbar']['focus'].r or 1,
+			g = MODUI_VAR['elements']['statusbar']['focus'].g or .5,
+			b = MODUI_VAR['elements']['statusbar']['focus'].b or .25,
+			fullPowerAnim = true
+		}
+		PowerBarColor['ENERGY'] = {
+			r = MODUI_VAR['elements']['statusbar']['energy'].r or 1,
+			g = MODUI_VAR['elements']['statusbar']['energy'].g or 1,
+			b = MODUI_VAR['elements']['statusbar']['energy'].b or 0,
+			fullPowerAnim = true
+		}
+	end
 
     ns.CLASS_COLOUR = function(f, a)
         if  f:GetObjectType() == 'StatusBar' then
@@ -80,5 +104,13 @@
 
 	ns.INTERNAL_CLASS_COLORS 		= INTERNAL_CLASS_COLORS
 	ns.CUSTOM_FACTION_BAR_COLORS 	= CUSTOM_FACTION_BAR_COLORS
+
+	local OnEvent = function(self, event, ...)
+		AddPowerColour()
+	end
+
+	local e = CreateFrame'Frame'
+	e:RegisterEvent'ADDON_LOADED'
+	e:SetScript('OnEvent', OnEvent)
 
 	--

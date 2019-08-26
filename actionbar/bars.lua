@@ -130,6 +130,7 @@
         UpdateWatchbar()
         if  not InCombatLockdown() then
             if  MultiBarBottomLeft:IsShown() then
+                PetActionButton1:ClearAllPoints()
                 PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
 
                 StanceButton1:ClearAllPoints()
@@ -214,7 +215,7 @@
                             bu:SetPoint('LEFT', ActionButton12, 'RIGHT', 46, 0)
                         end
                     end
-                    
+
                     if  i > 1 and (v ~= 'MultiBarLeft' or v ~= 'MultiBarRight') then
                         bu:ClearAllPoints()
                         -- pixel...

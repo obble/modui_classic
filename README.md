@@ -6,6 +6,9 @@ modui for Classic WoW
 ![UI:options](https://i.imgur.com/e3VtOsZ.png)
 ======
 
+#### Stable Versions ####
+https://www.wowinterface.com/downloads/info25114-modui.html
+
 #### Elements ####
 - Actionbar: BfA-style small mainbar with compact menus & bags.
 - Bag: one-bag inventory and bank.
