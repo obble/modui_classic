@@ -75,7 +75,7 @@
 
 	local AddBag = function()
 		local bag = CreateFrame('Frame', 'modbag', UIParent, 'ButtonFrameTemplate')
-		bag:SetPoint('BOTTOMRIGHT', -27, 240)
+		bag:SetPoint('BOTTOMRIGHT', -120, 150)
 		bag:SetFrameLevel(3)
 		bag:Hide()
 		for _, v in pairs({bag:GetRegions()}) do tinsert(ns.skin, v) end
@@ -132,18 +132,29 @@
 	end
 
 	local AddSlots = function()
-		if  MODUI_VAR['elements']['mainbar'].enable and MODUI_VAR['elements']['onebag'].enable then
-			for i = 0, 3 do
-				local bag = _G['modbag']
-				local slot = _G['CharacterBag'..i..'Slot']
-				local icon = _G['CharacterBag'..i..'SlotIconTexture']
+		for i = 0, 3 do
+			local bag = _G['modbag']
+			local slot = _G['CharacterBag'..i..'Slot']
+			local icon = _G['CharacterBag'..i..'SlotIconTexture']
 
+			slot:SetScript('OnEnter', function(self)
+				IterateForSparkle(self, true)
+			end)
+
+			slot:SetScript('OnLeave', function(self)
+				IterateForSparkle(self, false)
+			end)
+
+			if  MODUI_VAR['elements']['onebag'].enable then
+				slot:SetScript('OnClick', nil)
+			end
+
+			if  MODUI_VAR['elements']['mainbar'].enable then
 				slot:UnregisterEvent'ITEM_PUSH'
 				slot:SetNormalTexture''
 				slot:SetCheckedTexture''
 				slot:SetHighlightTexture''
 				slot:SetFrameStrata'MEDIUM'
-				slot:SetParent(bag.topstrip)
 				slot:ClearAllPoints()
 
 				ns.BD(slot)
@@ -151,90 +162,25 @@
 
 				slot.IconBorder:SetAlpha(0)
 
-				if  i == 0 then
-					slot:SetPoint('RIGHT', bag.topstrip, 0, 3)
+				slot:SetParent(MODUI_VAR['elements']['onebag'].enable and bag.topstrip or ContainerFrame1)
+				if MODUI_VAR['elements']['onebag'].enable then
+					if  i == 0 then
+						slot:SetPoint('RIGHT', bag.topstrip, 0, 3)
+					else
+						slot:SetPoint('RIGHT', _G['CharacterBag'..(i - 1)..'Slot'], 'LEFT', -9, 0)
+					end
 				else
-					slot:SetPoint('RIGHT', _G['CharacterBag'..(i - 1)..'Slot'], 'LEFT', -9, 0)
+					if MODUI_VAR['elements']['mainbar'].enable then
+						slot:SetSize(18, 12)
+					end
+					slot:SetParent(ContainerFrame1)
+					if  i == 0 then
+						slot:SetPoint('TOPRIGHT', ContainerFrame1, -20, -32)
+					else
+						slot:SetPoint('RIGHT', _G['CharacterBag'..(i - 1)..'Slot'], 'LEFT', -9, 0)
+					end
 				end
-
-				slot:SetScript('OnEnter', function(self)
-					IterateForSparkle(self, true)
-				end)
-				slot:SetScript('OnLeave', function(self)
-					IterateForSparkle(self, false)
-				end)
-
-				slot:SetScript('OnClick', nil)
 			end
-		end
-
-		if MODUI_VAR['elements']['mainbar'].enable and not MODUI_VAR['elements']['onebag'].enable then
-			for i = 0, 3 do
-				local slot = _G['CharacterBag'..i..'Slot']
-				local icon = _G['CharacterBag'..i..'SlotIconTexture']
-
-				slot:UnregisterEvent'ITEM_PUSH'
-				slot:SetNormalTexture''
-				slot:SetCheckedTexture''
-				slot:SetHighlightTexture''
-				slot:SetSize(16, 16)
-				slot:SetFrameStrata'MEDIUM'
-				slot:ClearAllPoints()
-
-				local mask = slot:CreateMaskTexture()
-		        mask:SetTexture[[Interface\Minimap\UI-Minimap-Background]]
-		        mask:SetPoint('TOPLEFT', -3, 3)
-		        mask:SetPoint('BOTTOMRIGHT', 3, -3)
-
-		        icon:AddMaskTexture(mask)
-
-		        if  not slot.bo then
-		            slot.bo = slot:CreateTexture(nil, 'OVERLAY')
-		            slot.bo:SetSize(36, 36)
-		            slot.bo:SetTexture[[Interface\Artifacts\Artifacts]]
-		            slot.bo:SetPoint'CENTER'
-		            slot.bo:SetTexCoord(.5, .58, .8775, .9575)
-		            slot.bo:SetDesaturated(1)
-		        end
-
-				slot.IconBorder:SetAlpha(0)
-
-				icon:SetTexCoord(.1, .9, .4, .6)
-
-				if  i == 0 then
-					slot:SetPoint('BOTTOM', MainMenuBarBackpackButton, 'TOP', 0, 15)
-				else
-					slot:SetPoint('BOTTOM', _G['CharacterBag'..(i - 1)..'Slot'], 'TOP', 0, 3)
-				end
-
-				slot:SetScript('OnEnter', function()
-					IterateForSparkle(slot, true)
-					ShowBags()
-				end)
-				slot:SetScript('OnLeave', function()
-					IterateForSparkle(slot, false)
-					HideBags()
-				end)
-
-				slot:SetScript('OnClick', nil)
-			end
-
-			local bu = MainMenuBarBackpackButton
-			bu.mouseover = CreateFrame('Button', nil, bu)
-			bu.mouseover:SetSize(30, 100)
-			bu.mouseover:SetPoint('BOTTOM', bu, 'TOP')
-			bu.mouseover:SetFrameLevel(10)
-			bu.mouseover:SetScript('OnEnter', ShowBags)
-			bu.mouseover:SetScript('OnLeave', HideBags)
-
-			bu:HookScript('OnEnter', function()
-				IterateForSparkle(self, true)
-				ShowBags()
-			end)
-			bu:HookScript('OnLeave', function(self)
-				IterateForSparkle(self, false)
-				HideBags()
-			end)
 		end
 	end
 

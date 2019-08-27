@@ -206,13 +206,13 @@
 	end
 
 	local FixSlots = function(bag)
-		if  MODUI_VAR['elements']['mainbar'].enable then
-			for i = 0, 3 do
-				local bu = _G['CharacterBag'..i..'Slot']
-				local icon = _G['CharacterBag'..i..'SlotIconTexture']
+		for i = 0, 3 do
+			local bu = _G['CharacterBag'..i..'Slot']
+			local icon = _G['CharacterBag'..i..'SlotIconTexture']
+			if  MODUI_VAR['elements']['mainbar'].enable then
 				bu:SetSize(18, 12)
 				icon:SetTexCoord(.1, .9, .2, .8)
-		    end
+			end
 		end
 	end
 
