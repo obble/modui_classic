@@ -26,6 +26,13 @@
         PartyMemberFrame3PetFrameTexture,
         PartyMemberFrame4PetFrameTexture,
 
+        StanceBarLeft,
+        StanceBarMiddle,
+        StanceBarRight,
+
+        SlidingActionBarTexture0,
+        SlidingActionBarTexture1,
+
         CastingBarFrame.Border,
 
         _G['TargetFrameToTTextureFrameTexture'],

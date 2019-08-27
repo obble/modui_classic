@@ -34,8 +34,6 @@
 
     		SlidingActionBarTexture0:SetPoint('TOPLEFT', PetActionBarFrame, 1, -5)
 
-            StanceBarLeft:SetPoint('BOTTOMLEFT', StanceBarFrame, 0, -5)
-
             MultiBarBottomRightButton7:ClearAllPoints()
             MultiBarBottomRightButton7:SetPoint('BOTTOMLEFT', MultiBarBottomRightButton1, 'TOPLEFT', 0, 24)
 
@@ -130,17 +128,29 @@
         UpdateWatchbar()
         if  not InCombatLockdown() then
             if  MultiBarBottomLeft:IsShown() then
+                SlidingActionBarTexture0:ClearAllPoints()
+                SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
+
                 PetActionButton1:ClearAllPoints()
-                PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 4)
+                PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
+
+                StanceBarLeft:ClearAllPoints()
+                StanceBarLeft:SetPoint('BOTTOMLEFT', StanceButton1, -14, -2)
 
                 StanceButton1:ClearAllPoints()
                 StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, 8)
             else
+                SlidingActionBarTexture0:ClearAllPoints()
+                SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
+                
                 PetActionButton1:ClearAllPoints()
-                PetActionButton1:SetPoint('TOP', PetActionBarFrame, 'LEFT', 51, 7)
+                PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
+
+                StanceBarLeft:ClearAllPoints()
+                StanceBarLeft:SetPoint('BOTTOMLEFT', StanceButton1, -14, -2)
 
                 StanceButton1:ClearAllPoints()
-                StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, 8)
+                StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
             end
 
             if  MultiBarLeft:IsShown() then

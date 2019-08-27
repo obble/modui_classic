@@ -20,18 +20,18 @@
         bar.border:SetSize(258, 33)
         bar.border:SetPoint('TOPLEFT', PlayerFrame, 'TOPLEFT', 100, -62)
 
-        bar.border.t:CreateTexture(nil, 'BACKGROUND')
+        bar.border.t = bar.border:CreateTexture(nil, 'BACKGROUND')
         bar.border.t:SetAllPoints(bar.border)
-        bar.border.t:SetTexture[[Interface\Addons\modui\art\unitframe\border.blp]]
+        bar.border.t:SetTexture[[Interface\AddOns\modui_classic\art\unitframe\border]]
         tinsert(ns.skin, bar.border.t)
 
         bar.background = CreateFrame('Frame', nil, PlayerFrame)
         bar.background:SetSize(258, 33)
         bar.background:SetPoint('TOPLEFT', PlayerFrame, 'TOPLEFT', 100, -62)
 
-        bar.background.t:CreateTexture(nil, 'BACKGROUND')
+        bar.background.t = bar.background:CreateTexture(nil, 'BACKGROUND')
         bar.background.t:SetAllPoints(bar.background)
-        bar.background.t:SetTexture[[Interface\Addons\modui\art\unitframe\background.blp]]
+        bar.background.t:SetTexture[[Interface\AddOns\modui_classic\art\unitframe\background]]
         tinsert(ns.skin, bar.background.t)
     end
 
@@ -41,21 +41,22 @@
     end
 
     local ToggleDruidBar = function(self)
+        local _, class = UnitClass'player'
         local form = GetShapeshiftForm()
-        if  form == 1 or form == 3 then
+        self:Hide()
+        self.border:Hide()
+        self.background:Hide()
+        if  class == 'DRUID' and (form == 1 or form == 3) then
             self:Show()
             self.border:Show()
             self.background:Show()
-        else
-            self:Hide()
-            self.border:Hide()
-            self.background:Hide()
         end
     end
 
     local OnEvent = function(self, event, ...)
         if  event == 'PLAYER_LOGIN' then
             AddDruidBar()
+            ToggleDruidBar(_G['modui_druidbar'])
         elseif event == 'UNIT_POWER_UPDATE' then
             local bar = _G['modui_druidbar']
             if bar then UpdatePower(bar) end
@@ -63,7 +64,7 @@
             local bar = _G['modui_druidbar']
             if bar then ToggleDruidBar(bar) end
         end
-    end)
+    end
 
     local  e = CreateFrame'Frame'
     for _, v in pairs(events) do e:RegisterEvent(v) end
