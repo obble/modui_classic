@@ -142,7 +142,7 @@
             else
                 SlidingActionBarTexture0:ClearAllPoints()
                 SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
-                
+
                 PetActionButton1:ClearAllPoints()
                 PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
 
@@ -151,16 +151,6 @@
 
                 StanceButton1:ClearAllPoints()
                 StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
-            end
-
-            if  MultiBarLeft:IsShown() then
-                MultiBarLeft:SetScale(.795)
-                MultiBarRight:SetScale(.795)
-                MultiBarRightButton1:SetPoint('TOPRIGHT', MultiBarRight, -2, 534)
-            else
-                MultiBarLeft:SetScale(1)
-                MultiBarRight:SetScale(1)
-                MultiBarRightButton1:SetPoint('TOPRIGHT', MultiBarRight, -2, 64)
             end
         end
     end
@@ -226,14 +216,18 @@
                         end
                     end
 
-                    if  i > 1 and (v ~= 'MultiBarLeft' or v ~= 'MultiBarRight') then
+                    if  i > 1 then
                         bu:ClearAllPoints()
                         -- pixel...
-                        bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
-                        -- PERFECTION!
-                        if  i == 7 and v == 'MultiBarBottomRight' then
-                            bu:ClearAllPoints()
-                            bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 17)
+                        if  v == 'MultiBarLeft' or v == 'MultiBarRight' then
+                            bu:SetPoint('TOP', _G[v..'Button'..(i - 1)], 'BOTTOM', 0, -8.5)
+                        else
+                            bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
+                            -- PERFECTION!
+                            if  i == 7 and v == 'MultiBarBottomRight' then
+                                bu:ClearAllPoints()
+                                bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 17)
+                            end
                         end
                     end
                 end

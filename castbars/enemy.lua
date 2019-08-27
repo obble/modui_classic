@@ -104,6 +104,9 @@
             castbar.IconBorder:SetAllPoints(castbar.Icon)
             ns.BD(castbar.IconBorder)
             ns.BUBorder(castbar.IconBorder, 18)
+            for _, v in pairs({castbar.IconBorder:GetRegions()}) do
+                tinsert(ns.skinbu, v)
+            end
             castbar.Icon:SetParent(castbar.IconBorder)
         end
 
@@ -111,6 +114,7 @@
         castbar.Timer:SetFont(FONT_REGULAR, 9)
 
         castbar.Border:SetAlpha(1)
+        tinsert(ns.skinbu, castbar.Border)
 
         if  castbar.BorderFrame then -- unneccesary?
             castbar.BorderFrame:SetAlpha(0)
