@@ -72,6 +72,9 @@ quest/quest.lua
 tooltip/content.lua
 tooltip/layout.lua
 
+#   talents
+talents/talents.lua
+
 #   ~unitframes
 unit/unit.lua
 

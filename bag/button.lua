@@ -41,9 +41,9 @@
                         -- uncommon+ quality
                     elseif rarity and rarity >= 2 and BAG_ITEM_QUALITY_COLORS[rarity] then
                         local colour = BAG_ITEM_QUALITY_COLORS[rarity]
-                        bu.bo[i]:SetVertexColor(colour.r, colour.g, colour.b)
+                        bu.bo[i]:SetVertexColor(colour.r*1.5, colour.g*1.5, colour.b*1.5)
                     else
-                        bu.bo[i]:SetVertexColor(1, 1, 1)
+                        bu.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r or 1, MODUI_VAR['theme_bu'].g or 1, MODUI_VAR['theme_bu'].b or 1)
                     end
                 else
                     bu.bo[i]:SetVertexColor(.2, .2, .2)
@@ -142,7 +142,6 @@
             local bu = _G['CharacterBag'..i..'Slot']
             ns.BU(bu)
             ns.BUElements(bu)
-            bu:SetSize(18, 12)
         end
     end
 

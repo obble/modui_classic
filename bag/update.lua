@@ -205,6 +205,17 @@
 		col, row = 0, 0
 	end
 
+	local FixSlots = function(bag)
+		if  MODUI_VAR['elements']['mainbar'].enable then
+			for i = 0, 3 do
+				local bu = _G['CharacterBag'..i..'Slot']
+				local icon = _G['CharacterBag'..i..'SlotIconTexture']
+				bu:SetSize(18, 12)
+				icon:SetTexCoord(.1, .9, .2, .8)
+		    end
+		end
+	end
+
 	local ReAnchor = function()
 		local bag = _G['modbag']
 		wipe(buttons)
@@ -220,6 +231,7 @@
 			ns.ColourUpdate(_G[con])
 		end
 		MoveButtons(buttons, bag)
+		FixSlots(bag)
 		bag:Show()
 	end
 

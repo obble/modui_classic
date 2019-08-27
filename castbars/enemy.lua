@@ -365,6 +365,8 @@
 
     local PLAYER_TARGET_CHANGED = function()
         GUIDs.target = UnitGUID'target' or nil
+        local castbar = GetCastbarFrame'target'
+        if castbar then castbar:Hide() end
         StopCast('target', true)
         StartCast(GUIDs.target, 'target')
     end
