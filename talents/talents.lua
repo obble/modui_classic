@@ -89,6 +89,7 @@
 
             bu[i] = CreateFrame('Button', 'TalentFrameTalent'..i..'sparkle', talent, 'AutoCastShineTemplate')
     		bu[i]:RegisterForClicks'NONE'
+            bu[i]:EnableMouse(false)
     		bu[i]:SetAllPoints()
             bu[i]:Hide()
         end

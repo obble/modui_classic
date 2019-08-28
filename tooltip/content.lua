@@ -13,20 +13,7 @@
         GameTooltip,
         ItemRefTooltip
     }
-
-    local FormatCurrency = function(amount)
-    	local gold   = floor(math.abs(amount) / 10000)
-    	local silver = mod(floor(math.abs(amount) / 100), 100)
-    	local copper = mod(floor(math.abs(amount)), 100)
-    	if  gold ~= 0 then
-    		return format('%s'..'|cffffd700'..GOLD_AMOUNT_SYMBOL..'|r'..' %s'..'|cffc7c7cfs|r'..' %s'..'|cffeda55fc|r', gold, silver, copper)
-    	elseif silver ~= 0 then
-    		return format('%s'..'|cffc7c7cf'..SILVER_AMOUNT_SYMBOL..'|r'..' %s'..'|cffeda55fc|r', silver, copper)
-    	else
-    		return format('%s'..'|cffeda55f'..COPPER_AMOUNT_SYMBOL..'|r', copper)
-    	end
-    end
-
+    
     local AddID = function(type, id)
         GameTooltip:AddLine(string.format('%s '..ID..': |cffd083cd%s|r', type, id))
     	GameTooltip:Show()
@@ -45,8 +32,7 @@
         	local _, _, _, _, _, _, _, _, _, _, price = GetItemInfo(item)
 
         	if  price and price > 0 then
-        		tooltip:AddDoubleLine(SELL_PRICE..': ', FormatCurrency(count and price*count or price), nil, nil, nil, 1, 1, 1)
-                -- tooltip:AddDoubleLine(SELL_PRICE..': ', GetCoinText(count and price*count or price), nil, nil, nil, 1, 1, 1)
+        		tooltip:AddDoubleLine(SELL_PRICE..': ', GetCoinText(count and price*count or price), nil, nil, nil, 1, 1, 1)
         	end
 
         	if  tooltip:IsShown() then

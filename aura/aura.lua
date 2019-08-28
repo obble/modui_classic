@@ -35,10 +35,10 @@
             direction       = '+',
             position        = {
                 'TOPRIGHT',
-                Minimap,
+                QuestWatchFrame,
                 'TOPLEFT',
-                -22,
-                -200,
+                -25,
+                -20,
             },
         },
         ['weapons|NA']      =   {
