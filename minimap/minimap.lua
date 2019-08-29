@@ -29,7 +29,7 @@
 
     t:SetFrameStrata'MEDIUM'
     t:ClearAllPoints()
-    t:SetPoint('TOPRIGHT', Minimap)
+    t:SetPoint('BOTTOMRIGHT', Minimap)
 
     if  MiniMapTracking then
         MiniMapTracking:ClearAllPoints()

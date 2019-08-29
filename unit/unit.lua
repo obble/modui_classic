@@ -134,6 +134,10 @@
             local bu = _G['TargetFrameBuff'..i]
             if  bu and not bu.bo then
                 ns.BUBorder(bu, 18, 18, 3, 4)
+                for j = 1, 4 do
+                    tinsert(ns.skinbu, bu.bo[j])
+                    bu.bo[j]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+                end
             end
         end
     end
@@ -196,21 +200,26 @@
         end
      end
 
-     local CheckClassification = function()
-         local classification = UnitClassification'target'
+     local CheckClassification = function(self)
 
-         -- this is wigging out for some reason at the minute (unitclassification?) and i cant figure out why :()
+         local classification = UnitClassification(self.unit)
 
-         --TargetFrame.borderTexture:SetTexture[[Interface\TargetingFrame\UI-TargetingFrame]]
+         for _, v in pairs(
+            {
+                self.Elite,
+                self.Rare
+            }
+        ) do
+            v:Hide()
+        end
 
-         TargetFrame.Elite:Hide()
-         TargetFrame.Rare:Hide()
+         self.borderTexture:SetTexture[[Interface\TargetingFrame\UI-TargetingFrame]]
 
-         --[[if  classification == 'worldboss' or classification == 'elite' then
-             TargetFrame.Elite:Show()
-         elseif c == 'rare' then
-             TargetFrame.Rare:Show()
-         end]]
+         if  classification == 'worldboss' or classification == 'elite' or classification == 'rareelite' then
+             self.Elite:Show()
+         elseif classification == 'rare' then
+             self.Rare:Show()
+         end
     end
 
     local UpdateToT = function(self, elapsed)
@@ -246,7 +255,7 @@
             end
 
             if  MODUI_VAR['elements']['unit'].rcolour then
-                CheckClassification()
+                hooksecurefunc('TargetFrame_CheckClassification', CheckClassification)
             end
 
             if  MODUI_VAR['elements']['unit'].vcolour then

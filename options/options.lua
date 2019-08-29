@@ -322,7 +322,7 @@
             true
         )
         add(
-            'Show Auras on Nameplates (Note: offline)',
+            'Show Auras on Nameplates',
             function(self)
                 MODUI_VAR['elements']['nameplate'].aura = self:GetChecked() and true or false
                 ShowReload()
@@ -330,7 +330,7 @@
             MODUI_VAR['elements']['nameplate'].aura and true or false,
             1, 1, 1,
             true,
-            false
+            true
         )
         add(
             'Show Combo Points on Nameplate',
