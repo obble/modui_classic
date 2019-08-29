@@ -18,10 +18,10 @@
             direction       = '+',
             position        = {
                 'TOPRIGHT',
-                TemporaryEnchantFrame,
+                Minimap,
                 'TOPLEFT',
-                -12,
-                -2,
+                -100,
+                -8,
             },
         },
         ['player|HARMFUL']  = {
@@ -53,7 +53,7 @@
         },
     }
 
-    local AbbrevTime = function(time)
+    local AbbrevTime = function(bu, time)
         local h, m, s, text
         if  time <= 0 then
             text = ''
@@ -88,7 +88,7 @@
     	if  self.expiration then
     		self.expiration = max(self.expiration - elapsed, 0)
             if  MODUI_VAR['elements']['aura'].values then
-                self:SetText(self.expiration > 0 and AbbrevTime(self.expiration) or '')
+                self:SetText(self.expiration > 0 and AbbrevTime(self, self.expiration) or '')
             else
                 self:SetFormattedText(SecondsToTimeAbbrev(self.expiration))
             end
@@ -97,16 +97,12 @@
     end
 
     local UpdateTempEnchant = function(...)
-        local RETURNS_PER_ITEM = 4
-        local i = 0
-        local n = select('#', ...)/RETURNS_PER_ITEM
-        for j = n, 1, -1 do
-            local enchant, expiration, charges = select(RETURNS_PER_ITEM*(j - 1) + 1, ...)
+        for i = 1, BuffFrame.numEnchants do
+            local enchant, expiration, charges = select(i, ...)
             if  enchant then
-                i = i + 1
                 local bu = _G['TempEnchant'..i]
                 if  MODUI_VAR['elements']['aura'].values then
-                    bu.duration:SetText(expiration > 0 and AbbrevTime(expiration/1000) or '')
+                    bu.duration:SetText(expiration > 0 and AbbrevTime(bu, expiration/1000) or '')
                 else
                     bu.duration:SetFormattedText(SecondsToTimeAbbrev(expiration/1000))
                 end
@@ -219,7 +215,7 @@
     local AddHeader = function(unit, filter, attribute)
         local Header = CreateFrame('Frame', 'modauras'..filter, Minimap, 'SecureAuraHeaderTemplate')
         Header:SetAttribute('template',         'modauraTemplate')
-        Header:SetAttribute('weaponTemplate',   'modauraTemplate')
+        --Header:SetAttribute('weaponTemplate',   'modauraTemplate')
         Header:SetAttribute('unit',             unit)
         Header:SetAttribute('filter',           filter)
         Header:SetAttribute('includeWeapons',   0)
@@ -256,7 +252,7 @@
 
     local AddTemporaryEnchant = function()
         TemporaryEnchantFrame:ClearAllPoints()
-        TemporaryEnchantFrame:SetPoint('TOPRIGHT', Minimap, 'TOPLEFT', -30, -8)
+        TemporaryEnchantFrame:SetPoint('TOPRIGHT', Minimap, 'TOPLEFT', -10, -7)
 
         hooksecurefunc('TemporaryEnchantFrame_Update', UpdateTempEnchant)
 
@@ -265,12 +261,12 @@
             local icon = _G['TempEnchant'..i..'Icon']
             local duration = _G['TempEnchant'..i..'Duration']
             local border = _G['TempEnchant'..i..'Border']
-            local colour = {border:GetVertexColor()}
 
             icon:SetTexCoord(.1, .9, .1, .9)
-            duration:SetPoint('TOP', bu, 'BOTTOM', 0, -6)
 
             ns.BUBorder(bu, 20, 20, 5, 5)
+
+            duration:SetPoint('TOP', bu, 'BOTTOM', 0, -6)
 
             border:Hide()
         end
