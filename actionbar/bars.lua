@@ -48,9 +48,6 @@
     local SetBarLength = function(shorten)
         local bar = _G['modui_mainbar']
 
-        MainMenuBarLeftEndCap:Hide()
-        MainMenuBarRightEndCap:Hide()
-
         ActionBarUpButton:ClearAllPoints()
         ActionBarUpButton:SetPoint('LEFT', ActionButton12, 'RIGHT', -1, 10)
 
@@ -122,42 +119,32 @@
         end
     end
 
+    local UpdatePetBar = function()
+        SlidingActionBarTexture0:ClearAllPoints()
+        SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
+
+        PetActionBarFrame:ClearAllPoints()
+        PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+
+        PetActionButton1:ClearAllPoints()
+        PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+    end
+
+    local UpdateStanceBar = function()
+        StanceBarLeft:ClearAllPoints()
+        StanceBarLeft:SetPoint('BOTTOMLEFT', StanceButton1, -14, -2)
+
+        StanceButton1:ClearAllPoints()
+        StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+    end
+
     local UpdateBars = function()
         SetBarLength(MultiBar2_IsVisible() and true or false)
         UpdateXP()
         UpdateWatchbar()
         if  not InCombatLockdown() then
-            if  MultiBarBottomLeft:IsShown() then
-                SlidingActionBarTexture0:ClearAllPoints()
-                SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
-
-                PetActionBarFrame:ClearAllPoints()
-                PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
-
-                PetActionButton1:ClearAllPoints()
-                PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
-
-                StanceBarLeft:ClearAllPoints()
-                StanceBarLeft:SetPoint('BOTTOMLEFT', StanceButton1, -14, -2)
-
-                StanceButton1:ClearAllPoints()
-                StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, 8)
-            else
-                SlidingActionBarTexture0:ClearAllPoints()
-                SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
-
-                PetActionBarFrame:ClearAllPoints()
-                PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
-
-                PetActionButton1:ClearAllPoints()
-                PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
-
-                StanceBarLeft:ClearAllPoints()
-                StanceBarLeft:SetPoint('BOTTOMLEFT', StanceButton1, -14, -2)
-
-                StanceButton1:ClearAllPoints()
-                StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
-            end
+            UpdatePetBar()
+            UpdateStanceBar()
         end
     end
 
@@ -278,14 +265,24 @@
             {
                 MultiBarBottomLeft,
                 PetActionBarFrame,
-                StanceBarFrame
+                StanceBarFrame,
             }
         ) do
             UIPARENT_MANAGED_FRAME_POSITIONS.v = nil
         end
 
+        for _, v in pairs(
+            {
+                MainMenuBarLeftEndCap,
+                MainMenuBarRightEndCap,
+            }
+        ) do
+            v:Hide()
+        end
+
         hooksecurefunc('MultiActionBar_Update', MoveBars)
         hooksecurefunc('ActionBarController_UpdateAll', UpdateBars)
+        hooksecurefunc('ShowPetActionBar', UpdatePetBar)
     end
 
     local OnEvent = function(self, event)

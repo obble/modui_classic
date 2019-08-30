@@ -19,7 +19,11 @@
 			<OnEnter>
 				local i = self:GetAttribute'index'
 				GameTooltip:SetOwner(self, 'ANCHOR_BOTTOMLEFT')
-				GameTooltip:SetUnitAura(self.unit, i, self.filter)
+				if  self:GetAttribute'index' then
+					GameTooltip:SetUnitAura(SecureButton_GetUnit(self:GetParent()), self:GetID(), self.filter)
+				elseif self:GetAttribute'target-slot' then
+					GameTooltip:SetInventoryItem('player', self:GetID())
+				end
 			</OnEnter>
 			<OnLeave function='GameTooltip_Hide'/>
 		</Scripts>

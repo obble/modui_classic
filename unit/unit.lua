@@ -1,8 +1,8 @@
 
     local _, ns = ...
 
-    -- local LCD = LibStub'LibClassicDurations'
-    -- LCD:Register'modui'
+    local LCD = LibStub'LibClassicDurations'
+    LCD:Register'modui'
 
     local events = {
         'PLAYER_LOGIN',
@@ -45,8 +45,31 @@
         PlayerPVPIcon:SetSize(48, 48)
         PlayerPVPIcon:ClearAllPoints()
         PlayerPVPIcon:SetPoint('CENTER', PlayerFrame, 'LEFT', 60, 16)
+
+        CastingBarFrame.Icon:SetSize(16, 16)
+        CastingBarFrame.Icon:ClearAllPoints()
+        CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
+        CastingBarFrame.Icon:SetTexCoord(.1, .9, .1, .9)
+
+        CastingBarFrame.IconF = CreateFrame('Frame', nil, CastingBarFrame)
+        CastingBarFrame.IconF:SetAllPoints(CastingBarFrame.Icon)
+        ns.BD(CastingBarFrame.IconF)
+        ns.BUBorder(CastingBarFrame.IconF, 18)
+        for i = 1, 4 do
+            tinsert(ns.skinbu, CastingBarFrame.IconF.bo[i])
+            CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+        end
+        CastingBarFrame.IconF:Hide()
+        CastingBarFrame.Icon:SetParent(CastingBarFrame.IconF)
     end
 
+    local UpdateCastingBarIcon = function(self)
+        if  self.Spark.offsetY < 1 then
+            self.IconF:Show()
+        else
+            self.IconF:Hide()
+        end
+    end
 
     local AddTargetFrame = function()
         for _, v in pairs(
@@ -243,6 +266,7 @@
         if  event == 'PLAYER_LOGIN' then
             if  MODUI_VAR['elements']['unit'].player then
                 AddPlayerFrame()
+                CastingBarFrame:HookScript('OnShow', UpdateCastingBarIcon)
             end
 
             if  MODUI_VAR['elements']['unit'].target then
@@ -269,9 +293,9 @@
             UpdateTargetNameClassColour()
         end
 
-        --if  MODUI_VAR['elements']['unit'].auras then
-        --    hooksecurefunc('CompactUnitFrame_UtilSetBuff', AddAuraDuration)
-        --end
+        if  MODUI_VAR['elements']['unit'].auras then
+            hooksecurefunc('CompactUnitFrame_UtilSetBuff', AddAuraDuration)
+        end
 
         if  MODUI_VAR['elements']['unit'].party then
             UpdatePartyTextClassColour()

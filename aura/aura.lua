@@ -20,7 +20,7 @@
                 'TOPRIGHT',
                 Minimap,
                 'TOPLEFT',
-                -100,
+                -35,
                 -8,
             },
         },
@@ -92,25 +92,15 @@
             else
                 self:SetFormattedText(SecondsToTimeAbbrev(self.expiration))
             end
-            UpdateSB(self, self.duration, self.expiration)
-    	end
-    end
-
-    local UpdateTempEnchant = function(...)
-        for i = 1, BuffFrame.numEnchants do
-            local enchant, expiration, charges = select(i, ...)
-            if  enchant then
-                local bu = _G['TempEnchant'..i]
-                if  MODUI_VAR['elements']['aura'].values then
-                    bu.duration:SetText(expiration > 0 and AbbrevTime(bu, expiration/1000) or '')
-                else
-                    bu.duration:SetFormattedText(SecondsToTimeAbbrev(expiration/1000))
-                end
+            if  self.duration then
+                UpdateSB(self, self.duration, self.expiration)
+            end
+            if  self.enchant then
                 for k = 1, 4 do
-                    bu.bo[k]:SetVertexColor(1, 0, .7)
+                    self.F.bo[k]:SetVertexColor(.6, 0, 1)
                 end
             end
-        end
+    	end
     end
 
     local FormatDebuffs = function(self, name, dtype)
@@ -131,8 +121,7 @@
         end
     end
 
-    local OnAttributeChanged = function(self, attribute, index)
-    	if attribute ~= 'index' then return end
+    local UpdateAura = function(self, index, filter)
         local header = self:GetParent()
         local unit, filter = header:GetAttribute'unit', header:GetAttribute'filter'
         local name, icon, count, dtype, duration, expiration = UnitAura(unit, index, filter)
@@ -155,8 +144,44 @@
     	end
     end
 
+    local UpdateTempEnchant = function(self, index)
+        local enchant = (index == 16 and 2) or 6
+    	local expiration = select(enchant, GetWeaponEnchantInfo())
+        local duration = expiration/1e3
+    	local icon = GetInventoryItemTexture('player', index)
+
+    	if  expiration then
+    		self.expiration = expiration/1000
+    		self.enchant = enchant
+            self.duration = duration
+
+            if  self.expiration and duration and duration > 0 then
+                self.sb:SetMinMaxValues(0, duration)
+            end
+    	else
+    		self.expiration = nil
+    		self.enchant = nil
+            self.duration = nil
+    	end
+
+        self:SetAlpha(icon and 1 or 0)
+
+    	if  icon then
+            self:SetNormalTexture(icon)
+        end
+    end
+
+    local OnAttributeChanged = function(self, attribute, index)
+    	if  attribute == 'index' then
+            UpdateAura(self, index, filter)
+        elseif attribute == 'target-slot' then
+            UpdateTempEnchant(self, index)
+        end
+    end
+
     local AddButton = function(self, name, bu)
-    	if  name:match'^child' then
+        --print(name)
+    	if  name:match'^child' or name:find'tempenchant' then
         	bu:SetScript('OnUpdate',            OnUpdate)
             bu:SetScript('OnAttributeChanged',  OnAttributeChanged)
 
@@ -215,13 +240,15 @@
     local AddHeader = function(unit, filter, attribute)
         local Header = CreateFrame('Frame', 'modauras'..filter, Minimap, 'SecureAuraHeaderTemplate')
         Header:SetAttribute('template',         'modauraTemplate')
-        --Header:SetAttribute('weaponTemplate',   'modauraTemplate')
         Header:SetAttribute('unit',             unit)
         Header:SetAttribute('filter',           filter)
-        Header:SetAttribute('includeWeapons',   0)
         Header:SetAttribute('xOffset',          attribute.x)
         Header:SetPoint(unpack(attribute.position))
 
+        if  filter == 'HELPFUL' then
+            Header:SetAttribute('weaponTemplate',   'modauraTemplate')
+            Header:SetAttribute('includeWeapons', 1)
+        end
 
         Header:SetAttribute('sortDirection',    attribute.direction)
         Header:SetAttribute('sortMethod',       attribute.sort)
@@ -242,7 +269,8 @@
     local RemoveBuffFrame = function()
         for _, v in pairs(
             {
-                BuffFrame
+                BuffFrame,
+                TemporaryEnchantFrame
             }
         ) do
             v:UnregisterAllEvents()
@@ -250,32 +278,9 @@
         end
     end
 
-    local AddTemporaryEnchant = function()
-        TemporaryEnchantFrame:ClearAllPoints()
-        TemporaryEnchantFrame:SetPoint('TOPRIGHT', Minimap, 'TOPLEFT', -10, -7)
-
-        hooksecurefunc('TemporaryEnchantFrame_Update', UpdateTempEnchant)
-
-        for i = 1, 2 do
-            local bu = _G['TempEnchant'..i]
-            local icon = _G['TempEnchant'..i..'Icon']
-            local duration = _G['TempEnchant'..i..'Duration']
-            local border = _G['TempEnchant'..i..'Border']
-
-            icon:SetTexCoord(.1, .9, .1, .9)
-
-            ns.BUBorder(bu, 20, 20, 5, 5)
-
-            duration:SetPoint('TOP', bu, 'BOTTOM', 0, -6)
-
-            border:Hide()
-        end
-    end
-
     local AddHeader = function()
         if not MODUI_VAR['elements']['aura'].enable then return end
         RemoveBuffFrame()
-        AddTemporaryEnchant()
         for i ,v in pairs(layout) do
             local unit, filter = i:match'(.-)|(.+)'
             if  unit then

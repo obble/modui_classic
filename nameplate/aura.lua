@@ -81,8 +81,12 @@
                 for j = 1, 4 do
                     plate.aura[i].bo[j]:SetVertexColor(colour.r*1.7, colour.g*1.7, colour.b*1.7)
                 end
-                --duration and expiry return as 0
-                --CooldownFrame_Set(plate.aura[i].cooldown, expiration - duration, duration, duration > 0, true)
+
+                if  ns.auras[name] then
+                    local duration = ns.auras[name]
+                    CooldownFrame_Set(plate.aura[i].cooldown, GetTime(), duration, duration > 0, true)
+                end
+
                 plate.aura[i]:Show()
             end
         end

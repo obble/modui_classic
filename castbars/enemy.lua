@@ -2,11 +2,6 @@
 
     local _, ns     = ...
 
-    local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
-    -- if build > 1 then return end -- BfA dont need this
-
-    -- TODO: level check against parented unit UnitLevel for cast-time?
-
     local GUIDs             = {}
     local timer             = {}
     local frames            = {}
@@ -91,7 +86,7 @@
     local SetCastbarStyle = function(castbar, cast, db)
         castbar:SetSize(150, 14)
         castbar.Timer:SetShown(true)
-        ns.SB(castbar)
+        --ns.SB(castbar)
 
         castbar.Spark:SetAlpha(1)
 
@@ -115,8 +110,8 @@
         castbar.Timer:SetFont(FONT_REGULAR, 9)
 
         castbar.Border:SetAlpha(1)
-        tinsert(ns.skinbu, castbar.Border)
-        castbar.Border:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+        tinsert(ns.skin, castbar.Border)
+        castbar.Border:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
 
         if  castbar.BorderFrame then -- unneccesary?
             castbar.BorderFrame:SetAlpha(0)
