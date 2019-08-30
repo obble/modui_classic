@@ -13,15 +13,15 @@
             minHeight       = 100,
             x               = -38,
             y               = 0,
-            wrapAfter       = 6,
+            wrapAfter       = 12,
             wrapY           = -42,
             direction       = '+',
             position        = {
                 'TOPRIGHT',
                 Minimap,
                 'TOPLEFT',
-                -22,
-                -14,
+                -100,
+                -8,
             },
         },
         ['player|HARMFUL']  = {
@@ -45,8 +45,10 @@
             xOffset         = 40,
             position        = {
                 'TOPRIGHT',
-                -300,
-                -200,
+                QuestWatchFrame,
+                'TOPLEFT',
+                -25,
+                -20,
             },
         },
     }
@@ -94,6 +96,23 @@
     	end
     end
 
+    local UpdateTempEnchant = function(...)
+        for i = 1, BuffFrame.numEnchants do
+            local enchant, expiration, charges = select(i, ...)
+            if  enchant then
+                local bu = _G['TempEnchant'..i]
+                if  MODUI_VAR['elements']['aura'].values then
+                    bu.duration:SetText(expiration > 0 and AbbrevTime(bu, expiration/1000) or '')
+                else
+                    bu.duration:SetFormattedText(SecondsToTimeAbbrev(expiration/1000))
+                end
+                for k = 1, 4 do
+                    bu.bo[k]:SetVertexColor(1, 0, .7)
+                end
+            end
+        end
+    end
+
     local FormatDebuffs = function(self, name, dtype)
         if  name then
             local colour = DebuffTypeColor[dtype or 'none']
@@ -107,7 +126,7 @@
         else
             self.Name:SetText''
             for  i, v in pairs(self.F.bo) do
-                 self.F.bo[i]:SetVertexColor(1, 1, 1)
+                 self.F.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
             end
         end
     end
@@ -137,79 +156,82 @@
     end
 
     local AddButton = function(self, name, bu)
-    	if not name:match'^child' then return end       -- ty p3lim
+    	if  name:match'^child' then
+        	bu:SetScript('OnUpdate',            OnUpdate)
+            bu:SetScript('OnAttributeChanged',  OnAttributeChanged)
 
-    	bu:SetScript('OnUpdate',            OnUpdate)
-        bu:SetScript('OnAttributeChanged',  OnAttributeChanged)
+            bu.F = CreateFrame('Frame', nil, bu)
+            bu.F:SetAllPoints()
+            ns.BD(bu)
 
-        bu.F = CreateFrame('Frame', nil, bu)
-        bu.F:SetAllPoints()
-        ns.BD(bu)
+            ns.BUBorder(bu.F, 20)
+            for i = 1, 4 do
+                tinsert(ns.skinbu, bu.F[i])
+            end
 
-        ns.BUBorder(bu.F, 20)
+        	local icon = bu:CreateTexture('$parentTexture', 'ARTWORK')
+        	icon:SetAllPoints()
+        	icon:SetTexCoord(.1, .9, .1, .9)
 
-    	local icon = bu:CreateTexture('$parentTexture', 'ARTWORK')
-    	icon:SetAllPoints()
-    	icon:SetTexCoord(.1, .9, .1, .9)
+            local name = bu:CreateFontString('$parentName', nil, 'GameFontNormal')
+            name:SetFont(FONT_REGULAR, 14)
+            name:SetShadowOffset(1, -1)
+        	name:SetShadowColor(0, 0, 0)
+            name:SetJustifyH'RIGHT'
+            name:SetPoint('RIGHT', bu, 'LEFT', -15, 0)
 
-        local name = bu:CreateFontString('$parentName', nil, 'GameFontNormal')
-        name:SetFont(FONT_REGULAR, 14)
-        name:SetShadowOffset(1, -1)
-    	name:SetShadowColor(0, 0, 0)
-        name:SetJustifyH'RIGHT'
-        name:SetPoint('RIGHT', bu, 'LEFT', -15, 0)
+        	local d = bu:CreateFontString('$parentDuration', nil, 'GameFontNormalSmall')
+        	d:SetPoint('TOP', bu, 'BOTTOM', 0, -8)
 
-    	local d = bu:CreateFontString('$parentDuration', nil, 'GameFontNormalSmall')
-    	d:SetPoint('TOP', bu, 'BOTTOM', 0, -8)
+        	local count = bu:CreateFontString('$parentCount', nil, 'GameFontNormal')
+            count:SetParent(bu.F)
+            count:SetJustifyH'CENTER'
+        	count:SetPoint('CENTER', bu, 'TOP', 0, 2)
 
-    	local count = bu:CreateFontString('$parentCount', nil, 'GameFontNormal')
-        count:SetParent(bu.F)
-        count:SetJustifyH'CENTER'
-    	count:SetPoint('CENTER', bu, 'TOP', 0, 2)
+            local sb = CreateFrame('StatusBar', nil, bu)
+            ns.BD(sb, 1, -2)
+            ns.SB(sb)
+            sb:SetHeight(5)
+            sb:SetPoint'LEFT'
+            sb:SetPoint'RIGHT'
+            sb:SetPoint'BOTTOM'
+            sb:SetMinMaxValues(0, 1)
+            sb:Hide()
 
-        local sb = CreateFrame('StatusBar', nil, bu)
-        ns.BD(sb, 1, -2)
-        ns.SB(sb)
-        sb:SetHeight(5)
-        sb:SetPoint'LEFT'
-        sb:SetPoint'RIGHT'
-        sb:SetPoint'BOTTOM'
-        sb:SetMinMaxValues(0, 1)
-        sb:Hide()
+            sb.bg = sb:CreateTexture(nil, 'BORDER')
+            ns.SB(sb.bg)
+            sb.bg:SetAllPoints()
+            sb.bg:SetVertexColor(.2, .2, .2)
 
-        sb.bg = sb:CreateTexture(nil, 'BORDER')
-        ns.SB(sb.bg)
-        sb.bg:SetAllPoints()
-        sb.bg:SetVertexColor(.2, .2, .2)
+            bu:SetFontString(d)
+            bu:SetNormalTexture(icon)
 
-        bu:SetFontString(d)
-        bu:SetNormalTexture(icon)
-
-    	bu.Count = count
-        bu.Name  = name
-        bu.sb    = sb
+        	bu.Count = count
+            bu.Name  = name
+            bu.sb    = sb
+        end
     end
 
     local AddHeader = function(unit, filter, attribute)
         local Header = CreateFrame('Frame', 'modauras'..filter, Minimap, 'SecureAuraHeaderTemplate')
         Header:SetAttribute('template',         'modauraTemplate')
+        --Header:SetAttribute('weaponTemplate',   'modauraTemplate')
         Header:SetAttribute('unit',             unit)
         Header:SetAttribute('filter',           filter)
-        Header:SetAttribute('includeWeapons',   1)  --  ?
+        Header:SetAttribute('includeWeapons',   0)
         Header:SetAttribute('xOffset',          attribute.x)
         Header:SetPoint(unpack(attribute.position))
 
-        if  unit ~= 'weapons' then
-            Header:SetAttribute('sortDirection',    attribute.direction)
-            Header:SetAttribute('sortMethod',       attribute.sort)
-            Header:SetAttribute('sortDirection',    attribute.direction)
-            Header:SetAttribute('point',            attribute.point)
-            Header:SetAttribute('minWidth',         attribute.minWidth)
-            Header:SetAttribute('minHeight',        attribute.minHeight)
-            Header:SetAttribute('xOffset',          attribute.x)
-            Header:SetAttribute('wrapYOffset',      attribute.wrapY)
-            Header:SetAttribute('wrapAfter',        attribute.wrapAfter)
-        end
+
+        Header:SetAttribute('sortDirection',    attribute.direction)
+        Header:SetAttribute('sortMethod',       attribute.sort)
+        Header:SetAttribute('sortDirection',    attribute.direction)
+        Header:SetAttribute('point',            attribute.point)
+        Header:SetAttribute('minWidth',         attribute.minWidth)
+        Header:SetAttribute('minHeight',        attribute.minHeight)
+        Header:SetAttribute('xOffset',          attribute.x)
+        Header:SetAttribute('wrapYOffset',      attribute.wrapY)
+        Header:SetAttribute('wrapAfter',        attribute.wrapAfter)
 
         Header:HookScript('OnAttributeChanged', AddButton)
         Header:Show()
@@ -220,7 +242,7 @@
     local RemoveBuffFrame = function()
         for _, v in pairs(
             {
-                TemporaryEnchantFrame, BuffFrame
+                BuffFrame
             }
         ) do
             v:UnregisterAllEvents()
@@ -228,9 +250,32 @@
         end
     end
 
+    local AddTemporaryEnchant = function()
+        TemporaryEnchantFrame:ClearAllPoints()
+        TemporaryEnchantFrame:SetPoint('TOPRIGHT', Minimap, 'TOPLEFT', -10, -7)
+
+        hooksecurefunc('TemporaryEnchantFrame_Update', UpdateTempEnchant)
+
+        for i = 1, 2 do
+            local bu = _G['TempEnchant'..i]
+            local icon = _G['TempEnchant'..i..'Icon']
+            local duration = _G['TempEnchant'..i..'Duration']
+            local border = _G['TempEnchant'..i..'Border']
+
+            icon:SetTexCoord(.1, .9, .1, .9)
+
+            ns.BUBorder(bu, 20, 20, 5, 5)
+
+            duration:SetPoint('TOP', bu, 'BOTTOM', 0, -6)
+
+            border:Hide()
+        end
+    end
+
     local AddHeader = function()
         if not MODUI_VAR['elements']['aura'].enable then return end
         RemoveBuffFrame()
+        AddTemporaryEnchant()
         for i ,v in pairs(layout) do
             local unit, filter = i:match'(.-)|(.+)'
             if  unit then

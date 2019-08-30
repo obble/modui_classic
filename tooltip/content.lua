@@ -13,7 +13,7 @@
         GameTooltip,
         ItemRefTooltip
     }
-    
+
     local AddID = function(type, id)
         GameTooltip:AddLine(string.format('%s '..ID..': |cffd083cd%s|r', type, id))
     	GameTooltip:Show()
@@ -116,10 +116,10 @@
         	if id then
         		AddID(STAT_CATEGORY_SPELL, id)
         	else
-        		local _, ilink = self:GetItem()
-        		if  ilink then
-        			AddID(HELPFRAME_ITEM_TITLE, string.match(ilink, 'item:(%d+)'))
-        		end
+        		-- local _, ilink = self:GetItem()
+        		-- if  ilink then
+        		-- 	AddID(HELPFRAME_ITEM_TITLE, string.match(ilink, 'item:(%d+)'))
+        		-- end
         	end
         end)
 
@@ -248,7 +248,7 @@
     		local line = _G['GameTooltipTextLeft'..i]
     		local t = line:GetText()
             --  ALL lines
-            line:SetTextColor(.8, .8, .6)
+            -- line:SetTextColor(.8, .8, .6)
             --  line 2:  guild
             if Guild and t:find(Guild) then
                 AddGuild(unit, line, Guild)

@@ -104,8 +104,9 @@
             castbar.IconBorder:SetAllPoints(castbar.Icon)
             ns.BD(castbar.IconBorder)
             ns.BUBorder(castbar.IconBorder, 18)
-            for _, v in pairs({castbar.IconBorder:GetRegions()}) do
-                tinsert(ns.skinbu, v)
+            for i = 1, 4 do
+                tinsert(ns.skinbu, castbar.IconBorder.bo[i])
+                castbar.IconBorder.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
             end
             castbar.Icon:SetParent(castbar.IconBorder)
         end
@@ -115,6 +116,7 @@
 
         castbar.Border:SetAlpha(1)
         tinsert(ns.skinbu, castbar.Border)
+        castbar.Border:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
 
         if  castbar.BorderFrame then -- unneccesary?
             castbar.BorderFrame:SetAlpha(0)

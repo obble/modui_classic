@@ -47,19 +47,19 @@
 
     local SetBarLength = function(shorten)
         local bar = _G['modui_mainbar']
-        for i = 0, 3 do
-            _G['MainMenuXPBarTexture'..i]:Hide()
-            _G['MainMenuBarTexture'..i]:Hide()
-            ReputationWatchBar.StatusBar['WatchBarTexture'..i]:SetAlpha(0)
-        end
+
         MainMenuBarLeftEndCap:Hide()
         MainMenuBarRightEndCap:Hide()
+
         ActionBarUpButton:ClearAllPoints()
         ActionBarUpButton:SetPoint('LEFT', ActionButton12, 'RIGHT', -1, 10)
+
         ActionBarDownButton:ClearAllPoints()
         ActionBarDownButton:SetPoint('TOP', ActionBarUpButton, 'BOTTOM', 0, 10)
+
         MainMenuBarPageNumber:ClearAllPoints()
         MainMenuBarPageNumber:SetPoint('LEFT', ActionBarUpButton, 'RIGHT', -2, -10)
+
         if  shorten then
             MainMenuExpBar:SetSize(760, 8)
             ReputationWatchBar:SetSize(760, 6)
@@ -131,6 +131,9 @@
                 SlidingActionBarTexture0:ClearAllPoints()
                 SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
 
+                PetActionBarFrame:ClearAllPoints()
+                PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
+
                 PetActionButton1:ClearAllPoints()
                 PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
 
@@ -142,6 +145,9 @@
             else
                 SlidingActionBarTexture0:ClearAllPoints()
                 SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
+
+                PetActionBarFrame:ClearAllPoints()
+                PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
 
                 PetActionButton1:ClearAllPoints()
                 PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, -40)
@@ -155,18 +161,12 @@
         end
     end
 
-    local AddBars = function()
-        local bar = CreateFrame('Frame', 'modui_mainbar', MainMenuBar)
-        bar:SetSize(1024, 128)
-        bar:SetPoint'BOTTOM'
-
-        bar.t = bar:CreateTexture(nil, 'BACKGROUND')
-        bar.t:SetAllPoints()
-        tinsert(ns.skin, bar.t)
-
-        bar.caps = CreateFrame('Frame', 'modui_endcaps', UIParent)
-        bar.caps:SetPoint('BOTTOM', bar)
-        bar.caps:SetFrameLevel(1)
+    local AddXP = function()
+        for i = 0, 3 do
+            _G['MainMenuXPBarTexture'..i]:Hide()
+            _G['MainMenuBarTexture'..i]:Hide()
+            ReputationWatchBar.StatusBar['WatchBarTexture'..i]:SetAlpha(0)
+        end
 
         ReputationWatchBar:SetSize(760, 6)
 
@@ -198,6 +198,27 @@
         MainMenuExpBar.t:SetHeight(1)
         MainMenuExpBar.t:SetPoint('BOTTOMLEFT', MainMenuExpBar, 'TOPLEFT')
         MainMenuExpBar.t:SetPoint('BOTTOMRIGHT', MainMenuExpBar, 'TOPRIGHT')
+
+        hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
+        hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
+    end
+
+    local AddBars = function()
+        local bar = CreateFrame('Frame', 'modui_mainbar', MainMenuBar)
+        bar:SetSize(1024, 128)
+        bar:SetPoint'BOTTOM'
+
+        bar.t = bar:CreateTexture(nil, 'BACKGROUND')
+        bar.t:SetAllPoints()
+        tinsert(ns.skin, bar.t)
+
+        bar.caps = CreateFrame('Frame', 'modui_endcaps', UIParent)
+        bar.caps:SetPoint('BOTTOM', bar)
+        bar.caps:SetFrameLevel(1)
+
+        AddXP()
+
+        ns.BUBorder(MainMenuBarVehicleLeaveButton, MainMenuBarVehicleLeaveButton:GetWidth() - 3, MainMenuBarVehicleLeaveButton:GetWidth() - 4)
 
         for _, v in pairs(n) do
             for i = 1, 12 do
@@ -264,8 +285,6 @@
         end
 
         hooksecurefunc('MultiActionBar_Update', MoveBars)
-        hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
-        hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
         hooksecurefunc('ActionBarController_UpdateAll', UpdateBars)
     end
 
@@ -278,6 +297,9 @@
             else
                 UpdateXP()
             end
+        elseif MODUI_VAR['elements']['mainbar'].xp then
+            AddXP()
+            UpdateXP()
         end
     end
 

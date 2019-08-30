@@ -12,10 +12,14 @@
             plate.aura = {}
             for i = 1, 4 do
                 plate.aura[i] = CreateFrame('Frame', nil, plate)
-                ns.BUBorder(plate.aura[i], 14, 14, 2)
-                ns.BD(plate.aura[i])
+                ns.BUBorder(plate.aura[i], 18, 12, 4, 5)
+                for j = 1, 4 do
+                    tinsert(ns.skinbu, plate.aura[i].bo[j])
+                    plate.aura[i].bo[j]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+                end
+                --ns.BD(plate.aura[i])
                 plate.aura[i]:SetSize(16, 9)
-                plate.aura[i]:SetPoint('BOTTOMLEFT', i == 1 and plate or plate.aura[i - 1], i == 1 and 'TOPLEFT' or 'BOTTOMRIGHT', 11, i == 1 and 2 or 0)
+                plate.aura[i]:SetPoint('BOTTOMLEFT', i == 1 and plate or plate.aura[i - 1], i == 1 and 'TOPLEFT' or 'BOTTOMRIGHT', i == 1 and 2 or 8, i == 1 and 2 or 0)
                 plate.aura[i]:Hide()
 
                 plate.aura[i].icon = plate.aura[i]:CreateTexture(nil, 'ARTWORK')
@@ -50,15 +54,21 @@
 
     local ShouldShowBuff = function(name, caster, showpersonal, showall)
         if not name then return false end
-        return showall or (showpersonal and (caster == 'player' or caster == 'pet'))
+        if caster == 'player' or caster == 'pet' then
+            return true
+        else
+            return false
+        end
     end
 
     local UpdateAura = function(plate, unit)
         local filter = UpdateFilter(unit)
         for i = 1, 4 do
             local name, icon, count, type, duration, expiration, caster, _, showpersonal, spellid, _, _, _, showall = UnitAura(unit, i, filter)
+            local colour = DebuffTypeColor[type or 'none']
+
 			plate.aura[i]:Hide()
-            if  ShouldShowBuff(name, caster, showpersonal, showall, duration) then -- use "show"
+            if  ShouldShowBuff(name, caster) then -- use "show"
                 plate.aura[i]:SetID(i)
                 plate.aura[i].icon:SetTexture(icon)
                 if  count > 1 then
@@ -67,7 +77,12 @@
                 else
                     plate.aura[i].count:Hide()
                 end
-                CooldownFrame_Set(plate.aura[i].cooldown, expiration - duration, duration, duration > 0, true)
+
+                for j = 1, 4 do
+                    plate.aura[i].bo[j]:SetVertexColor(colour.r*1.7, colour.g*1.7, colour.b*1.7)
+                end
+                --duration and expiry return as 0
+                --CooldownFrame_Set(plate.aura[i].cooldown, expiration - duration, duration, duration > 0, true)
                 plate.aura[i]:Show()
             end
         end

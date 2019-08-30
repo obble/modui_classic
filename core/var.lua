@@ -36,6 +36,7 @@
 			mainbar = {
 				enable			= true,
 				keypress		= true,
+				xp				= true,
 			},
 			nameplate = {
 				enable			= true,

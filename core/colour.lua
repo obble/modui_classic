@@ -28,6 +28,10 @@
 		[8]	= {r = .3, g = 1, b = .5},	-- exalted
 	}
 
+	-- set shaman colour to blue
+	-- nb: probably going to taint
+	RAID_CLASS_COLORS['SHAMAN'] = INTERNAL_CLASS_COLORS['SHAMAN']
+
 	local AddPowerColour = function()
 		PowerBarColor['MANA'] 	= {
 			r = MODUI_VAR['elements']['statusbar']['mana'].r or 0,
