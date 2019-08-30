@@ -14,7 +14,7 @@
             x               = -38,
             y               = 0,
             wrapAfter       = 12,
-            wrapY           = -42,
+            wrapY           = -50,
             direction       = '+',
             position        = {
                 'TOPRIGHT',
