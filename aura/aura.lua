@@ -95,11 +95,6 @@
             if  self.duration then
                 UpdateSB(self, self.duration, self.expiration)
             end
-            if  self.enchant then
-                for k = 1, 4 do
-                    self.F.bo[k]:SetVertexColor(.6, 0, 1)
-                end
-            end
     	end
     end
 
@@ -168,6 +163,9 @@
 
     	if  icon then
             self:SetNormalTexture(icon)
+            for k = 1, 4 do
+                self.F.bo[k]:SetVertexColor(.6, 0, 1)
+            end
         end
     end
 
