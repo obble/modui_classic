@@ -2694,5 +2694,56 @@
         [GetSpellInfo(712)] = 4,        -- Summon Succubus
     }
 
+	ns.auras = {
+		   -- misc
+	   ['Flee']                     = 10,
+	   ['Reckless Charge']          = 12,
+	   ['Sleep']                    = 12,
+	   ['Tidal Charm']              = 3,
+		   -- blackwing lair
+	   ['Burning Adrenaline']       = 20,
+		   -- molten core
+	   ['Living Bomb']              = 8,
+		   -- engineering
+	   ['Iron Grenade']             = 3,
+	   ['Net-o-Matic']              = 10,
+	   ['Thorium Grenade']          = 3,
+		   -- druid
+	   ['Hibernate']                = 40,
+		   -- hunter
+	   ['Freezing Trap']            = 20,
+	   ['Scare Beast']              = 20,
+		   -- mage
+	   ['Polymorph']                = 50,
+	   ['Polymorph: Pig']           = 50,
+	   ['Polymorph: Turtle']        = 50,
+	   ['Frostbolt']				= 7,
+	   ['Frost Nova']				= 8,
+	   ['Frostbite']				= 5,
+		   -- paladin
+	   ['Hammer of Justice']        = 6,
+	   ['Repentance']               = 6,
+		   -- priest
+	   ['Mind Control']             = 3,
+	   ['Mind Vision']              = 60,
+	   ['Psychic Scream']           = 8,
+		   -- rogue
+	   ['Blind']                    = 10,
+	   ['Cheap Shot']               = 5,
+	   ['Gouge']                    = 4,
+	   ['Kidney Shot']              = 6,
+	   ['Sap']                      = 11,
+		   -- warlock
+	   ['Curse of Exhaustion']      = 12,
+	   ['Curse of Tongues']         = 30,
+	   ['Death Coil']               = 3,
+	   ['Drain Mana']               = 5,
+	   ['Fear']                     = 20,
+	   ['Howl of Terror']           = 15,
+		   -- warrior
+	   ['Charge Stun']              = 1,
+	   ['Intercept Stun']           = 3,
+   }
+
 
 	--

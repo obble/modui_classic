@@ -88,10 +88,19 @@
     local _, a = BankFrame:GetRegions()
     tinsert(ns.skin, a)
 
+    -- item text (books etc)
     local _, a, b, c, d = ItemTextFrame:GetRegions()
     for _, v in pairs({a, b, c, d}) do
         tinsert(ns.skin, v)
     end
+
+    ItemTextFrame.Material = ItemTextFrame:CreateTexture(nil, 'OVERLAY', nil, 7)
+    ItemTextFrame.Material:SetTexture[[Interface\AddOns\modui_classic\art\quest\QuestBG.tga]]
+    ItemTextFrame.Material:SetSize(506, 506)
+    ItemTextFrame.Material:SetPoint('TOPLEFT', ItemTextFrame, 24, -82)
+    ItemTextFrame.Material:SetVertexColor(.9, .9, .9)
+
+
 
     local a, b, c, d, e, f, g = HelpFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e, f, g}) do
@@ -475,7 +484,9 @@
                     function(colour, cancel)
                        if  colour then
                            if  cancel then
-                               ns.colour[1], ns.colour[2], ns.colour[3] = MODUI_VAR['theme'].r or 1, MODUI_VAR['theme'].g or 1, MODUI_VAR['theme'].b or 1 -- fallback
+                               ns.colour[1] = MODUI_VAR['theme'].r
+                               ns.colour[2] = MODUI_VAR['theme'].g
+                               ns.colour[3] = MODUI_VAR['theme'].b
                            else
                                ns.colour[1], ns.colour[2], ns.colour[3] = colour[1], colour[2], colour[3]
                                MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b = colour[1], colour[2], colour[3]
@@ -520,9 +531,9 @@
                    function(colour, cancel)
                       if  colour then
                           if  cancel then
-                              ns.colour_bu[1] = MODUI_VAR['theme_bu'].r or 1
-                              ns.colour_bu[2] = MODUI_VAR['theme_bu'].g or 1
-                              ns.colour_bu[3] = MODUI_VAR['theme_bu'].b or 1
+                              ns.colour_bu[1] = MODUI_VAR['theme_bu'].r
+                              ns.colour_bu[2] = MODUI_VAR['theme_bu'].g
+                              ns.colour_bu[3] = MODUI_VAR['theme_bu'].b
                           else
                               ns.colour_bu[1], ns.colour_bu[2], ns.colour_bu[3] = colour[1], colour[2], colour[3]
                               MODUI_VAR['theme_bu'].r = colour[1]
@@ -594,7 +605,7 @@
         end
 
         if  not MODUI_VAR['theme'] then
-            MODUI_VAR['theme'] = {r = 1, g = 1, b = 1}
+            MODUI_VAR['theme'] = {r = 0, g = 0, b = 0}
         end
 
         if  not MODUI_VAR['theme_bu'] then

@@ -26,7 +26,7 @@
         v:Hide()
     end]]
 
-    local ColourBagBorders = function(bu, slotID, texture, rarity)
+    local ColourBagBorders = function(bu, slotID, texture, rarity, type)
         local q = _G[bu:GetName()..'IconQuestTexture']
         local s = _G[bu:GetName()].searchOverlay
         if  bu.bo then
@@ -42,11 +42,17 @@
                     elseif rarity and rarity >= 2 and BAG_ITEM_QUALITY_COLORS[rarity] then
                         local colour = BAG_ITEM_QUALITY_COLORS[rarity]
                         bu.bo[i]:SetVertexColor(colour.r*1.5, colour.g*1.5, colour.b*1.5)
+                    elseif type > 0 then
+                        bu.bo[i]:SetVertexColor(.4, .3, 0)
                     else
                         bu.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r or 1, MODUI_VAR['theme_bu'].g or 1, MODUI_VAR['theme_bu'].b or 1)
                     end
                 else
-                    bu.bo[i]:SetVertexColor(.2, .2, .2)
+                    if  type > 0 then
+                        bu.bo[i]:SetVertexColor(.4, .3, 0)
+                    else
+                        bu.bo[i]:SetVertexColor(.2, .2, .2)
+                    end
                 end
             end
         end
@@ -65,7 +71,7 @@
                         local colour = BAG_ITEM_QUALITY_COLORS[bu.quality]
                         bu.bo[i]:SetVertexColor(colour.r, colour.g, colour.b)
                     else
-                        bu.bo[i]:SetVertexColor(1, 1, 1)
+                        bu.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r or 1, MODUI_VAR['theme_bu'].g or 1, MODUI_VAR['theme_bu'].b or 1)
                     end
                 else
                     bu.bo[i]:SetVertexColor(.2, .2, .2)
@@ -81,7 +87,8 @@
             local bu = _G[name..'Item'..i]
             local itemID = GetContainerItemID(id, bu:GetID())
             local texture, _, _, rarity = GetContainerItemInfo(id, bu:GetID())
-            ColourBagBorders(bu, itemID, texture, rarity)
+            local _, type = GetContainerNumFreeSlots(id)
+            ColourBagBorders(bu, itemID, texture, rarity, type)
             bu.IconBorder:Hide()
         end
     end

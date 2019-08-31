@@ -1,8 +1,10 @@
 
     local _, ns = ...
 
-    -- local LCD = LibStub'LibClassicDurations'
-    -- LCD:Register'modui'
+    local LCD = LibStub'LibClassicDurations'
+    LCD:Register'modui'
+
+    local LCMH = LibStub'LibClassicMobHealth-1.0'
 
     local events = {
         'PLAYER_LOGIN',
@@ -45,8 +47,36 @@
         PlayerPVPIcon:SetSize(48, 48)
         PlayerPVPIcon:ClearAllPoints()
         PlayerPVPIcon:SetPoint('CENTER', PlayerFrame, 'LEFT', 60, 16)
+
+        CastingBarFrame.Icon:SetSize(16, 16)
+        CastingBarFrame.Icon:ClearAllPoints()
+        CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
+        CastingBarFrame.Icon:SetTexCoord(.1, .9, .1, .9)
+
+        CastingBarFrame.IconF = CreateFrame('Frame', nil, CastingBarFrame)
+        CastingBarFrame.IconF:SetAllPoints(CastingBarFrame.Icon)
+        ns.BD(CastingBarFrame.IconF)
+        ns.BUBorder(CastingBarFrame.IconF, 18)
+        for i = 1, 4 do
+            tinsert(ns.skinbu, CastingBarFrame.IconF.bo[i])
+            CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+        end
+        CastingBarFrame.IconF:Hide()
+        CastingBarFrame.Icon:SetParent(CastingBarFrame.IconF)
     end
 
+    local UpdateCastingBarIcon = function(self)
+        if  self.Spark.offsetY < 1 then
+            self.IconF:Show()
+        else
+            self.IconF:Hide()
+        end
+    end
+
+    local UpdateTargetValue = function()
+        local v, max, found = LCMH:GetUnitHealth'target'
+        TextStatusBar_UpdateTextStringWithValues(TargetFrameHealthBar, TargetFrameHealthBarText, v, 0, max)
+    end
 
     local AddTargetFrame = function()
         for _, v in pairs(
@@ -57,6 +87,8 @@
         ) do
             ns.SB(v)
         end
+
+        TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
 
         TargetFrameNameBackground:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
 
@@ -72,6 +104,27 @@
         TargetFrame.Rare:SetPoint('TOPRIGHT', TargetFrame)
         TargetFrame.Rare:Hide()
 
+        TargetFrameHealthBarText = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
+        TargetFrameHealthBarText:SetPoint('CENTER', -50, 3)
+        TargetFrameHealthBar.TextString = TargetFrameHealthBarText
+
+        TargetFrameHealthBarTextLeft = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
+        TargetFrameHealthBarTextLeft:SetPoint('LEFT', 8, 3)
+        TargetFrameHealthBar.LeftText = TargetFrameHealthBarTextLeft
+
+        TargetFrameHealthBarTextRight = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
+        TargetFrameHealthBarTextRight:SetPoint('RIGHT', -110, 3)
+        TargetFrameHealthBar.RightText = TargetFrameHealthBarTextRight
+
+        for _, v in pairs(
+            {
+                TargetFrameHealthBarText,
+                TargetFrameHealthBarTextLeft,
+                TargetFrameHealthBarTextRight,
+            }
+        ) do
+            v:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE')
+        end
 
         TargetFrameTextureFramePVPIcon:SetSize(48, 48)
         TargetFrameTextureFramePVPIcon:ClearAllPoints()
@@ -138,24 +191,33 @@
                     tinsert(ns.skinbu, bu.bo[j])
                     bu.bo[j]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
                 end
+
+                bu.cooldown = CreateFrame('Cooldown', bu:GetName()..'Cooldown', bu, 'CooldownFrameTemplate')
+                bu.cooldown:SetAllPoints()
+                bu.cooldown:SetReverse(true)
+                bu.cooldown:SetHideCountdownNumbers(true)
             end
         end
     end
 
-    local AddAuraDuration = function(self, unit, index, filter)
-        local name, _, _, _, duration, expiration, caster, _, _, spellid = UnitBuff(unit, index, filter)
+    local AddAuraDuration = function(self)
+        for i = 1, MAX_TARGET_BUFFS do
+            local name, _, _, _, duration, expiration, caster, _, _, spellid = UnitBuff(self.unit, i, nil)
+            local bu = _G['TargetFrameBuff'..i]
+            if  name then
+                local durationnew, expirationnew = LCD:GetAuraDurationByUnit(self.unit, spellid, caster, name)
+                if  duration == 0 and durationnew then
+                    duration    = durationnew
+                    expiration  = expirationnew
+                end
 
-        local durationnew, expirationnew = LCD:GetAuraDurationByUnit(unit, spellid, caster, name)
-        if  duration == 0 and durationnew then
-            duration    = durationnew
-            expiration  = expirationnew
-        end
-
-        if  expiration and expiration ~= 0 then
-            local start = expiration - duration
-            CooldownFrame_Set(self.cooldown, start, duration, true)
-        else
-            CooldownFrame_Clear(self.cooldown)
+                if  expiration and expiration ~= 0 then
+                    local start = expiration - duration
+                    CooldownFrame_Set(bu.cooldown, start, duration, true)
+                else
+                    CooldownFrame_Clear(bu.cooldown)
+                end
+            end
         end
     end
 
@@ -194,7 +256,7 @@
         ) do
             if  t and n == 'PlayerFrameManaBar' then
                 AddManaTextColour(t, class, UnitPowerType'player')
-            elseif t and n == 'PlayerFrameHealthBar' then
+            elseif t and (n == 'PlayerFrameHealthBar'  or n == 'TargetFrameHealthBar') then
                 AddHealthTextColour(t, statusbar)
             end
         end
@@ -243,6 +305,7 @@
         if  event == 'PLAYER_LOGIN' then
             if  MODUI_VAR['elements']['unit'].player then
                 AddPlayerFrame()
+                CastingBarFrame:HookScript('OnShow', UpdateCastingBarIcon)
             end
 
             if  MODUI_VAR['elements']['unit'].target then
@@ -269,9 +332,9 @@
             UpdateTargetNameClassColour()
         end
 
-        --if  MODUI_VAR['elements']['unit'].auras then
-        --    hooksecurefunc('CompactUnitFrame_UtilSetBuff', AddAuraDuration)
-        --end
+        if  MODUI_VAR['elements']['unit'].auras then
+            hooksecurefunc('TargetFrame_UpdateAuras', AddAuraDuration)
+        end
 
         if  MODUI_VAR['elements']['unit'].party then
             UpdatePartyTextClassColour()

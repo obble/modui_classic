@@ -11,12 +11,15 @@ core/var.lua
 theme/theme.lua
 
 #   ~libraries
-#libraries/LibStub/LibStub.lua
-#libraries/CallbackHandler-1.0/CallbackHandler-1.0.lua
-#libraries/LibClassicDuration/core.lua
-#libraries/LibClassicDuration/classAbilities.lua
-#libraries/LibClassicDuration/diminishingReturns.lua
-#libraries/LibClassicDuration/npcAbilities.lua
+libraries/LibStub/LibStub.lua
+libraries/CallbackHandler-1.0/CallbackHandler-1.0.lua
+libraries/LibClassicDurations/core.lua
+libraries/LibClassicDurations/classAbilities.lua
+libraries/LibClassicDurations/diminishingReturns.lua
+libraries/LibClassicDurations/npcAbilities.lua
+libraries/LibClassicMobHealth/LibClassicMobHealth.lua
+libraries/LibClassicCasterino/LibClassicCasterino.lua
+libraries/SortBags/SortBags.lua
 
 #   ~shared functions & overall UI biz
 core/colour.lua
@@ -77,6 +80,8 @@ talents/talents.lua
 
 #   ~unitframes
 unit/unit.lua
+unit/druidbar.lua
+unit/energy.lua
 
 #   ~world map
 worldmap/worldmap.lua

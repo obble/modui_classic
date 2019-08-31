@@ -30,13 +30,14 @@
 				enable			= true,
 			},
 			error = {
-				enable			= false,
+				enable			= true,
 				quick			= true,
 			},
 			mainbar = {
 				enable			= true,
 				keypress		= true,
 				xp				= true,
+				horiz			= false,
 			},
 			nameplate = {
 				enable			= true,
