@@ -149,11 +149,11 @@
 			local slot = _G['CharacterBag'..i..'Slot']
 			local icon = _G['CharacterBag'..i..'SlotIconTexture']
 
-			slot:SetScript('OnEnter', function(self)
+			slot:HookScript('OnEnter', function(self)
 				IterateForSparkle(self, true)
 			end)
 
-			slot:SetScript('OnLeave', function(self)
+			slot:HookScript('OnLeave', function(self)
 				IterateForSparkle(self, false)
 			end)
 

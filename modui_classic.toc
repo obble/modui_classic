@@ -53,6 +53,7 @@ bag/bag/bag.lua
 bag/button.lua
 bag/bank/bank.lua
 bag/tools/greys.lua
+bag/tools/sort.lua
 bag/update.lua
 
 #   ~micromenu
