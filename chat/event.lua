@@ -4,12 +4,6 @@
 
     local hooks = {}
 
-    local SYSMSG = function(self, event, _, text)
-        if  event == 'UI_INFO_MESSAGE' then         -- send info messages to chat
-            ChatFrame1:AddMessage(text, 1, 1, 0, 1)
-        end
-    end
-
     local AddStringsAndChannelLabels = function()
         FOREIGN_SERVER_LABEL            = '—'
 
@@ -163,14 +157,11 @@
     end
 
     local OnEvent = function()
-        if  not MODUI_VAR['elements']['error'].enable then
+        if not MODUI_VAR['elements']['error'].enable then
             UIErrorsFrame:UnregisterEvent'UI_ERROR_MESSAGE'
         end
 
         if  MODUI_VAR['elements']['chat'].enable then
-            if  MODUI_VAR['elements']['chat'].sysmsg then
-                UIErrorsFrame:SetScript('OnEvent', SYSMSG)
-            end
 
             if  MODUI_VAR['elements']['chat'].events then
                 AddEventFilters()

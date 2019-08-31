@@ -2,6 +2,8 @@
 
     local _, ns = ...
 
+    local LCD = LibStub'LibClassicDurations'
+
     local events = {
         'NAME_PLATE_UNIT_ADDED',
         'UNIT_AURA'
@@ -61,7 +63,7 @@
         end
     end
 
-    local UpdateAura = function(plate, unit)
+    local UpdateAura = function(plate, unit, ...)
         local filter = UpdateFilter(unit)
         for i = 1, 4 do
             local name, icon, count, type, duration, expiration, caster, _, showpersonal, spellid, _, _, _, showall = UnitAura(unit, i, filter)
@@ -82,9 +84,23 @@
                     plate.aura[i].bo[j]:SetVertexColor(colour.r*1.7, colour.g*1.7, colour.b*1.7)
                 end
 
+                -- its really annoying but we can't track durations and determine when a spell is refreshed or not using UnitAura
+                -- we'll probably have to move over to combat log events if LCD isnt flexible enough...
+
                 if  ns.auras[name] then
-                    local duration = ns.auras[name]
-                    CooldownFrame_Set(plate.aura[i].cooldown, GetTime(), duration, duration > 0, true)
+                    local durationnew, expirationnew = LCD:GetAuraDurationByUnit(unit, spellid, caster, name)
+
+                    if  duration == 0 and durationnew then
+                        duration    = durationnew
+                        expiration  = expirationnew
+                    end
+
+                    if  expiration and expiration ~= 0 then
+                        local start = expiration - duration
+                        CooldownFrame_Set(plate.aura[i].cooldown, start, duration, true)
+                    else
+                        CooldownFrame_Clear(plate.aura[i].cooldown)
+                    end
                 end
 
                 plate.aura[i]:Show()
@@ -92,14 +108,14 @@
         end
     end
 
-    local OnEvent = function(_, event, unit)
+    local OnEvent = function(_, event, unit, ...)
         if  MODUI_VAR['elements']['nameplate'].enable and MODUI_VAR['elements']['nameplate'].aura then
             local  plate = C_NamePlate.GetNamePlateForUnit(unit)
             if not plate then return end
             if  event == 'NAME_PLATE_UNIT_ADDED' then
                 CreateAura(plate)
             end
-            UpdateAura(plate, unit)
+            UpdateAura(plate, unit, ...)
         end
     end
 

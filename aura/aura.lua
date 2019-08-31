@@ -190,6 +190,7 @@
             ns.BUBorder(bu.F, 20)
             for i = 1, 4 do
                 tinsert(ns.skinbu, bu.F[i])
+                bu.F.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
             end
 
         	local icon = bu:CreateTexture('$parentTexture', 'ARTWORK')

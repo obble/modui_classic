@@ -17,6 +17,9 @@ libraries/LibClassicDurations/core.lua
 libraries/LibClassicDurations/classAbilities.lua
 libraries/LibClassicDurations/diminishingReturns.lua
 libraries/LibClassicDurations/npcAbilities.lua
+libraries/LibClassicMobHealth/LibClassicMobHealth.lua
+libraries/LibClassicCasterino/LibClassicCasterino.lua
+libraries/SortBags/SortBags.lua
 
 #   ~shared functions & overall UI biz
 core/colour.lua
@@ -78,6 +81,7 @@ talents/talents.lua
 #   ~unitframes
 unit/unit.lua
 unit/druidbar.lua
+unit/energy.lua
 
 #   ~world map
 worldmap/worldmap.lua

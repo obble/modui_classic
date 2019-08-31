@@ -205,7 +205,8 @@
 
         AddXP()
 
-        ns.BUBorder(MainMenuBarVehicleLeaveButton, MainMenuBarVehicleLeaveButton:GetWidth() - 3, MainMenuBarVehicleLeaveButton:GetWidth() - 4)
+        MainMenuBarVehicleLeaveButton:SetSize(28, 28)
+        ns.BUBorder(MainMenuBarVehicleLeaveButton, MainMenuBarVehicleLeaveButton:GetWidth() - 10, MainMenuBarVehicleLeaveButton:GetWidth() - 2, 3.5, 6)
 
         for _, v in pairs(n) do
             for i = 1, 12 do
@@ -228,7 +229,11 @@
                         bu:ClearAllPoints()
                         -- pixel...
                         if  v == 'MultiBarLeft' or v == 'MultiBarRight' then
-                            bu:SetPoint('TOP', _G[v..'Button'..(i - 1)], 'BOTTOM', 0, -8.5)
+                            if  MODUI_VAR['elements']['mainbar'].horiz then
+                                bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
+                            else
+                                bu:SetPoint('TOP', _G[v..'Button'..(i - 1)], 'BOTTOM', 0, -8.5)
+                            end
                         else
                             bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
                             -- PERFECTION!

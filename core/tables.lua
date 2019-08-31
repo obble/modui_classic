@@ -2717,6 +2717,9 @@
 	   ['Polymorph']                = 50,
 	   ['Polymorph: Pig']           = 50,
 	   ['Polymorph: Turtle']        = 50,
+	   ['Frostbolt']				= 7,
+	   ['Frost Nova']				= 8,
+	   ['Frostbite']				= 5,
 		   -- paladin
 	   ['Hammer of Justice']        = 6,
 	   ['Repentance']               = 6,
