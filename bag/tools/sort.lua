@@ -3,12 +3,16 @@
 	local _, ns = ...
 
 	local AddAutoSort = function()
-		local bag  = _G['modbag']
-		local bank = _G['modbank']
+		local bag  = _G['modbag'] or ContainerFrame1
+		local bank = _G['modbank'] or BankFrame
 
 		local sort = CreateFrame('Frame', 'modui_AutoSort', bag)
-		sort:SetSize(14, 14)
-		sort:SetPoint('LEFT', bag.topstrip, 10, 4)
+		sort:SetSize(14, 12)
+		if   MODUI_VAR['elements']['onebag'].enable then
+			sort:SetPoint('LEFT', bag.topstrip, 7, 4)
+		else
+			sort:SetPoint('TOPLEFT', ContainerFrame1, 50, -32)
+		end
 		ns.BDStone(sort, 5)
 
 		sort.t = CreateFrame('Button', 'modui_AudioSortButton', sort)
@@ -40,10 +44,8 @@
 
 	end
 
-	local OnEvent = function()
-		if  MODUI_VAR['elements']['onebag'].enable then
-			AddAutoSort()
-		end
+	local OnEvent = function(self, event, ...)
+		AddAutoSort()
 	end
 
 	local e = CreateFrame'Frame'

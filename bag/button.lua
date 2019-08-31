@@ -144,18 +144,8 @@
         end
     end
 
-    local AddSlots = function()
-        for i = 0, 3 do
-            local bu = _G['CharacterBag'..i..'Slot']
-            ns.BU(bu)
-            ns.BUElements(bu)
-        end
-    end
-
     local MinorButtonSkins = function()
         AddTokens()
-        AddSlots()
-        AddBankSlots()
         e:UnregisterEvent'PLAYER_ENTERING_WORLD'
     end
 
