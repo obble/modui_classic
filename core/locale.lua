@@ -3,11 +3,12 @@
 	local _, ns = ...
 
 	local L = {}
+	local locale = GetLocale()
 
 	-- AURA
-	L['h'] = '' -- "h" hours on aura timers
-	L['m'] = '' -- "m" minutes on aura timers
-	L['s'] = '' -- "s" seconds on aura timers
+	L['h'] = 'h' -- "h" hours on aura timers
+	L['m'] = 'm' -- "m" minutes on aura timers
+	L['s'] = 's' -- "s" seconds on aura timers
 
 	-- BAG
 	L['Bag'] = ''
@@ -128,6 +129,101 @@
 	L[' whispers:'] = ''                    --   whisper from
 	L['Joined Channel:' = ''                --   channel join
 	L['Left Channel:'] = 'Left '            --   channel left
+	
+	if locale == "zhTW" then
+	
+		-- BAG
+		L['Bag'] = '背包' -- or use BAGSLOT
+		L['Bank'] = '銀行' -- or use BANK
+		L['Sell Poor Quality Items & Rubbish'] = '賣垃圾'
 
+		-- MAP
+		L['Mouse'] = '滑鼠'
 
-	--
+		-- MENU
+		L['Your new settings require a UI reload to take effect.'] = '你的新設定需要重載介面才會生效。'
+		L['Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'] = '全局切換開關。|cffff0000注意：會覆蓋掉你現有的設定。|r'
+		L['Actionbar'] = '快捷列'
+		L['Cast Spells on Button Down'] = '按下按鍵時施法'
+		L['Aura'] = '光環'
+		L['Statusbars on Auras'] = '在光環上顯示計時條'
+		L['Custom Value Formatting on Auras'] = '修改光環計時文本格式'
+		L['Chat'] = '聊天'
+		L['Events & Custom Chat Text'] = '修改聊天文本格式'
+		L['Chat Style'] = '修改聊天框架外觀'
+		L['URLs'] = '網址'
+		L['Inventory'] = '行囊'
+		L['Button For Selling Grey Items at Vendor'] = '在商人介面顯示賣垃圾的按鈕'
+		L['Enemy Castbars'] = '敵方施法條'
+		L['Nameplates'] = '名條'
+		L['Show Auras on Nameplates'] = '在名條上顯示光環'
+		L['Show Combo Points on Nameplate'] = '在名條上顯示連擊點'
+		L['Class Colours on Friendly Nameplates'] = '替友方名條職業著色'
+		L['Icon-based Nameplates for Totems'] = '圖騰圖示'
+		L['Quest Tracker (Click-through to Quest Log)'] = '點擊任務追蹤開啟任務日誌'
+		L['Tooltip'] = '滑鼠提示'
+		L['Unitframes'] = '單位框架'
+		L['Player'] = '玩家'
+		L['Target'] = '目標'
+		L['Party'] = '隊伍'
+		L['Target of Target'] = '目標的目標'
+		L['Pet'] = '寵物'
+		L['Value Colours on Text'] = '數值著色'
+		L['Elite/Rare Dragons in Colour (for dark theme UIs)'] = '使用黑色主題時著色稀有和精英的金銀龍'
+
+		-- TOOLTIP
+		L[' Boss'] = ' 首領' -- or use BOSS
+		L[' Rare Elite'] = ' 稀有精英'
+		L[' Rare'] = ' 稀有' -- or use ELITE
+		L[' Elite' = ' 精英'
+	
+	elseif locale == "zhCN" then
+	
+		-- BAG
+		L['Bag'] = '背包' -- or use BAGSLOT
+		L['Bank'] = '银行' -- or use BANK
+		L['Sell Poor Quality Items & Rubbish'] = '卖垃圾'
+
+		-- MAP
+		L['Mouse'] = '鼠标'
+
+		-- MENU
+		L['Your new settings require a UI reload to take effect.'] = '你的新设置需要重载界面才会生效。'
+		L['Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'] = '全局切换开关。|cffff0000注意：会复盖掉你现有的设置。|r'
+		L['Actionbar'] = '动作条'
+		L['Cast Spells on Button Down'] = '按下按键时施法'
+		L['Aura'] = '光环'
+		L['Statusbars on Auras'] = '在光环上显示计时条'
+		L['Custom Value Formatting on Auras'] = '修改光环计时文本格式'
+		L['Chat'] = '聊天'
+		L['Events & Custom Chat Text'] = '修改聊天文本格式'
+		L['Chat Style'] = '修改聊天框架外观'
+		L['URLs'] = '网址'
+		L['Inventory'] = '行囊'
+		L['Button For Selling Grey Items at Vendor'] = '在商人接口显示卖垃圾的按钮'
+		L['Enemy Castbars'] = '敌对施法条'
+		L['Nameplates'] = '姓名板'
+		L['Show Auras on Nameplates'] = '在姓名板上显示光环'
+		L['Show Combo Points on Nameplate'] = '在姓名板上显示连击点'
+		L['Class Colours on Friendly Nameplates'] = '友方姓名板职业染色'
+		L['Icon-based Nameplates for Totems'] = '图腾图示'
+		L['Quest Tracker (Click-through to Quest Log)'] = '点击任务追踪开启任务日志'
+		L['Tooltip'] = '鼠标提示'
+		L['Unitframes'] = '单位框体'
+		L['Player'] = '玩家'
+		L['Target'] = '目标'
+		L['Party'] = '队伍'
+		L['Target of Target'] = '目标的目标'
+		L['Pet'] = '宠物'
+		L['Value Colours on Text'] = '数值染色'
+		L['Elite/Rare Dragons in Colour (for dark theme UIs)'] = '使用黑色主题时着色稀有和精英的金银龙'
+
+		-- TOOLTIP
+		L[' Boss'] = ' 首领' -- or use BOSS
+		L[' Rare Elite'] = ' 稀有精英'
+		L[' Rare'] = ' 稀有' -- or use ELITE
+		L[' Elite' = ' 精英'
+		
+	else
+		return
+	end
