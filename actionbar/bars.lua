@@ -89,7 +89,8 @@
         local colour = FACTION_BAR_COLORS[index]
 
         ReputationWatchBar:ClearAllPoints()
-        ReputationWatchBar:SetPoint('BOTTOM', 0, 55)
+        ReputationWatchBar:SetPoint('BOTTOMLEFT', MainMenuExpBar, 'TOPLEFT')
+        ReputationWatchBar:SetPoint('BOTTOMRIGHT', MainMenuExpBar, 'TOPRIGHT')
 
 		ReputationWatchBar.spark:SetPoint('CENTER', ReputationWatchBar.StatusBar, 'LEFT', x, 2)
         ReputationWatchBar.spark:SetVertexColor(colour.r, colour.g, colour.b)
@@ -151,20 +152,21 @@
     local AddXP = function()
         for i = 0, 3 do
             _G['MainMenuXPBarTexture'..i]:Hide()
-            _G['MainMenuBarTexture'..i]:Hide()
             ReputationWatchBar.StatusBar['WatchBarTexture'..i]:SetAlpha(0)
+            if  MODUI_VAR['elements']['mainbar'].enable  then
+                _G['MainMenuBarTexture'..i]:Hide()
+            end
         end
 
-        ReputationWatchBar:SetSize(760, 6)
-
-        ReputationWatchBar.StatusBar:SetSize(760, 6)
+        ReputationWatchBar:SetSize(1024, 6)
+        ReputationWatchBar.StatusBar:SetSize(1024, 6)
 
         ReputationWatchBar.spark = ReputationWatchBar:CreateTexture(nil, 'OVERLAY', nil, 7)
         ReputationWatchBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
         ReputationWatchBar.spark:SetSize(35, 35)
         ReputationWatchBar.spark:SetBlendMode'ADD'
 
-        MainMenuExpBar:SetSize(760, 6)
+        MainMenuExpBar:SetSize(1024, 6)
         MainMenuExpBar:ClearAllPoints()
         MainMenuExpBar:SetPoint('BOTTOM', 0, 48)
 

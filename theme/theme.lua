@@ -6,7 +6,7 @@
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
 
     ns.colour   = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
-    ns.colou_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
+    ns.colour_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
 
     ns.skin     = {
         MinimapBorder,
@@ -99,8 +99,6 @@
     ItemTextFrame.Material:SetSize(506, 506)
     ItemTextFrame.Material:SetPoint('TOPLEFT', ItemTextFrame, 24, -82)
     ItemTextFrame.Material:SetVertexColor(.9, .9, .9)
-
-
 
     local a, b, c, d, e, f, g = HelpFrame:GetRegions()
     for _, v in pairs({a, b, c, d, e, f, g}) do
@@ -443,9 +441,9 @@
         for _,  v in pairs(ns.skin) do
             if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
                 v:SetVertexColor(
-                MODUI_VAR['theme'].r,
-                MODUI_VAR['theme'].g,
-                MODUI_VAR['theme'].b
+                    MODUI_VAR['theme'].r,
+                    MODUI_VAR['theme'].g,
+                    MODUI_VAR['theme'].b
                 )
             end
         end
