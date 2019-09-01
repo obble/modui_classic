@@ -37,7 +37,11 @@
                 plate.aura[i].cooldown = CreateFrame('Cooldown', nil, plate.aura[i], 'CooldownFrameTemplate')
                 plate.aura[i].cooldown:SetAllPoints()
                 plate.aura[i].cooldown:SetReverse(true)
-                plate.aura[i].cooldown:SetHideCountdownNumbers(true)
+
+                local t = plate.aura[i].cooldown:GetRegions()
+                t:SetFont(STANDARD_TEXT_FONT, 8, 'OUTLINE')
+                t:ClearAllPoints()
+                t:SetPoint('CENTER', plate.aura[i].cooldown, 'TOP')
             end
         end
     end

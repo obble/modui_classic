@@ -199,7 +199,11 @@
                 bu.cooldown = CreateFrame('Cooldown', bu:GetName()..'Cooldown', bu, 'CooldownFrameTemplate')
                 bu.cooldown:SetAllPoints()
                 bu.cooldown:SetReverse(true)
-                bu.cooldown:SetHideCountdownNumbers(true)
+
+                local t = bu.cooldown:GetRegions()
+                t:SetFont(STANDARD_TEXT_FONT, 7, 'OUTLINE')
+                t:ClearAllPoints()
+                t:SetPoint('CENTER', bu.cooldown, 'BOTTOM', 0, 3)
             end
         end
     end
