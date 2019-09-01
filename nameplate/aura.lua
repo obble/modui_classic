@@ -14,6 +14,7 @@
             plate.aura = {}
             for i = 1, 4 do
                 plate.aura[i] = CreateFrame('Frame', nil, plate)
+                ns.BD(plate.aura[i], 1, -2)
                 ns.BUBorder(plate.aura[i], 18, 12, 4, 5)
                 for j = 1, 4 do
                     tinsert(ns.skinbu, plate.aura[i].bo[j])

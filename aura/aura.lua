@@ -111,7 +111,7 @@
         else
             self.Name:SetText''
             for  i, v in pairs(self.F.bo) do
-                 self.F.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+                 self.F.bo[i]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
             end
         end
     end
@@ -190,7 +190,7 @@
             ns.BUBorder(bu.F, 20)
             for i = 1, 4 do
                 tinsert(ns.skinbu, bu.F[i])
-                bu.F.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+                bu.F.bo[i]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
             end
 
         	local icon = bu:CreateTexture('$parentTexture', 'ARTWORK')

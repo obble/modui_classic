@@ -39,11 +39,6 @@
                 edgeSize   = 18,
             })
             tinsert(ns.skinb, self.BD)
-            self.BD:SetBackdropBorderColor(
-                MODUI_VAR['theme'].r,
-                MODUI_VAR['theme'].g,
-                MODUI_VAR['theme'].b
-            )
 
             self.BD.shadow = self:CreateTexture(nil, 'BACKGROUND')
     		self.BD.shadow:SetPoint('TOPLEFT', self.BD, -5, 12)
@@ -51,16 +46,6 @@
     		self.BD.shadow:SetTexture[[Interface\Scenarios\ScenarioParts]]
     		self.BD.shadow:SetVertexColor(0, 0, 0, .6)
     		self.BD.shadow:SetTexCoord(0, .641, 0, .18)
-
-            self.BD.top = self.BD:CreateTexture(nil, 'OVERLAY')
-    		self.BD.top:SetPoint('CENTER', self, 'TOP', 0, 1)
-    		self.BD.top:SetAtlas('AzeriteTooltip-Topper', true)
-            self.BD.top:Hide()
-
-            self.BD.bottom = self.BD:CreateTexture(nil, 'OVERLAY')
-    		self.BD.bottom:SetPoint('CENTER', self, 'BOTTOM', 0, -2)
-    		self.BD.bottom:SetAtlas('AzeriteTooltip-Bottom', true)
-            self.BD.bottom:Hide()
         end
     end
 
@@ -115,8 +100,11 @@
                 edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
                 edgeSize   = 18,
             })
-            self.BD.top:Hide()
-            self.BD.bottom:Hide()
+            self.BD:SetBackdropBorderColor(
+                MODUI_VAR['theme'].r,
+                MODUI_VAR['theme'].g,
+                MODUI_VAR['theme'].b
+            )
         end
     end
 

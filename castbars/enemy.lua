@@ -101,7 +101,7 @@
             ns.BUBorder(castbar.IconBorder, 18)
             for i = 1, 4 do
                 tinsert(ns.skinbu, castbar.IconBorder.bo[i])
-                castbar.IconBorder.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+                castbar.IconBorder.bo[i]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
             end
             castbar.Icon:SetParent(castbar.IconBorder)
         end

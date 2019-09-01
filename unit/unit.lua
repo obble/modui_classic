@@ -59,7 +59,7 @@
         ns.BUBorder(CastingBarFrame.IconF, 18)
         for i = 1, 4 do
             tinsert(ns.skinbu, CastingBarFrame.IconF.bo[i])
-            CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+            CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
         end
         CastingBarFrame.IconF:Hide()
         CastingBarFrame.Icon:SetParent(CastingBarFrame.IconF)
@@ -193,7 +193,7 @@
                 ns.BUBorder(bu, 18, 18, 3, 4)
                 for j = 1, 4 do
                     tinsert(ns.skinbu, bu.bo[j])
-                    bu.bo[j]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+                    bu.bo[j]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
                 end
 
                 bu.cooldown = CreateFrame('Cooldown', bu:GetName()..'Cooldown', bu, 'CooldownFrameTemplate')
