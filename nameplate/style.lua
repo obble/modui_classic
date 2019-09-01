@@ -28,7 +28,7 @@
         if  UnitIsUnit('target', frame.namePlateUnitToken) then
             v, max, found = LCMH:GetUnitHealth'target'
         end
-        
+
         if  v and v > 0 and v ~= 100 then
             plate.healthBar.LeftText:SetText(v)
             ns.GRADIENT_COLOUR(plate.healthBar.LeftText, v, 0, max)
@@ -48,7 +48,7 @@
         plate.name:SetPoint('BOTTOMRIGHT', plate, 'TOPRIGHT', -6, -13)
         plate.name:SetJustifyH'RIGHT'
 
-        plate.healthBar:SetStatusBarTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
+        -- plate.healthBar:SetStatusBarTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
 
         plate.healthBar.LeftText = plate.healthBar:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
         plate.healthBar.LeftText:SetPoint('LEFT', plate.healthBar, 2, 1)

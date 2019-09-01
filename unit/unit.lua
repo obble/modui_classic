@@ -32,7 +32,7 @@
                 PlayerFrameManaBar
             }
         ) do
-            ns.SB(v)
+            --ns.SB(v)
         end
         if  not PlayerFrame.bg then
             local _, class  = UnitClass'player'
@@ -89,7 +89,7 @@
                 TargetFrameManaBar
             }
         ) do
-            ns.SB(v)
+            --ns.SB(v)
         end
 
         TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
@@ -146,7 +146,7 @@
             }
         ) do
             if  v then
-                ns.SB(v)
+                --ns.SB(v)
             end
         end
     end
@@ -159,8 +159,8 @@
                     _G['PartyMemberFrame'..i..'ManaBar']
                 }
             ) do
-                ns.BD(v)
-                ns.SB(v)
+                --ns.BD(v)
+                --ns.SB(v)
             end
         end
     end
@@ -322,7 +322,7 @@
 
             if  MODUI_VAR['elements']['unit'].tot then
                 AddToTFrame()
-                hooksecurefunc('TargetofTarget_Update', UpdateToT)
+                -- TargetFrameToT:HookScript('OnUpdate', UpdateToT) tainting i think
             end
 
             if  MODUI_VAR['elements']['unit'].rcolour then
@@ -345,7 +345,7 @@
         end
 
         if  MODUI_VAR['elements']['unit'].party then
-            UpdatePartyTextClassColour()
+            -- UpdatePartyTextClassColour() tainting i think
         end
     end
 
