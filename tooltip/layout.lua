@@ -38,6 +38,12 @@
                 edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
                 edgeSize   = 18,
             })
+            tinsert(ns.skinb, self.BD)
+            self.BD:SetBackdropBorderColor(
+                MODUI_VAR['theme'].r,
+                MODUI_VAR['theme'].g,
+                MODUI_VAR['theme'].b
+            )
 
             self.BD.shadow = self:CreateTexture(nil, 'BACKGROUND')
     		self.BD.shadow:SetPoint('TOPLEFT', self.BD, -5, 12)

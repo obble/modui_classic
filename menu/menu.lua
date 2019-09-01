@@ -184,6 +184,7 @@
            menu.bo:SetPoint'CENTER'
            menu.bo:SetTexCoord(.5, .58, .8775, .9575)
            menu.bo:SetVertexColor(.6, .6, .6)
+           tinsert(ns.skinmenu, menu.bo)
        end
 
        --[[KeyRingButton:SetParent(ContainerFrame1)

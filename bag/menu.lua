@@ -82,6 +82,7 @@
 			bu.bo:SetPoint'CENTER'
 			bu.bo:SetTexCoord(.5, .58, .8775, .9575)
 			bu.bo:SetVertexColor(.6, .6, .6)
+			tinsert(ns.skinmenu, bu.bo)
 		end
 	end
 

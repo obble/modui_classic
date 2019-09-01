@@ -39,6 +39,7 @@
     }
     ns.skinbu   = {}
     ns.skinb    = {}
+    ns.skinmenu = {}
 
     -- 8.0?
     if  build > 1 then
@@ -389,9 +390,59 @@
   tinsert(ns.skinb, QuestTimerFrame)
   tinsert(ns.skin, QuestTimerHeader)
 
+  local UpdateSkins = function()
+      for _,  v in pairs(ns.skin) do
+          if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
+              v:SetVertexColor(
+                  MODUI_VAR['theme'].r,
+                  MODUI_VAR['theme'].g,
+                  MODUI_VAR['theme'].b
+              )
+          end
+      end
+      for _,  v in pairs(ns.skinb) do
+          if  v and v:GetBackdropBorderColor() then
+              v:SetBackdropBorderColor(
+                  MODUI_VAR['theme'].r,
+                  MODUI_VAR['theme'].g,
+                  MODUI_VAR['theme'].b
+              )
+          end
+      end
+      for _,  v in pairs(ns.skinbu) do
+          if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
+              v:SetVertexColor(
+                  MODUI_VAR['theme'].r,
+                  MODUI_VAR['theme'].g,
+                  MODUI_VAR['theme'].b
+              )
+          end
+      end
+      -- offset menu buttons a lil bit
+      for _, v in pairs(ns.skinmenu) do
+          if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
+              if  MODUI_VAR['theme'].r < .2 and MODUI_VAR['theme'].g < .2 and MODUI_VAR['theme'].b < .2 then
+                  v:SetDesaturated(true)
+                  v:SetVertexColor(.25, .25, .25)
+              else
+                  v:SetDesaturated(false)
+                  v:SetVertexColor(
+                      MODUI_VAR['theme'].r < .7 and MODUI_VAR['theme'].r + .2 or .85,
+                      MODUI_VAR['theme'].g < .7 and MODUI_VAR['theme'].g + .2 or .85,
+                      MODUI_VAR['theme'].b < .7 and MODUI_VAR['theme'].b + .2 or .85
+                  )
+              end
+          end
+      end
+  end
+
     -- colour picker
     local ColourPicker = function(r, g, b, a, callback, theme)
-        ColorPickerFrame:SetColorRGB(r, g, b)
+        ColorPickerFrame:SetColorRGB(
+            theme and MODUI_VAR['theme'].r or MODUI_VAR['theme_bu'].r,
+            theme and MODUI_VAR['theme'].g or MODUI_VAR['theme_bu'].g,
+            theme and MODUI_VAR['theme'].b or MODUI_VAR['theme_bu'].b
+        )
         ColorPickerFrame.hasOpacity = false
         ColorPickerFrame.func = callback
         ColorPickerFrame:Hide()
@@ -399,8 +450,6 @@
         ColorPickerFrame:SetPoint'CENTER'
         if  theme then
             ColorPickerFrame.theme  = true
-        else
-            ColorPickerFrame.button = true
         end
     end
 
@@ -410,22 +459,20 @@
     ColorPickerFrame.reset:SetPoint('BOTTOMLEFT', ColorPickerOkayButton, 0, 22)
     ColorPickerFrame.reset:Hide()
 
-    ColorPickerFrame:SetScript('OnShow', function(self)
-        if  self.hasOpacity then
-            OpacitySliderFrame:Show()
-            OpacitySliderFrame:SetValue(self.opacity)
-            self:SetWidth(365)
-        else
-            OpacitySliderFrame:Hide()
-            self:SetWidth(305)
-            end
+    ColorPickerFrame:HookScript('OnShow', function(self)
+        ns.colour[1] = MODUI_VAR['theme'].r
+        ns.colour[2] = MODUI_VAR['theme'].g
+        ns.colour[3] = MODUI_VAR['theme'].b
+        ns.colour_bu[1] = MODUI_VAR['theme_bu'].r
+        ns.colour_bu[2] = MODUI_VAR['theme_bu'].g
+        ns.colour_bu[3] = MODUI_VAR['theme_bu'].b
         if ColorPickerFrame.theme then
             self:SetHeight(220)
             ColorPickerFrame.reset:Show()
         end
     end)
 
-    ColorPickerFrame:SetScript('OnHide', function()
+    ColorPickerFrame:HookScript('OnHide', function()
         ColorPickerFrame.reset:Hide()
         ColorPickerFrame.theme  = false
         ColorPickerFrame.button = false
@@ -463,6 +510,23 @@
 
     local menu = CreateFrame('Frame', 'modoptions', UIParent, 'UIDropDownMenuTemplate')
 
+    local ColourFrameFunc = function(colour, cancel)
+        if  colour then
+            if  cancel then
+                MODUI_VAR['theme'].r = ns.colour_bu[1]
+                MODUI_VAR['theme'].g = ns.colour_bu[2]
+                MODUI_VAR['theme'].b = ns.colour_bu[3]
+            else
+                MODUI_VAR['theme'].r = colour[1]
+                MODUI_VAR['theme'].g = colour[2]
+                MODUI_VAR['theme'].b = colour[3]
+            end
+        else
+            MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b = ColorPickerFrame:GetColorRGB()
+        end
+        UpdateSkins()
+    end
+
     local list = {
         {
             text            = 'modui',
@@ -474,89 +538,21 @@
             text = 'UI Colour',
             icon = 'Interface\\ICONS\\inv_misc_gem_variety_02',
             func = function()
-                ColourPicker(
-                    ns.colour[1],
-                    ns.colour[2],
-                    ns.colour[3],
-                    1,
-                    function(colour, cancel)
-                       if  colour then
-                           if  cancel then
-                               ns.colour[1] = MODUI_VAR['theme'].r
-                               ns.colour[2] = MODUI_VAR['theme'].g
-                               ns.colour[3] = MODUI_VAR['theme'].b
-                           else
-                               ns.colour[1], ns.colour[2], ns.colour[3] = colour[1], colour[2], colour[3]
-                               MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b = colour[1], colour[2], colour[3]
-                           end
-                       else
-                           ns.colour[1], ns.colour[2], ns.colour[3] = ColorPickerFrame:GetColorRGB()
-                           MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b = ColorPickerFrame:GetColorRGB()
-                       end
-                       for _,  v in pairs(ns.skin) do
-                           if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
-                               v:SetVertexColor(
-                                   ns.colour[1],
-                                   ns.colour[2],
-                                   ns.colour[3]
-                               )
-                           end
-                       end
-                       for _,  v in pairs(ns.skinb) do
-                           if  v and v:GetBackdropBorderColor() then
-                               v:SetBackdropBorderColor(
-                                   MODUI_VAR['theme'].r,
-                                   MODUI_VAR['theme'].g,
-                                   MODUI_VAR['theme'].b
-                               )
-                           end
-                       end
-                   end
-               )
+                ColorPickerFrame:SetColorRGB(
+                    MODUI_VAR['theme'].r,
+                    MODUI_VAR['theme'].g,
+                    MODUI_VAR['theme'].b
+                )
+                ColorPickerFrame.hasOpacity = false
+                ColorPickerFrame.func = function(colour, cancel)
+                   ColourFrameFunc(colour, cancel, false)
+               end
+               ColorPickerFrame:Show()
+               ColorPickerFrame:SetPoint'CENTER'
            end,
            notCheckable = true,
            fontObject = Game13Font,
        },
-       {
-           text = 'Button Colour',
-           icon = 'Interface\\ICONS\\inv_misc_gem_variety_01',
-           func = function()
-               ColourPicker(
-                   ns.colour_bu[1],
-                   ns.colour_bu[2],
-                   ns.colour_bu[3],
-                   1,
-                   function(colour, cancel)
-                      if  colour then
-                          if  cancel then
-                              ns.colour_bu[1] = MODUI_VAR['theme_bu'].r
-                              ns.colour_bu[2] = MODUI_VAR['theme_bu'].g
-                              ns.colour_bu[3] = MODUI_VAR['theme_bu'].b
-                          else
-                              ns.colour_bu[1], ns.colour_bu[2], ns.colour_bu[3] = colour[1], colour[2], colour[3]
-                              MODUI_VAR['theme_bu'].r = colour[1]
-                              MODUI_VAR['theme_bu'].g = colour[2]
-                              MODUI_VAR['theme_bu'].b = colour[3]
-                          end
-                      else
-                          ns.colour_bu[1], ns.colour_bu[2], ns.colour_bu[3] = ColorPickerFrame:GetColorRGB()
-                          MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b = ColorPickerFrame:GetColorRGB()
-                      end
-                      for _,  v in pairs(ns.skinbu) do
-                          if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
-                              v:SetVertexColor(
-                                  ns.colour_bu[1],
-                                  ns.colour_bu[2],
-                                  ns.colour_bu[3]
-                              )
-                          end
-                      end
-                  end
-              )
-          end,
-          notCheckable = true,
-          fontObject = Game13Font,
-      },
       {
           text = 'Toggle Elements',
           icon = 'Interface\\PaperDollInfoFrame\\UI-EquipmentManager-Toggle',
@@ -610,36 +606,7 @@
             MODUI_VAR['theme_bu'] = {r = .9, g = .9, b = .9}
         end
 
-        ns.colour = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b} -- update this
-        ns.colour_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
-
-        for _,  v in pairs(ns.skin) do
-            if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
-                v:SetVertexColor(
-                    MODUI_VAR['theme'].r,
-                    MODUI_VAR['theme'].g,
-                    MODUI_VAR['theme'].b
-                )
-            end
-        end
-        for _,  v in pairs(ns.skinb) do
-            if  v and v:GetBackdropBorderColor() then
-                v:SetBackdropBorderColor(
-                    MODUI_VAR['theme'].r,
-                    MODUI_VAR['theme'].g,
-                    MODUI_VAR['theme'].b
-                )
-            end
-        end
-        for _,  v in pairs(ns.skinbu) do
-            if  v then
-                v:SetVertexColor(
-                    MODUI_VAR['theme_bu'].r,
-                    MODUI_VAR['theme_bu'].g,
-                    MODUI_VAR['theme_bu'].b
-                )
-            end
-        end
+        UpdateSkins()
     end
 
     hooksecurefunc('GroupLootFrame_OnShow', OnShow)
