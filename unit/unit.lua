@@ -75,7 +75,11 @@
 
     local UpdateTargetValue = function()
         local v, max, found = LCMH:GetUnitHealth'target'
+        local display = GetCVar'statusTextDisplay'
         TextStatusBar_UpdateTextStringWithValues(TargetFrameHealthBar, TargetFrameHealthBarText, v, 0, max)
+        if  TargetFrameHealthBar.RightText and display == 'BOTH' and not TargetFrameHealthBar.showPercentage then
+            TargetFrameHealthBar.RightText:SetText(v)
+        end
     end
 
     local AddTargetFrame = function()

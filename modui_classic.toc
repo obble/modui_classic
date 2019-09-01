@@ -11,15 +11,7 @@ core/var.lua
 theme/theme.lua
 
 #   ~libraries
-libraries/LibStub/LibStub.lua
-libraries/CallbackHandler-1.0/CallbackHandler-1.0.lua
-libraries/LibClassicDurations/core.lua
-libraries/LibClassicDurations/classAbilities.lua
-libraries/LibClassicDurations/diminishingReturns.lua
-libraries/LibClassicDurations/npcAbilities.lua
-libraries/LibClassicMobHealth/LibClassicMobHealth.lua
-libraries/LibClassicCasterino/LibClassicCasterino.lua
-libraries/SortBags/SortBags.lua
+libraries/init.xml
 
 #   ~shared functions & overall UI biz
 core/colour.lua

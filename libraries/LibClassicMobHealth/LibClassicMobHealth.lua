@@ -96,7 +96,7 @@ _G.hash_SlashCmdList["LIBCLASSICMOBHEALTHONE"] = nil
 _G.SlashCmdList["LIBCLASSICMOBHEALTHONE"] = nil
 
 function frame:ADDON_LOADED(name)
-	if name == MAJOR_VERSION then
+	if name == "Tukui" then
 		-- if we're not an embedded library, then use a saved variable
 		frame:RegisterEvent("PLAYER_LOGOUT")
 		if type(_G.LibClassicMobHealth10DB) == "table" then
