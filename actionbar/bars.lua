@@ -32,7 +32,8 @@
 
             MultiBarBottomRight:SetPoint('LEFT', MultiBarBottomLeft, 'RIGHT', 43, 6)
 
-    		SlidingActionBarTexture0:SetPoint('TOPLEFT', PetActionBarFrame, 1, -5)
+            SlidingActionBarTexture0:ClearAllPoints()
+    		SlidingActionBarTexture0:SetPoint('TOPLEFT', PetActionButton1, -34, 12)
 
             MultiBarBottomRightButton7:ClearAllPoints()
             MultiBarBottomRightButton7:SetPoint('BOTTOMLEFT', MultiBarBottomRightButton1, 'TOPLEFT', 0, 24)
