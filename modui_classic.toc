@@ -7,18 +7,19 @@
 #   ~load variables table prior to anything else
 core/var.lua
 
-#   ~colour modification (todo: put button skinning in here?)
-theme/theme.lua
-
-#   ~libraries
-libraries/init.xml
-
 #   ~shared functions & overall UI biz
 core/colour.lua
 core/functions.lua
 core/text.lua
 core/skins.lua
 core/tables.lua
+
+#   ~colour modification (todo: put button skinning in here?)
+theme/theme.lua
+theme/buttons/character.lua
+
+#   ~libraries
+libraries/init.xml
 
 #   ~insert templates
 templates.xml

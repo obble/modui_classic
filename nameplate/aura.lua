@@ -36,6 +36,7 @@
 
                 plate.aura[i].cooldown = CreateFrame('Cooldown', nil, plate.aura[i], 'CooldownFrameTemplate')
                 plate.aura[i].cooldown:SetAllPoints()
+                plate.aura[i].cooldown:SetSwipeTexture[[Interface\CHARACTERFRAME\TempPortraitAlphaMaskSmall]]
                 plate.aura[i].cooldown:SetReverse(true)
 
                 local t = plate.aura[i].cooldown:GetRegions()

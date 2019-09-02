@@ -157,12 +157,7 @@
     end
 
     local OnEvent = function()
-        if not MODUI_VAR['elements']['error'].enable then
-            UIErrorsFrame:UnregisterEvent'UI_ERROR_MESSAGE'
-        end
-
         if  MODUI_VAR['elements']['chat'].enable then
-
             if  MODUI_VAR['elements']['chat'].events then
                 AddEventFilters()
                 AddMessageHooks()

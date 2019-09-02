@@ -188,44 +188,87 @@
     local AddTargetAura = function(self)
         -- nb: needs update: these are being generated ad-hoc
         for i = 1, MAX_TARGET_BUFFS do
-            local bu = _G['TargetFrameBuff'..i]
-            if  bu and not bu.bo then
+            local n     = 'TargetFrameBuff'..i
+            local bu    = _G[n]
+            local cd    = _G[n..'Cooldown']
+            if  bu and not bu.skinned then
                 ns.BUBorder(bu, 18, 18, 3, 4)
                 for j = 1, 4 do
                     tinsert(ns.skinbu, bu.bo[j])
                     bu.bo[j]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
                 end
 
-                bu.cooldown = CreateFrame('Cooldown', bu:GetName()..'Cooldown', bu, 'CooldownFrameTemplate')
-                bu.cooldown:SetAllPoints()
-                bu.cooldown:SetReverse(true)
+                cd:SetHideCountdownNumbers(false)
 
-                local t = bu.cooldown:GetRegions()
+                local t = cd:GetRegions()
                 t:SetFont(STANDARD_TEXT_FONT, 7, 'OUTLINE')
                 t:ClearAllPoints()
-                t:SetPoint('CENTER', bu.cooldown, 'BOTTOM', 0, 3)
+                t:SetPoint('CENTER', cd, 'BOTTOM', 0, 3)
+                bu.skinned = true
+            end
+        end
+        for i = 1, MAX_TARGET_DEBUFFS do
+            local n     = 'TargetFrameDebuff'..i
+            local bu    = _G[n]
+            local cd    = _G[n..'Cooldown']
+
+            if  bu and not bu.skinned then
+                cd:SetHideCountdownNumbers(false)
+
+                local t = cd:GetRegions()
+                t:SetFont(STANDARD_TEXT_FONT, 7, 'OUTLINE')
+                t:ClearAllPoints()
+                t:SetPoint('CENTER', cd, 'BOTTOM', 0, 3)
+                bu.skinned = true
             end
         end
     end
 
     local AddAuraDuration = function(self)
+        AddTargetAura(self)
         for i = 1, MAX_TARGET_BUFFS do
-            local name, _, _, _, duration, expiration, caster, _, _, spellid = UnitBuff(self.unit, i, nil)
-            local bu = _G['TargetFrameBuff'..i]
+            local name, icon, count, dtype, duration, expiration, caster, canstealorpurge, _ , spellid, _, _, isplayer, nameplateshowall = UnitBuff(self.unit, i, nil)
             if  name then
-                local durationnew, expirationnew = LCD:GetAuraDurationByUnit(self.unit, spellid, caster, name)
-                if  duration == 0 and durationnew then
-                    duration    = durationnew
-                    expiration  = expirationnew
+                local n     = self:GetName()..'Buff'..i
+                local bu    = _G[n]
+                local cd    = _G[n..'Cooldown']
+
+                local duration2, expiration2 = LCD:GetAuraDurationByUnit(self.unit, spellid, caster)
+                if  duration == 0 and duration2 then
+                    duration    = duration2
+                    expiration  = expiration2
                 end
 
-                if  expiration and expiration ~= 0 then
-                    local start = expiration - duration
-                    CooldownFrame_Set(bu.cooldown, start, duration, true)
-                else
-                    CooldownFrame_Clear(bu.cooldown)
-                end
+                CooldownFrame_Set(cd, expiration - duration, duration, duration > 0, true)
+            else
+                break
             end
+        end
+
+        local num           = 1
+        local i             = 1
+        local max           = self.maxDebuffs or MAX_TARGET_DEBUFFS
+        while num <= max and i <= max do
+            local name, icon, count, dtype, duration, expiration, caster, _, _, spellid, _, _, isplayer, nameplates= UnitDebuff(self.unit, i, 'INCLUDE_NAME_PLATE_ONLY')
+            if  name then
+                if  TargetFrame_ShouldShowDebuffs(self.unit, caster, nameplateshowall, casterisplayer) then
+                    local n     = self:GetName()..'Debuff'..num
+                    local bu    = _G[n]
+                    local cd    = _G[n..'Cooldown']
+
+                    local duration2, expiration2 = LCD:GetAuraDurationByUnit(self.unit, spellid, caster)
+                    if  duration == 0 and duration2 then
+                        duration    = duration2
+                        expiration  = expiration2
+                    end
+
+                    CooldownFrame_Set(cd, expiration - duration, duration, duration > 0, true)
+                    num = num + 1
+                end
+            else
+                break
+            end
+            i = i + 1
         end
     end
 
@@ -333,19 +376,17 @@
                 hooksecurefunc('TextStatusBar_UpdateTextString', UpdateTextStringColour)
             end
 
-            hooksecurefunc('TargetFrame_UpdateAuras', AddTargetAura)
+            if  MODUI_VAR['elements']['unit'].auras then
+                hooksecurefunc('TargetFrame_UpdateAuras', AddAuraDuration)
+            end
         end
 
         if  MODUI_VAR['elements']['unit'].target then
             UpdateTargetNameClassColour()
         end
 
-        if  MODUI_VAR['elements']['unit'].auras then
-            hooksecurefunc('TargetFrame_UpdateAuras', AddAuraDuration)
-        end
-
         if  MODUI_VAR['elements']['unit'].party then
-            -- UpdatePartyTextClassColour() tainting i think
+            if not InCombatLockdown() then UpdatePartyTextClassColour() end
         end
     end
 
