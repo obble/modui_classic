@@ -272,6 +272,11 @@
         end
     end
 
+    local AddPartyPets = function()
+        local  var = GetCVar'showPartyPets'
+		if not var == '1' then SetCVar('showPartyPets', 1) end
+    end
+
     local UpdateTargetNameClassColour = function()
         if  UnitIsPlayer'target' then
             local _, class  = UnitClass'target'
@@ -386,6 +391,7 @@
         end
 
         if  MODUI_VAR['elements']['unit'].party then
+            AddPartyPets()
             if not InCombatLockdown() then UpdatePartyTextClassColour() end
         end
     end

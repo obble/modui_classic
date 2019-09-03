@@ -36,7 +36,6 @@
             ns.ItemElements(bu)
             ns.BUBorder(bu)
             bu:SetNormalTexture''
-            print(v)
             if  v == 'SecondaryHand' or v == 'Ranged' then
                 local x = {bu:GetPoint()}
                 bu:ClearAllPoints()

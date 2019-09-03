@@ -116,31 +116,6 @@
         end
     end
 
-    local AddTokens = function()
-        for i = 1, 3 do
-            local bu    = _G['BackpackTokenFrameToken'..i]
-            local ic    = _G['BackpackTokenFrameToken'..i..'Icon']
-            local count = _G['BackpackTokenFrameToken'..i..'Count']
-            if bu then
-                ic:ClearAllPoints()
-                ic:SetPoint('RIGHT', bu)
-                ic:SetTexCoord(.1, .9, .1, .9)
-
-                count:ClearAllPoints()
-                count:SetPoint('RIGHT', ic, 'LEFT', -3, 0)
-                count:SetFont(FONT_REGULAR, 7)
-            end
-        end
-    end
-
-    local MinorButtonSkins = function()
-        AddTokens()
-        e:UnregisterEvent'PLAYER_ENTERING_WORLD'
-    end
-
-    e:RegisterEvent'PLAYER_ENTERING_WORLD'
-    e:SetScript('OnEvent', MinorButtonSkins)
-
     hooksecurefunc('ContainerFrame_Update',                 ns.ColourUpdate)
     hooksecurefunc('ContainerFrame_UpdateSearchResults',    ns.ColourUpdate)
     hooksecurefunc('BankFrameItemButton_Update',            ns.BankColourUpdate)

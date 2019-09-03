@@ -174,6 +174,14 @@
 
 				slot.IconBorder:SetAlpha(0)
 
+				-- not... the best
+				slot:HookScript('OnEvent', function(self)
+					if  MODUI_VAR['elements']['mainbar'].enable then
+						slot:SetSize(18, 12)
+						icon:SetTexCoord(.1, .9, .2, .8)
+					end
+				end)
+
 				slot:SetParent(MODUI_VAR['elements']['onebag'].enable and bag.topstrip or ContainerFrame1)
 				if MODUI_VAR['elements']['onebag'].enable then
 					if  i == 0 then

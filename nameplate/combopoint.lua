@@ -19,10 +19,12 @@
 
     local CreateComboFrame = function(unit)
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
-        plate.cp = plate.UnitFrame.healthBar:CreateFontString(nil, 'OVERLAY')
-        plate.cp:SetFont(STANDARD_TEXT_FONT, 16, 'OUTLINE')
-        plate.cp:SetPoint('RIGHT', plate.UnitFrame.healthBar)
-        plate.cp:Hide()
+        if  not plate.cp then
+            plate.cp = plate.UnitFrame.healthBar:CreateFontString(nil, 'OVERLAY')
+            plate.cp:SetFont(STANDARD_TEXT_FONT, 16, 'OUTLINE')
+            plate.cp:SetPoint('RIGHT', plate.UnitFrame.healthBar)
+            plate.cp:Hide()
+        end
     end
 
     local Update = function(frame)
