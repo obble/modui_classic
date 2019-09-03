@@ -15,6 +15,11 @@
         'Stance',
     }
 
+    local h = {
+        'MultiBarLeft',
+        'MultiBarRight',
+    }
+
     local events = {
         'PLAYER_LOGIN',
         'PLAYER_XP_UPDATE',
@@ -193,6 +198,29 @@
         hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
     end
 
+    local AddButtonSkin = function()
+        for _, v in pairs(n) do
+            for i = 1, 12 do
+                local bu = _G[v..'Button'..i]
+                if  bu then
+                    ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
+                    ns.BUBorder(bu)
+                    ns.BUElements(bu)
+                end
+            end
+        end
+        for _, v in pairs(x) do
+            for i = 1, 10 do
+                local bu = _G[v..'Button'..i]
+                if  bu then
+                    ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
+                    ns.BUBorder(bu)
+                    ns.BUElements(bu)
+                end
+            end
+        end
+    end
+
     local AddBars = function()
         local bar = CreateFrame('Frame', 'modui_mainbar', MainMenuBar)
         bar:SetSize(1024, 128)
@@ -215,10 +243,6 @@
             for i = 1, 12 do
                 local bu = _G[v..'Button'..i]
                 if  bu then
-                    ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
-                    ns.BUBorder(bu)
-                    ns.BUElements(bu)
-
                     -- TODO: all our placement needs *MAJOR* streamlining
                     -- but i dont have time rn
                     if  v == 'MultiBarBottomRight' then
@@ -231,32 +255,13 @@
                     if  i > 1 then
                         bu:ClearAllPoints()
                         -- pixel...
-                        if  v == 'MultiBarLeft' or v == 'MultiBarRight' then
-                            if  MODUI_VAR['elements']['mainbar'].horiz then
-                                bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
-                            else
-                                bu:SetPoint('TOP', _G[v..'Button'..(i - 1)], 'BOTTOM', 0, -8.5)
-                            end
-                        else
-                            bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
-                            -- PERFECTION!
-                            if  i == 7 and v == 'MultiBarBottomRight' then
-                                bu:ClearAllPoints()
-                                bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 17)
-                            end
+                        bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
+                        -- PERFECTION!
+                        if  i == 7 and v == 'MultiBarBottomRight' then
+                            bu:ClearAllPoints()
+                            bu:SetPoint('BOTTOMLEFT', _G[v..'Button1'], 'TOPLEFT', 0, 17)
                         end
                     end
-                end
-            end
-        end
-
-        for _, v in pairs(x) do
-            for i = 1, 10 do
-                local bu = _G[v..'Button'..i]
-                if  bu then
-                    ns.BU(bu, .75, true, bu:GetHeight() - 2.25, bu:GetWidth() - 2.25)
-                    ns.BUBorder(bu)
-                    ns.BUElements(bu)
                 end
             end
         end
@@ -283,6 +288,10 @@
             {
                 MainMenuBarLeftEndCap,
                 MainMenuBarRightEndCap,
+                -- fuck em, im just hiding these textures
+                -- until i can be bothered to level hunter
+                SlidingActionBarTexture0,
+                SlidingActionBarTexture1,
             }
         ) do
             v:Hide()
@@ -293,10 +302,36 @@
         hooksecurefunc('ShowPetActionBar', UpdatePetBar)
     end
 
+    local AddHorizBars = function()
+        for _, v in pairs(h) do
+            for i = 1, 12 do
+                local bu = _G[v..'Button'..i]
+                if  v == 'MultiBarRight' then
+                    if  i == 1 then
+                        bu:ClearAllPoints()
+                        bu:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 0, 8)
+                    else
+                        bu:ClearAllPoints()
+                        bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 6, 0)
+                    end
+                else
+                    if  i == 1 then
+                        bu:ClearAllPoints()
+                        bu:SetPoint('BOTTOMLEFT', MultiBarBottomRightButton1, 'TOPLEFT', 0, 8)
+                    else
+                        bu:ClearAllPoints()
+                        bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 6, 0)
+                    end
+                end
+            end
+        end
+    end
+
     local OnEvent = function(self, event)
         if  MODUI_VAR['elements']['mainbar'].enable then
             if  event == 'PLAYER_LOGIN' then
                 AddBars()
+                AddButtonSkin()
                 MoveBars()
                 UpdateBars()
             else
@@ -305,6 +340,9 @@
         elseif MODUI_VAR['elements']['mainbar'].xp then
             AddXP()
             UpdateXP()
+        end
+        if  MODUI_VAR['elements']['mainbar'].horiz and not MODUI_VAR['elements']['mainbar'].enable then
+            AddHorizBars()
         end
     end
 

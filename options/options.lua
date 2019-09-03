@@ -88,14 +88,68 @@
 
     local AllOnClick = function(self)
         if  self:GetChecked() then
-            MODUI_VAR['elements'].all = true
-            MODUI_VAR['elements']['aura'].enable = true
-            MODUI_VAR['elements']['unit'].enable = true
+            MODUI_VAR['elements'].all                           = true
+            MODUI_VAR['elements']['mainbar'].enable             = true
+            MODUI_VAR['elements']['mainbar'].keypress           = true
+            MODUI_VAR['elements']['aura'].enable                = true
+            MODUI_VAR['elements']['aura'].statusbars            = true
+            MODUI_VAR['elements']['aura'].values                = true
+            MODUI_VAR['elements']['mainbar'].xp                 = true
+            MODUI_VAR['elements']['chat'].enable                = true
+            MODUI_VAR['elements']['chat'].events                = true
+            MODUI_VAR['elements']['chat'].style                 = true
+            MODUI_VAR['elements']['chat'].url                   = true
+            MODUI_VAR['elements']['onebag'].enable              = true
+            MODUI_VAR['elements']['onebag'].greys               = true
+            MODUI_VAR['elements']['ecastbar'].enable            = true
+            MODUI_VAR['elements']['nameplate'].enable           = true
+            MODUI_VAR['elements']['nameplate'].aura             = true
+            MODUI_VAR['elements']['nameplate'].combo            = true
+            MODUI_VAR['elements']['nameplate'].friendlyclass    = true
+            MODUI_VAR['elements']['nameplate'].totem            = true
+            MODUI_VAR['elements']['tracker'].enable             = true
+            MODUI_VAR['elements']['tooltip'].enable             = true
+            MODUI_VAR['elements']['unit'].enable                = true
+            MODUI_VAR['elements']['unit'].player                = true
+            MODUI_VAR['elements']['unit'].target                = true
+            MODUI_VAR['elements']['unit'].party                 = true
+            MODUI_VAR['elements']['unit'].tot                   = true
+            MODUI_VAR['elements']['unit'].pet                   = true
+            MODUI_VAR['elements']['unit'].auras                 = true
+            MODUI_VAR['elements']['unit'].vcolour               = true
+            MODUI_VAR['elements']['unit'].rcolour               = true
             UpdateAllCheckButtons(true)
         else
-            MODUI_VAR['elements'].all = false
-            MODUI_VAR['elements']['aura'].enable = false
-            MODUI_VAR['elements']['unit'].enable = false
+            MODUI_VAR['elements'].all                           = false
+            MODUI_VAR['elements']['mainbar'].enable             = false
+            MODUI_VAR['elements']['mainbar'].keypress           = false
+            MODUI_VAR['elements']['aura'].enable                = false
+            MODUI_VAR['elements']['aura'].statusbars            = false
+            MODUI_VAR['elements']['aura'].values                = false
+            MODUI_VAR['elements']['mainbar'].xp                 = false
+            MODUI_VAR['elements']['chat'].enable                = false
+            MODUI_VAR['elements']['chat'].events                = false
+            MODUI_VAR['elements']['chat'].style                 = false
+            MODUI_VAR['elements']['chat'].url                   = false
+            MODUI_VAR['elements']['onebag'].enable              = false
+            MODUI_VAR['elements']['onebag'].greys               = false
+            MODUI_VAR['elements']['ecastbar'].enable            = false
+            MODUI_VAR['elements']['nameplate'].enable           = false
+            MODUI_VAR['elements']['nameplate'].aura             = false
+            MODUI_VAR['elements']['nameplate'].combo            = false
+            MODUI_VAR['elements']['nameplate'].friendlyclass    = false
+            MODUI_VAR['elements']['nameplate'].totem            = false
+            MODUI_VAR['elements']['tracker'].enable             = false
+            MODUI_VAR['elements']['tooltip'].enable             = false
+            MODUI_VAR['elements']['unit'].enable                = false
+            MODUI_VAR['elements']['unit'].player                = false
+            MODUI_VAR['elements']['unit'].target                = false
+            MODUI_VAR['elements']['unit'].party                 = false
+            MODUI_VAR['elements']['unit'].tot                   = false
+            MODUI_VAR['elements']['unit'].pet                   = false
+            MODUI_VAR['elements']['unit'].auras                 = false
+            MODUI_VAR['elements']['unit'].vcolour               = false
+            MODUI_VAR['elements']['unit'].rcolour               = false
             UpdateAllCheckButtons(false)
         end
         ShowReload()
@@ -168,6 +222,28 @@
             true
         )
         add(
+            'Exp & Reputation Bar',
+            function(self)
+                MODUI_VAR['elements']['mainbar'].xp = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['mainbar'].xp and true or false,
+            1, 1, 1,
+            true,
+            true
+        )
+        add(
+            'Horizontal Third Row (Classic Layout only)',
+            function(self)
+                MODUI_VAR['elements']['mainbar'].horiz = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['mainbar'].horiz and true or false,
+            1, 1, 1,
+            true,
+            MODUI_VAR['elements']['mainbar'].enable and false or true
+        )
+        add(
             'Cast Spells on Button Down',
             function(self)
                 MODUI_VAR['elements']['mainbar'].keypress = self:GetChecked() and true or false
@@ -186,8 +262,8 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton4'],
-                        _G['modui_checkbutton5']
+                        _G['modui_checkbutton6'],
+                        _G['modui_checkbutton7']
                     }
                 )
             end,
@@ -224,9 +300,9 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton7'],
-                        _G['modui_checkbutton8'],
                         _G['modui_checkbutton9'],
+                        _G['modui_checkbutton10'],
+                        _G['modui_checkbutton11'],
                     }
                 )
             end,
@@ -309,10 +385,10 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton14'],
-                        _G['modui_checkbutton15'],
                         _G['modui_checkbutton16'],
                         _G['modui_checkbutton17'],
+                        _G['modui_checkbutton18'],
+                        _G['modui_checkbutton19'],
                     }
                 )
             end,
@@ -394,14 +470,14 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton21'],
-                        _G['modui_checkbutton22'],
                         _G['modui_checkbutton23'],
                         _G['modui_checkbutton24'],
                         _G['modui_checkbutton25'],
                         _G['modui_checkbutton26'],
                         _G['modui_checkbutton27'],
                         _G['modui_checkbutton28'],
+                        _G['modui_checkbutton29'],
+                        _G['modui_checkbutton30'],
                     }
                 )
             end,
