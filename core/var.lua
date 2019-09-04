@@ -66,6 +66,7 @@
 			},
 			unit = {
 				enable 			= true,
+				castbar			= true,
 				player 			= true,
 				target 			= true,
 				party 			= true,

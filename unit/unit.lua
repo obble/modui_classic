@@ -10,6 +10,8 @@
         'PLAYER_LOGIN',
         'GROUP_ROSTER_UPDATE',
         'PLAYER_TARGET_CHANGED',
+        'UNIT_SPELLCAST_START',
+        'UNIT_SPELLCAST_CHANNEL_START',
         'UNIT_FACTION'
     }
 
@@ -48,29 +50,58 @@
         PlayerPVPIcon:ClearAllPoints()
         PlayerPVPIcon:SetPoint('CENTER', PlayerFrame, 'LEFT', 60, 16)
 
-        CastingBarFrame.Icon:SetSize(16, 16)
-        CastingBarFrame.Icon:ClearAllPoints()
-        CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
-        CastingBarFrame.Icon:SetTexCoord(.1, .9, .1, .9)
+        if  MODUI_VAR['elements']['unit'].castbar then
+            CastingBarFrame.Icon:SetSize(16, 16)
+            CastingBarFrame.Icon:ClearAllPoints()
+            CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
+            CastingBarFrame.Icon:SetTexCoord(.1, .9, .1, .9)
 
-        CastingBarFrame.IconF = CreateFrame('Frame', nil, CastingBarFrame)
-        CastingBarFrame.IconF:SetAllPoints(CastingBarFrame.Icon)
-        ns.BD(CastingBarFrame.IconF)
-        ns.BUBorder(CastingBarFrame.IconF, 18)
-        for i = 1, 4 do
-            tinsert(ns.skinbu, CastingBarFrame.IconF.bo[i])
-            CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
+            CastingBarFrame.IconF = CreateFrame('Frame', nil, CastingBarFrame)
+            CastingBarFrame.IconF:SetAllPoints(CastingBarFrame.Icon)
+            ns.BD(CastingBarFrame.IconF)
+            ns.BUBorder(CastingBarFrame.IconF, 18)
+            for i = 1, 4 do
+                tinsert(ns.skinbu, CastingBarFrame.IconF.bo[i])
+                CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
+            end
+            CastingBarFrame.Icon:SetParent(CastingBarFrame.IconF)
+
+            CastingBarFrame.SafeZone = CastingBarFrame:CreateTexture(nil, 'BORDER')
+            ns.SB(CastingBarFrame.SafeZone)
+            CastingBarFrame.SafeZone:SetVertexColor(.69, .31, .31)
+    		CastingBarFrame.SafeZone:SetPoint'RIGHT'
+    		CastingBarFrame.SafeZone:SetPoint'TOP'
+    		CastingBarFrame.SafeZone:SetPoint'BOTTOM'
         end
-        CastingBarFrame.IconF:Hide()
-        CastingBarFrame.Icon:SetParent(CastingBarFrame.IconF)
     end
 
-    local UpdateCastingBarIcon = function(self)
-        if  self.Spark.offsetY < 1 then
-            self.IconF:Show()
+    local UpdateCastingBarLatency = function(start, endtime)
+        local width = CastingBarFrame:GetWidth()
+        local _, _, _, ms = GetNetStats()
+        local x = (ms/1e3)/((endtime/1e3) - (start/1e3))
+
+        if x > 1 then x = 1 end
+
+        CastingBarFrame.SafeZone:SetWidth(width*x)
+    end
+
+    local UpdateCastingBarIcon = function(texture)
+        if  CastingBarFrame.Spark.offsetY < 1 then
+            CastingBarFrame.Icon:ClearAllPoints()
+            CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
         else
-            self.IconF:Hide()
+            CastingBarFrame.Icon:SetTexture(texture)
+            CastingBarFrame.Icon:Show()
+            CastingBarFrame.Icon:ClearAllPoints()
+            CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -32, 3)
         end
+    end
+
+    local UpdateCastingBar = function()
+        local _, _, texture, start, endtime = CastingInfo()
+        print(start, endtime)
+        UpdateCastingBarLatency(start, endtime)
+        UpdateCastingBarIcon(texture)
     end
 
     local UpdateTargetValue = function()
@@ -361,7 +392,6 @@
         if  event == 'PLAYER_LOGIN' then
             if  MODUI_VAR['elements']['unit'].player then
                 AddPlayerFrame()
-                CastingBarFrame:HookScript('OnShow', UpdateCastingBarIcon)
             end
 
             if  MODUI_VAR['elements']['unit'].target then
@@ -383,6 +413,12 @@
 
             if  MODUI_VAR['elements']['unit'].auras then
                 hooksecurefunc('TargetFrame_UpdateAuras', AddAuraDuration)
+            end
+        end
+
+        if  event == 'UNIT_SPELLCAST_START' or event == 'UNIT_SPELLCAST_CHANNEL_START' then
+            if  MODUI_VAR['elements']['unit'].castbar then
+                UpdateCastingBar()
             end
         end
 

@@ -95,6 +95,7 @@
             MODUI_VAR['elements']['aura'].statusbars            = true
             MODUI_VAR['elements']['aura'].values                = true
             MODUI_VAR['elements']['mainbar'].xp                 = true
+            MODUI_VAR['elements']['unit'].castbar               = true
             MODUI_VAR['elements']['chat'].enable                = true
             MODUI_VAR['elements']['chat'].events                = true
             MODUI_VAR['elements']['chat'].style                 = true
@@ -129,6 +130,7 @@
             MODUI_VAR['elements']['aura'].statusbars            = false
             MODUI_VAR['elements']['aura'].values                = false
             MODUI_VAR['elements']['mainbar'].xp                 = false
+            MODUI_VAR['elements']['unit'].castbar               = false
             MODUI_VAR['elements']['chat'].enable                = false
             MODUI_VAR['elements']['chat'].events                = false
             MODUI_VAR['elements']['chat'].style                 = false
@@ -297,6 +299,17 @@
             MODUI_VAR['elements']['aura'].enable and true or false
         )
         add(
+            'Castbar',
+            function(self)
+                MODUI_VAR['elements']['unit'].castbar = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['unit'].castbar and true or false,
+            1, .8, 0,
+            nil,
+            true
+        )
+        add(
             'Chat',
             function(self)
                 MODUI_VAR['elements']['chat'].enable = self:GetChecked() and true or false
@@ -304,9 +317,9 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton9'],
                         _G['modui_checkbutton10'],
                         _G['modui_checkbutton11'],
+                        _G['modui_checkbutton12'],
                     }
                 )
             end,
@@ -389,10 +402,10 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton16'],
                         _G['modui_checkbutton17'],
                         _G['modui_checkbutton18'],
                         _G['modui_checkbutton19'],
+                        _G['modui_checkbutton20'],
                     }
                 )
             end,
@@ -463,7 +476,7 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton22'],
+                        _G['modui_checkbutton23'],
                     }
                 )
             end,
@@ -491,7 +504,6 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton24'],
                         _G['modui_checkbutton25'],
                         _G['modui_checkbutton26'],
                         _G['modui_checkbutton27'],
@@ -499,6 +511,7 @@
                         _G['modui_checkbutton29'],
                         _G['modui_checkbutton30'],
                         _G['modui_checkbutton31'],
+                        _G['modui_checkbutton32'],
                     }
                 )
             end,
