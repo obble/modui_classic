@@ -33,7 +33,7 @@
             MultiBarBottomLeft:SetPoint('BOTTOMLEFT', ActionButton1, 'TOPLEFT', 0, 23)
 
             MultiBarBottomLeftButton1:ClearAllPoints()
-            MultiBarBottomLeftButton1:SetPoint('BOTTOMLEFT', ActionButton1, 'TOPLEFT', 0, 23)
+            MultiBarBottomLeftButton1:SetPoint('BOTTOMLEFT', ActionButton1, 'TOPLEFT', 0, ReputationWatchBar:IsShown() and 30 or 23)
 
             MultiBarBottomRight:SetPoint('LEFT', MultiBarBottomLeft, 'RIGHT', 43, 6)
 
@@ -41,7 +41,7 @@
     		SlidingActionBarTexture0:SetPoint('TOPLEFT', PetActionButton1, -34, 12)
 
             MultiBarBottomRightButton7:ClearAllPoints()
-            MultiBarBottomRightButton7:SetPoint('BOTTOMLEFT', MultiBarBottomRightButton1, 'TOPLEFT', 0, 24)
+            MultiBarBottomRightButton7:SetPoint('BOTTOMLEFT', MultiBarBottomRightButton1, 'TOPLEFT', 0, ReputationWatchBar:IsShown() and 31 or 24)
 
             PetActionButton1:ClearAllPoints()
             PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, 8)
@@ -100,6 +100,9 @@
 
 		ReputationWatchBar.spark:SetPoint('CENTER', ReputationWatchBar.StatusBar, 'LEFT', x, 2)
         ReputationWatchBar.spark:SetVertexColor(colour.r, colour.g, colour.b)
+
+        ReputationWatchBar:HookScript('OnShow', MoveBars)
+        ReputationWatchBar:HookScript('OnHide', MoveBars)
     end
 
     local UpdateExhaustion = function()
@@ -131,28 +134,39 @@
         SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
 
         PetActionBarFrame:ClearAllPoints()
-        PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
-
         PetActionButton1:ClearAllPoints()
-        PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+        if  MODUI_VAR['elements']['mainbar'].horiz and not MODUI_VAR['elements']['mainbar'].enable then
+            PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarRight:IsShown() and 56 or MultiBarBottomLeft:IsShown() and 8 or -40)
+            PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarRight:IsShown() and 56 or MultiBarBottomLeft:IsShown() and 8 or -40)
+        else
+            PetActionBarFrame:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+            PetActionButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+        end
     end
 
     local UpdateStanceBar = function()
         StanceBarLeft:ClearAllPoints()
         StanceBarLeft:SetPoint('BOTTOMLEFT', StanceButton1, -14, -2)
-
         StanceButton1:ClearAllPoints()
-        StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+        if  MODUI_VAR['elements']['mainbar'].horiz and not MODUI_VAR['elements']['mainbar'].enable then
+            StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarRight:IsShown() and 56 or MultiBarBottomLeft:IsShown() and 8 or -40)
+        else
+            StanceButton1:SetPoint('BOTTOMLEFT', MultiBarBottomLeftButton1, 'TOPLEFT', 20, MultiBarBottomLeft:IsShown() and 8 or -40)
+        end
+    end
+
+    local UpdatePetStance = function()
+        if  not InCombatLockdown() then
+            UpdatePetBar()
+            UpdateStanceBar()
+        end
     end
 
     local UpdateBars = function()
         SetBarLength(MultiBar2_IsVisible() and true or false)
         UpdateXP()
         UpdateWatchbar()
-        if  not InCombatLockdown() then
-            UpdatePetBar()
-            UpdateStanceBar()
-        end
+        UpdatePetStance()
     end
 
     local AddXP = function()
@@ -174,7 +188,7 @@
 
         MainMenuExpBar:SetSize(1024, 6)
         MainMenuExpBar:ClearAllPoints()
-        MainMenuExpBar:SetPoint('BOTTOM', 0, 48)
+        MainMenuExpBar:SetPoint('BOTTOM', 0, MODUI_VAR['elements']['mainbar'].enable and 49 or 40)
 
         MainMenuExpBar.spark = MainMenuExpBar:CreateTexture(nil, 'OVERLAY', nil, 7)
         MainMenuExpBar.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
@@ -325,6 +339,15 @@
                 end
             end
         end
+        for i, v in pairs(n) do
+            if  i > 1 then
+                local bar = _G[v]
+                bar:HookScript('OnShow', UpdatePetStance)
+                bar:HookScript('OnHide', UpdatePetStance)
+            end
+        end
+        hooksecurefunc('ActionBarController_UpdateAll', UpdatePetStance)
+        hooksecurefunc('ShowPetActionBar', UpdatePetBar)
     end
 
     local OnEvent = function(self, event)
