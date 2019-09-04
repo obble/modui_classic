@@ -79,13 +79,32 @@
         end
     end
 
+    local MouseUpdate = function(tooltip, parent)
+		if  GetMouseFocus() ~= WorldFrame then
+			return
+		end
+		local x, y  = GetCursorPosition()
+		local scale = tooltip:GetEffectiveScale()
+		tooltip:ClearAllPoints()
+		tooltip:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', (x/scale + 25), (y/scale - 5))
+	end
+
     local AddAnchor = function(tooltip, parent)
-        if  not GetMouseoverUnit() then
-            tooltip:SetOwner(parent, 'ANCHOR_CURSOR')
+        local isUnit = GetMouseoverUnit()
+        if  MODUI_VAR['elements']['tooltip'].mouseanchor then
+            MouseUpdate(tooltip, parent)
+            if  isUnit then
+                AddStatusBar(GameTooltipStatusBar, tooltip, false)
+            end
         else
-            tooltip:ClearAllPoints()
-            tooltip:SetPoint('BOTTOMRIGHT', UIParent, -33, 33)
-            AddStatusBar(GameTooltipStatusBar, tooltip, false)
+            if  not isUnit then
+                tooltip:ClearAllPoints()
+                tooltip:SetOwner(parent, 'ANCHOR_TOPRIGHT', 0, 10)
+            else
+                tooltip:ClearAllPoints()
+                tooltip:SetPoint('BOTTOMRIGHT', UIParent, -33, 33)
+                AddStatusBar(GameTooltipStatusBar, tooltip, false)
+            end
         end
     end
 
@@ -121,6 +140,9 @@
             hooksecurefunc('GameTooltip_UpdateStyle',       UpdateStyle)
             hooksecurefunc('GameTooltip_SetBackdropStyle',  UpdateStyle)
             hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
+            if  MODUI_VAR['elements']['tooltip'].mouseanchor then
+				GameTooltip:HookScript('OnUpdate', MouseUpdate)
+			end
         end
     end
 

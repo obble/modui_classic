@@ -59,6 +59,7 @@
 			},
 			tooltip = {
 				enable			= true,
+				mouseanchor		= true,
 			},
 			tracker = {
 				enable 			= true,
