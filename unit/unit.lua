@@ -69,9 +69,6 @@
             CastingBarFrame.SafeZone = CastingBarFrame:CreateTexture(nil, 'BORDER')
             ns.SB(CastingBarFrame.SafeZone)
             CastingBarFrame.SafeZone:SetVertexColor(.69, .31, .31)
-    		CastingBarFrame.SafeZone:SetPoint'RIGHT'
-    		CastingBarFrame.SafeZone:SetPoint'TOP'
-    		CastingBarFrame.SafeZone:SetPoint'BOTTOM'
         end
     end
 
@@ -83,6 +80,10 @@
         if x > 1 then x = 1 end
 
         CastingBarFrame.SafeZone:SetWidth(width*x)
+        CastingBarFrame.SafeZone:ClearAllPoints()
+        CastingBarFrame.SafeZone:SetPoint(channel and 'LEFT' or 'RIGHT')
+        CastingBarFrame.SafeZone:SetPoint'TOP'
+        CastingBarFrame.SafeZone:SetPoint'BOTTOM'
     end
 
     local UpdateCastingBarIcon = function(texture)
@@ -97,10 +98,14 @@
         end
     end
 
-    local UpdateCastingBar = function()
-        local _, _, texture, start, endtime = CastingInfo()
-        print(start, endtime)
-        UpdateCastingBarLatency(start, endtime)
+    local UpdateCastingBar = function(channel)
+        local  _, texture, start, endtime
+        if  channel then
+            _, _, texture, start, endtime = ChannelInfo()
+        else
+            _, _, texture, start, endtime = CastingInfo()
+        end
+        UpdateCastingBarLatency(start, endtime, channel)
         UpdateCastingBarIcon(texture)
     end
 
@@ -418,7 +423,7 @@
 
         if  event == 'UNIT_SPELLCAST_START' or event == 'UNIT_SPELLCAST_CHANNEL_START' then
             if  MODUI_VAR['elements']['unit'].castbar then
-                UpdateCastingBar()
+                UpdateCastingBar(event == 'UNIT_SPELLCAST_CHANNEL_START' and true or false)
             end
         end
 
