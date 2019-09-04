@@ -86,14 +86,17 @@
 		local x, y  = GetCursorPosition()
 		local scale = tooltip:GetEffectiveScale()
 		tooltip:ClearAllPoints()
-		tooltip:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', (x/scale + 25), (y/scale - 5))
+		tooltip:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', (x/scale + 25), (y/scale + -5))
 	end
 
     local AddAnchor = function(tooltip, parent)
         local isUnit = GetMouseoverUnit()
         if  MODUI_VAR['elements']['tooltip'].mouseanchor then
-            MouseUpdate(tooltip, parent)
-            if  isUnit then
+            if  GetMouseFocus() ~= WorldFrame then
+                tooltip:ClearAllPoints()
+                tooltip:SetOwner(parent, 'ANCHOR_TOPRIGHT', 0, 10)
+            else
+                MouseUpdate(tooltip, parent)
                 AddStatusBar(GameTooltipStatusBar, tooltip, false)
             end
         else
