@@ -461,8 +461,8 @@
 				ToggleChildButton(
 					self,
 					{
+						_G['modui_checkbutton22'],
 						_G['modui_checkbutton23'],
-						_G['modui_checkbutton24'],
 					}
 				)
             end,
@@ -501,7 +501,6 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton24'],
                         _G['modui_checkbutton25'],
                         _G['modui_checkbutton26'],
                         _G['modui_checkbutton27'],
@@ -509,6 +508,7 @@
                         _G['modui_checkbutton29'],
                         _G['modui_checkbutton30'],
                         _G['modui_checkbutton31'],
+                        _G['modui_checkbutton32'],
                     }
                 )
             end,
