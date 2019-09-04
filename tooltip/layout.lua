@@ -149,7 +149,7 @@
             hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
 			--OnUpdate hook for mouseanchor
 			if MODUI_VAR['elements']['tooltip'].mouseanchor then
-				hooksecurefunc('GameTooltip_OnUpdate', MouseUpdate)
+				GameTooltip:HookScript('OnUpdate', MouseUpdate)
 			end
 			
         end
