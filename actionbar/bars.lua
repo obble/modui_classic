@@ -269,7 +269,11 @@
                     if  i > 1 then
                         bu:ClearAllPoints()
                         -- pixel...
-                        bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
+                        if v == 'MultiBarRight' or v == 'MultiBarLeft' then
+                            bu:SetPoint('TOP', _G[v..'Button'..(i - 1)], 'BOTTOM', 0, -8.5)
+                        else
+                            bu:SetPoint('LEFT', _G[v..'Button'..(i - 1)], 'RIGHT', 8.5, 0)
+                        end
                         -- PERFECTION!
                         if  i == 7 and v == 'MultiBarBottomRight' then
                             bu:ClearAllPoints()
