@@ -80,14 +80,40 @@
     end
 
     local AddAnchor = function(tooltip, parent)
-        if  not GetMouseoverUnit() then
-            tooltip:SetOwner(parent, 'ANCHOR_CURSOR')
-        else
-            tooltip:ClearAllPoints()
-            tooltip:SetPoint('BOTTOMRIGHT', UIParent, -33, 33)
-            AddStatusBar(GameTooltipStatusBar, tooltip, false)
-        end
-    end
+		--MouseAnchor behavior below
+		if MODUI_VAR['elements']['tooltip'].mouseanchor then
+			--SmartAnchor behavior here
+			if GetMouseFocus() ~= WorldFrame and MODUI_VAR['elements']['tooltip'].smartanchor then
+				tooltip:ClearAllPoints()
+				tooltip:SetOwner(parent, "ANCHOR_TOP", 0, 10)
+				return
+			end		
+				local x, y = GetCursorPosition()
+				local effScale = tooltip:GetEffectiveScale()
+				tooltip:ClearAllPoints()
+				tooltip:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", (x / effScale + 25), (y / effScale + -25))
+		else
+		--Standard modui behavior below
+			if  not GetMouseoverUnit() then
+				tooltip:SetOwner(parent, 'ANCHOR_CURSOR')
+			else
+				tooltip:ClearAllPoints()
+				tooltip:SetPoint('BOTTOMRIGHT', UIParent, -33, 33)
+				AddStatusBar(GameTooltipStatusBar, tooltip, false)
+			end
+		end
+	end
+
+	local MouseUpdate = function(tooltip, parent)
+		--Don't follow if we aren't in the WorldFrame as it's irritating.
+		if GetMouseFocus() ~= WorldFrame then
+			return
+		end		
+		local x, y = GetCursorPosition()
+		local effScale = tooltip:GetEffectiveScale()
+		tooltip:ClearAllPoints()
+		tooltip:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", (x / effScale + 25), (y / effScale + -25))
+	end
 
     local UpdateStyle = function(self)
         local _, link = self:GetItem()
@@ -121,6 +147,11 @@
             hooksecurefunc('GameTooltip_UpdateStyle',       UpdateStyle)
             hooksecurefunc('GameTooltip_SetBackdropStyle',  UpdateStyle)
             hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
+			--OnUpdate hook for mouseanchor
+			if MODUI_VAR['elements']['tooltip'].mouseanchor then
+				hooksecurefunc('GameTooltip_OnUpdate', MouseUpdate)
+			end
+			
         end
     end
 
