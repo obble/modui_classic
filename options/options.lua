@@ -109,6 +109,8 @@
             MODUI_VAR['elements']['nameplate'].totem            = true
             MODUI_VAR['elements']['tracker'].enable             = true
             MODUI_VAR['elements']['tooltip'].enable             = true
+			MODUI_VAR['elements']['tooltip'].smartanchor		= true
+			MODUI_VAR['elements']['tooltip'].mouseanchor		= true
             MODUI_VAR['elements']['unit'].enable                = true
             MODUI_VAR['elements']['unit'].player                = true
             MODUI_VAR['elements']['unit'].target                = true
@@ -456,11 +458,40 @@
             function(self)
                 MODUI_VAR['elements']['tooltip'].enable = self:GetChecked() and true or false
                 ShowReload()
+				ToggleChildButton(
+					self,
+					{
+						_G['modui_checkbutton23'],
+						_G['modui_checkbutton24'],
+					}
+				)
             end,
             MODUI_VAR['elements']['tooltip'].enable and true or false,
             1, .8, 0,
             nil,
             true
+        )
+		add(
+            'Smart Anchor',
+            function(self)
+                MODUI_VAR['elements']['tooltip'].smartanchor = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['tooltip'].smartanchor and true or false,
+            1, 1, 1,
+            true,
+            MODUI_VAR['elements']['tooltip'].enable and true or false
+        )
+        add(
+            'Mouse Anchor',
+            function(self)
+                MODUI_VAR['elements']['tooltip'].mouseanchor = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['tooltip'].mouseanchor and true or false,
+            1, 1, 1,
+            true,
+            MODUI_VAR['elements']['tooltip'].enable and true or false
         )
         add(
             'Unitframes',
@@ -470,7 +501,6 @@
                 ToggleChildButton(
                     self,
                     {
-                        _G['modui_checkbutton23'],
                         _G['modui_checkbutton24'],
                         _G['modui_checkbutton25'],
                         _G['modui_checkbutton26'],
@@ -478,6 +508,7 @@
                         _G['modui_checkbutton28'],
                         _G['modui_checkbutton29'],
                         _G['modui_checkbutton30'],
+                        _G['modui_checkbutton31'],
                     }
                 )
             end,
