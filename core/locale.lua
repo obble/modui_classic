@@ -24,7 +24,7 @@
 	L['Actionbar'] = ''
 	L['Aura'] = ''
 	L['Statusbars on Auras'] = ''
-	L['Custom Value Formatting on Auras'] ''
+	L['Custom Value Formatting on Auras'] = ''
 	L['Chat'] = ''
 	L['Events & Custom Chat Text'] = ''
 	L['Chat Style'] = ''
@@ -52,7 +52,7 @@
 	L[' Boss'] = ''
 	L[' Rare Elite'] = ''
 	L[' Rare'] = ''
-	L[' Elite' = ''
+	L[' Elite'] = ''
 
 	-- TRANSFORM
 	L['Increases speed by (.+)%%'] = '' -- tooltip string on mount items
@@ -67,13 +67,13 @@
 	L['|Hchannel:raid|hR|h. %s:\32'] = ''             -- "R. Obble:" raid chat
 	L['RW. %s:\32'] = ''                              -- "RW. Obble:" raid warning
 	L['|Hchannel:raid|hRL|h. %s:\32'] = ''            -- "RL. Obble:" raid leader
-	L['|Hchannel:INSTANCE_CHAT|hIns|h. %s:\32'] - ''  -- "Ins. Obble:" instance chat
+	L['|Hchannel:INSTANCE_CHAT|hIns|h. %s:\32'] = ''  -- "Ins. Obble:" instance chat
 	L['|Hchannel:INSTANCE_CHAT|hIL|h. %s:\32'] = ''   -- "IL. Obble:" instance leader
 	L['|Hchannel:Battleground|hBG|h. %s:\32'] = ''    -- "BG. Obble:" battleground chat
 	L['|Hchannel:Battleground|hBL|h. %s:\32'] = ''     -- "BL. Obble:" battleground leader
 	L['|Hchannel:party|hP|h. %s:\32'] = ''              -- "P. Obble:" party chat
 	L['|Hchannel:party|hDG|h. %s:\32'] = ''             -- "DG. Obble:" party guide
-	L['|Hchannel:raid|hR|h. %s:\32'] == ''              -- "R. Obble:" CHAT_MONSTER_PARTY_GET
+	L['|Hchannel:raid|hR|h. %s:\32'] = ''              -- "R. Obble:" CHAT_MONSTER_PARTY_GET
 
 	-- CHAT EVENTS
 	L['Joined Channel: (.+)'] = ''
@@ -127,7 +127,7 @@
 	L['To (|HBNplayer.+|h):'] = ''          --   whisper to bnet
 	L['To (|Hplayer.+|h):'] = ''            --   whisper to
 	L[' whispers:'] = ''                    --   whisper from
-	L['Joined Channel:' = ''                --   channel join
+	L['Joined Channel:'] = ''                --   channel join
 	L['Left Channel:'] = 'Left '            --   channel left
 	
 	if locale == "zhTW" then
@@ -175,7 +175,7 @@
 		L[' Boss'] = ' 首領' -- or use BOSS
 		L[' Rare Elite'] = ' 稀有精英'
 		L[' Rare'] = ' 稀有' -- or use ELITE
-		L[' Elite' = ' 精英'
+		L[' Elite'] = ' 精英'
 	
 	elseif locale == "zhCN" then
 	
@@ -222,7 +222,7 @@
 		L[' Boss'] = ' 首领' -- or use BOSS
 		L[' Rare Elite'] = ' 稀有精英'
 		L[' Rare'] = ' 稀有' -- or use ELITE
-		L[' Elite' = ' 精英'
+		L[' Elite'] = ' 精英'
 		
 	else
 		return
