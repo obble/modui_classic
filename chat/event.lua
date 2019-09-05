@@ -101,7 +101,8 @@
         local _, size   = self:GetFont()
         local _, class  = UnitClass'player'
         local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class].colorStr
-        local d = date'%I.%M'..string.lower(date'%p')
+        local var       = GetCVar'timeMgrUseMilitaryTime'
+        local d = var == '1' and date'%H.%M' or date'%I.%M'..string.lower(date'%p')
 
         if  string.find(t, 'Left Channel:') then                        --   global channels being left should be indentifiable
             t = gsub(t, '%[(%d0?)%. (.-)%]', '|cffffffff%1|r %2   ')    --   [2. trade] > 2: Trade
@@ -157,12 +158,7 @@
     end
 
     local OnEvent = function()
-        if not MODUI_VAR['elements']['error'].enable then
-            UIErrorsFrame:UnregisterEvent'UI_ERROR_MESSAGE'
-        end
-
         if  MODUI_VAR['elements']['chat'].enable then
-
             if  MODUI_VAR['elements']['chat'].events then
                 AddEventFilters()
                 AddMessageHooks()

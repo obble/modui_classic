@@ -10,6 +10,8 @@
         'PLAYER_LOGIN',
         'GROUP_ROSTER_UPDATE',
         'PLAYER_TARGET_CHANGED',
+        'UNIT_SPELLCAST_START',
+        'UNIT_SPELLCAST_CHANNEL_START',
         'UNIT_FACTION'
     }
 
@@ -32,7 +34,7 @@
                 PlayerFrameManaBar
             }
         ) do
-            ns.SB(v)
+            --ns.SB(v)
         end
         if  not PlayerFrame.bg then
             local _, class  = UnitClass'player'
@@ -48,34 +50,72 @@
         PlayerPVPIcon:ClearAllPoints()
         PlayerPVPIcon:SetPoint('CENTER', PlayerFrame, 'LEFT', 60, 16)
 
-        CastingBarFrame.Icon:SetSize(16, 16)
-        CastingBarFrame.Icon:ClearAllPoints()
-        CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
-        CastingBarFrame.Icon:SetTexCoord(.1, .9, .1, .9)
+        if  MODUI_VAR['elements']['unit'].castbar then
+            CastingBarFrame.Icon:SetSize(16, 16)
+            CastingBarFrame.Icon:ClearAllPoints()
+            CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
+            CastingBarFrame.Icon:SetTexCoord(.1, .9, .1, .9)
 
-        CastingBarFrame.IconF = CreateFrame('Frame', nil, CastingBarFrame)
-        CastingBarFrame.IconF:SetAllPoints(CastingBarFrame.Icon)
-        ns.BD(CastingBarFrame.IconF)
-        ns.BUBorder(CastingBarFrame.IconF, 18)
-        for i = 1, 4 do
-            tinsert(ns.skinbu, CastingBarFrame.IconF.bo[i])
-            CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+            CastingBarFrame.IconF = CreateFrame('Frame', nil, CastingBarFrame)
+            CastingBarFrame.IconF:SetAllPoints(CastingBarFrame.Icon)
+            ns.BD(CastingBarFrame.IconF)
+            ns.BUBorder(CastingBarFrame.IconF, 18)
+            for i = 1, 4 do
+                tinsert(ns.skinbu, CastingBarFrame.IconF.bo[i])
+                CastingBarFrame.IconF.bo[i]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
+            end
+            CastingBarFrame.Icon:SetParent(CastingBarFrame.IconF)
+
+            CastingBarFrame.SafeZone = CastingBarFrame:CreateTexture(nil, 'BORDER')
+            ns.SB(CastingBarFrame.SafeZone)
+            CastingBarFrame.SafeZone:SetVertexColor(.69, .31, .31)
         end
-        CastingBarFrame.IconF:Hide()
-        CastingBarFrame.Icon:SetParent(CastingBarFrame.IconF)
     end
 
-    local UpdateCastingBarIcon = function(self)
-        if  self.Spark.offsetY < 1 then
-            self.IconF:Show()
+    local UpdateCastingBarLatency = function(start, endtime)
+        local width = CastingBarFrame:GetWidth()
+        local _, _, _, ms = GetNetStats()
+        local x = (ms/1e3)/((endtime/1e3) - (start/1e3))
+
+        if x > 1 then x = 1 end
+
+        CastingBarFrame.SafeZone:SetWidth(width*x)
+        CastingBarFrame.SafeZone:ClearAllPoints()
+        CastingBarFrame.SafeZone:SetPoint(channel and 'LEFT' or 'RIGHT')
+        CastingBarFrame.SafeZone:SetPoint'TOP'
+        CastingBarFrame.SafeZone:SetPoint'BOTTOM'
+    end
+
+    local UpdateCastingBarIcon = function(texture)
+        if  CastingBarFrame.Spark.offsetY < 1 then
+            CastingBarFrame.Icon:ClearAllPoints()
+            CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -25, 0)
         else
-            self.IconF:Hide()
+            CastingBarFrame.Icon:SetTexture(texture)
+            CastingBarFrame.Icon:Show()
+            CastingBarFrame.Icon:ClearAllPoints()
+            CastingBarFrame.Icon:SetPoint('LEFT', CastingBarFrame, -32, 3)
         end
+    end
+
+    local UpdateCastingBar = function(channel)
+        local  _, texture, start, endtime
+        if  channel then
+            _, _, texture, start, endtime = ChannelInfo()
+        else
+            _, _, texture, start, endtime = CastingInfo()
+        end
+        UpdateCastingBarLatency(start, endtime, channel)
+        UpdateCastingBarIcon(texture)
     end
 
     local UpdateTargetValue = function()
         local v, max, found = LCMH:GetUnitHealth'target'
+        local display = GetCVar'statusTextDisplay'
         TextStatusBar_UpdateTextStringWithValues(TargetFrameHealthBar, TargetFrameHealthBarText, v, 0, max)
+        if  TargetFrameHealthBar.RightText and display == 'BOTH' and not TargetFrameHealthBar.showPercentage then
+            TargetFrameHealthBar.RightText:SetText(v)
+        end
     end
 
     local AddTargetFrame = function()
@@ -85,7 +125,7 @@
                 TargetFrameManaBar
             }
         ) do
-            ns.SB(v)
+            --ns.SB(v)
         end
 
         TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
@@ -142,7 +182,7 @@
             }
         ) do
             if  v then
-                ns.SB(v)
+                --ns.SB(v)
             end
         end
     end
@@ -155,8 +195,8 @@
                     _G['PartyMemberFrame'..i..'ManaBar']
                 }
             ) do
-                ns.BD(v)
-                ns.SB(v)
+                --ns.BD(v)
+                --ns.SB(v)
             end
         end
     end
@@ -184,41 +224,93 @@
     local AddTargetAura = function(self)
         -- nb: needs update: these are being generated ad-hoc
         for i = 1, MAX_TARGET_BUFFS do
-            local bu = _G['TargetFrameBuff'..i]
-            if  bu and not bu.bo then
+            local n     = 'TargetFrameBuff'..i
+            local bu    = _G[n]
+            local cd    = _G[n..'Cooldown']
+            if  bu and not bu.skinned then
                 ns.BUBorder(bu, 18, 18, 3, 4)
                 for j = 1, 4 do
                     tinsert(ns.skinbu, bu.bo[j])
-                    bu.bo[j]:SetVertexColor(MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b)
+                    bu.bo[j]:SetVertexColor(MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b)
                 end
 
-                bu.cooldown = CreateFrame('Cooldown', bu:GetName()..'Cooldown', bu, 'CooldownFrameTemplate')
-                bu.cooldown:SetAllPoints()
-                bu.cooldown:SetReverse(true)
-                bu.cooldown:SetHideCountdownNumbers(true)
+                cd:SetHideCountdownNumbers(false)
+
+                local t = cd:GetRegions()
+                t:SetFont(STANDARD_TEXT_FONT, 7, 'OUTLINE')
+                t:ClearAllPoints()
+                t:SetPoint('CENTER', cd, 'BOTTOM', 0, 3)
+                bu.skinned = true
+            end
+        end
+        for i = 1, MAX_TARGET_DEBUFFS do
+            local n     = 'TargetFrameDebuff'..i
+            local bu    = _G[n]
+            local cd    = _G[n..'Cooldown']
+
+            if  bu and not bu.skinned then
+                cd:SetHideCountdownNumbers(false)
+
+                local t = cd:GetRegions()
+                t:SetFont(STANDARD_TEXT_FONT, 7, 'OUTLINE')
+                t:ClearAllPoints()
+                t:SetPoint('CENTER', cd, 'BOTTOM', 0, 3)
+                bu.skinned = true
             end
         end
     end
 
     local AddAuraDuration = function(self)
+        AddTargetAura(self)
         for i = 1, MAX_TARGET_BUFFS do
-            local name, _, _, _, duration, expiration, caster, _, _, spellid = UnitBuff(self.unit, i, nil)
-            local bu = _G['TargetFrameBuff'..i]
+            local name, icon, count, dtype, duration, expiration, caster, canstealorpurge, _ , spellid, _, _, isplayer, nameplateshowall = UnitBuff(self.unit, i, nil)
             if  name then
-                local durationnew, expirationnew = LCD:GetAuraDurationByUnit(self.unit, spellid, caster, name)
-                if  duration == 0 and durationnew then
-                    duration    = durationnew
-                    expiration  = expirationnew
+                local n     = self:GetName()..'Buff'..i
+                local bu    = _G[n]
+                local cd    = _G[n..'Cooldown']
+
+                local duration2, expiration2 = LCD:GetAuraDurationByUnit(self.unit, spellid, caster)
+                if  duration == 0 and duration2 then
+                    duration    = duration2
+                    expiration  = expiration2
                 end
 
-                if  expiration and expiration ~= 0 then
-                    local start = expiration - duration
-                    CooldownFrame_Set(bu.cooldown, start, duration, true)
-                else
-                    CooldownFrame_Clear(bu.cooldown)
-                end
+                CooldownFrame_Set(cd, expiration - duration, duration, duration > 0, true)
+            else
+                break
             end
         end
+
+        local num           = 1
+        local i             = 1
+        local max           = self.maxDebuffs or MAX_TARGET_DEBUFFS
+        while num <= max and i <= max do
+            local name, icon, count, dtype, duration, expiration, caster, _, _, spellid, _, _, isplayer, nameplates= UnitDebuff(self.unit, i, 'INCLUDE_NAME_PLATE_ONLY')
+            if  name then
+                if  TargetFrame_ShouldShowDebuffs(self.unit, caster, nameplateshowall, casterisplayer) then
+                    local n     = self:GetName()..'Debuff'..num
+                    local bu    = _G[n]
+                    local cd    = _G[n..'Cooldown']
+
+                    local duration2, expiration2 = LCD:GetAuraDurationByUnit(self.unit, spellid, caster)
+                    if  duration == 0 and duration2 then
+                        duration    = duration2
+                        expiration  = expiration2
+                    end
+
+                    CooldownFrame_Set(cd, expiration - duration, duration, duration > 0, true)
+                    num = num + 1
+                end
+            else
+                break
+            end
+            i = i + 1
+        end
+    end
+
+    local AddPartyPets = function()
+        local  var = GetCVar'showPartyPets'
+		if not var == '1' then SetCVar('showPartyPets', 1) end
     end
 
     local UpdateTargetNameClassColour = function()
@@ -305,7 +397,6 @@
         if  event == 'PLAYER_LOGIN' then
             if  MODUI_VAR['elements']['unit'].player then
                 AddPlayerFrame()
-                CastingBarFrame:HookScript('OnShow', UpdateCastingBarIcon)
             end
 
             if  MODUI_VAR['elements']['unit'].target then
@@ -314,7 +405,7 @@
 
             if  MODUI_VAR['elements']['unit'].tot then
                 AddToTFrame()
-                hooksecurefunc('TargetofTarget_Update', UpdateToT)
+                -- TargetFrameToT:HookScript('OnUpdate', UpdateToT) tainting i think
             end
 
             if  MODUI_VAR['elements']['unit'].rcolour then
@@ -325,19 +416,24 @@
                 hooksecurefunc('TextStatusBar_UpdateTextString', UpdateTextStringColour)
             end
 
-            hooksecurefunc('TargetFrame_UpdateAuras', AddTargetAura)
+            if  MODUI_VAR['elements']['unit'].auras then
+                hooksecurefunc('TargetFrame_UpdateAuras', AddAuraDuration)
+            end
+        end
+
+        if  event == 'UNIT_SPELLCAST_START' or event == 'UNIT_SPELLCAST_CHANNEL_START' then
+            if  MODUI_VAR['elements']['unit'].castbar then
+                UpdateCastingBar(event == 'UNIT_SPELLCAST_CHANNEL_START' and true or false)
+            end
         end
 
         if  MODUI_VAR['elements']['unit'].target then
             UpdateTargetNameClassColour()
         end
 
-        if  MODUI_VAR['elements']['unit'].auras then
-            hooksecurefunc('TargetFrame_UpdateAuras', AddAuraDuration)
-        end
-
         if  MODUI_VAR['elements']['unit'].party then
-            UpdatePartyTextClassColour()
+            AddPartyPets()
+            if not InCombatLockdown() then UpdatePartyTextClassColour() end
         end
     end
 

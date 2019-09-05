@@ -59,12 +59,14 @@
 			},
 			tooltip = {
 				enable			= true,
+				mouseanchor		= false,
 			},
 			tracker = {
 				enable 			= true,
 			},
 			unit = {
 				enable 			= true,
+				castbar			= true,
 				player 			= true,
 				target 			= true,
 				party 			= true,

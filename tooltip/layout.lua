@@ -38,6 +38,7 @@
                 edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
                 edgeSize   = 18,
             })
+            tinsert(ns.skinb, self.BD)
 
             self.BD.shadow = self:CreateTexture(nil, 'BACKGROUND')
     		self.BD.shadow:SetPoint('TOPLEFT', self.BD, -5, 12)
@@ -45,16 +46,6 @@
     		self.BD.shadow:SetTexture[[Interface\Scenarios\ScenarioParts]]
     		self.BD.shadow:SetVertexColor(0, 0, 0, .6)
     		self.BD.shadow:SetTexCoord(0, .641, 0, .18)
-
-            self.BD.top = self.BD:CreateTexture(nil, 'OVERLAY')
-    		self.BD.top:SetPoint('CENTER', self, 'TOP', 0, 1)
-    		self.BD.top:SetAtlas('AzeriteTooltip-Topper', true)
-            self.BD.top:Hide()
-
-            self.BD.bottom = self.BD:CreateTexture(nil, 'OVERLAY')
-    		self.BD.bottom:SetPoint('CENTER', self, 'BOTTOM', 0, -2)
-    		self.BD.bottom:SetAtlas('AzeriteTooltip-Bottom', true)
-            self.BD.bottom:Hide()
         end
     end
 
@@ -88,13 +79,35 @@
         end
     end
 
+    local MouseUpdate = function(tooltip, parent)
+		if  GetMouseFocus() ~= WorldFrame then
+			return
+		end
+		local x, y  = GetCursorPosition()
+		local scale = tooltip:GetEffectiveScale()
+		tooltip:ClearAllPoints()
+		tooltip:SetPoint('TOPLEFT', UIParent, 'BOTTOMLEFT', (x/scale + 25), (y/scale + -5))
+	end
+
     local AddAnchor = function(tooltip, parent)
-        if  not GetMouseoverUnit() then
-            tooltip:SetOwner(parent, 'ANCHOR_CURSOR')
+        local isUnit = GetMouseoverUnit()
+        if  MODUI_VAR['elements']['tooltip'].mouseanchor then
+            if  GetMouseFocus() ~= WorldFrame then
+                tooltip:ClearAllPoints()
+                tooltip:SetOwner(parent, 'ANCHOR_TOPRIGHT', 0, 10)
+            else
+                MouseUpdate(tooltip, parent)
+                AddStatusBar(GameTooltipStatusBar, tooltip, false)
+            end
         else
-            tooltip:ClearAllPoints()
-            tooltip:SetPoint('BOTTOMRIGHT', UIParent, -33, 33)
-            AddStatusBar(GameTooltipStatusBar, tooltip, false)
+            if  not isUnit then
+                tooltip:ClearAllPoints()
+                tooltip:SetOwner(parent, 'ANCHOR_TOPRIGHT', 0, 10)
+            else
+                tooltip:ClearAllPoints()
+                tooltip:SetPoint('BOTTOMRIGHT', UIParent, -33, 33)
+                AddStatusBar(GameTooltipStatusBar, tooltip, false)
+            end
         end
     end
 
@@ -109,8 +122,11 @@
                 edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
                 edgeSize   = 18,
             })
-            self.BD.top:Hide()
-            self.BD.bottom:Hide()
+            self.BD:SetBackdropBorderColor(
+                MODUI_VAR['theme'].r,
+                MODUI_VAR['theme'].g,
+                MODUI_VAR['theme'].b
+            )
         end
     end
 
@@ -127,6 +143,9 @@
             hooksecurefunc('GameTooltip_UpdateStyle',       UpdateStyle)
             hooksecurefunc('GameTooltip_SetBackdropStyle',  UpdateStyle)
             hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
+            if  MODUI_VAR['elements']['tooltip'].mouseanchor then
+				GameTooltip:HookScript('OnUpdate', MouseUpdate)
+			end
         end
     end
 

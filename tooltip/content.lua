@@ -14,11 +14,6 @@
         ItemRefTooltip
     }
 
-    local AddID = function(type, id)
-        GameTooltip:AddLine(string.format('%s '..ID..': |cffd083cd%s|r', type, id))
-    	GameTooltip:Show()
-    end
-
     local AddPrice = function(tooltip, count, id)
         local _, item
 
@@ -111,31 +106,6 @@
     end
 
     local AddHooks = function(unit)
-        hooksecurefunc(GameTooltip, 'SetAction', function(self)
-        	local _, _, id = self:GetSpell()
-        	if id then
-        		AddID(STAT_CATEGORY_SPELL, id)
-        	else
-        		-- local _, ilink = self:GetItem()
-        		-- if  ilink then
-        		-- 	AddID(HELPFRAME_ITEM_TITLE, string.match(ilink, 'item:(%d+)'))
-        		-- end
-        	end
-        end)
-
-        hooksecurefunc(GameTooltip, 'SetSpellByID', function(self, id)
-            AddID(STAT_CATEGORY_SPELL, id)
-        end)
-
-        hooksecurefunc(GameTooltip, 'SetTalent', function(self, id)
-        	AddID(STAT_CATEGORY_SPELL, id)
-        end)
-
-        hooksecurefunc(GameTooltip, 'SetUnitAura', function(self, unit, index, filter)
-            local name, icon, count, dtype, duration, expiration, _, _, _, id = UnitAura(unit, index, filter)
-            if id then AddID(STAT_CATEGORY_SPELL, id) end
-        end)
-
         for _, v in pairs(tooltips) do
             hooksecurefunc(v, 'SetAuctionItem', function(self, type, index)
             	local _, _, count = GetAuctionItemInfo(type, index)
@@ -148,9 +118,7 @@
             end)
 
             hooksecurefunc(v, 'SetBagItem', function(self, container, slot)
-            	local id = GetContainerItemID(container, slot)
                 local _, count = GetContainerItemInfo(container, slot)
-            	if id then AddID(HELPFRAME_ITEM_TITLE, id) end
             	AddPrice(self, count)
             end)
 

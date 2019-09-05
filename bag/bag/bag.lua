@@ -73,6 +73,13 @@
         end
     end
 
+	local UpdateSlot = function(self)
+		if  MODUI_VAR['elements']['mainbar'].enable then
+			self:SetSize(18, 12)
+			_G[self:GetName()..'IconTexture']:SetTexCoord(.1, .9, .2, .8)
+		end
+	end
+
 	local AddBag = function()
 		local bag = CreateFrame('Frame', 'modbag', UIParent, 'ButtonFrameTemplate')
 		bag:SetPoint('BOTTOMRIGHT', -120, 150)
@@ -149,11 +156,11 @@
 			local slot = _G['CharacterBag'..i..'Slot']
 			local icon = _G['CharacterBag'..i..'SlotIconTexture']
 
-			slot:SetScript('OnEnter', function(self)
+			slot:HookScript('OnEnter', function(self)
 				IterateForSparkle(self, true)
 			end)
 
-			slot:SetScript('OnLeave', function(self)
+			slot:HookScript('OnLeave', function(self)
 				IterateForSparkle(self, false)
 			end)
 
@@ -173,6 +180,10 @@
 				ns.BDStone(slot, 5)
 
 				slot.IconBorder:SetAlpha(0)
+
+				-- not... the best
+				slot:HookScript('OnShow',  UpdateSlot)
+				slot:HookScript('OnEvent', UpdateSlot)
 
 				slot:SetParent(MODUI_VAR['elements']['onebag'].enable and bag.topstrip or ContainerFrame1)
 				if MODUI_VAR['elements']['onebag'].enable then

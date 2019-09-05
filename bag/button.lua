@@ -6,27 +6,7 @@
 
     local e = CreateFrame'Frame'
 
-    --[[ns.BD(BagItemAutoSortButton)
-    BagItemAutoSortButton:SetSize(15, 15)
-    BagItemAutoSortButton:GetNormalTexture():SetTexCoord(.15, .85, .15, .85)
-    BagItemAutoSortButton:GetNormalTexture():ClearAllPoints()
-    BagItemAutoSortButton:GetNormalTexture():SetPoint('TOPLEFT', -1, 1)
-    BagItemAutoSortButton:GetNormalTexture():SetPoint('BOTTOMRIGHT', 1, -1)
-    BagItemAutoSortButton:HookScript('OnClick', function()
-        if ReagentBankFrame:IsShown() and IsReagentBankUnlocked() then
-            SortReagentBankBags()
-        elseif BankFrame:IsShown() then
-            SortBankBags()
-        end
-    end)
-
-    for _, v in pairs({
-        BagItemSearchBox.Left, BagItemSearchBox.Middle, BagItemSearchBox.Right
-    }) do
-        v:Hide()
-    end]]
-
-    local ColourBagBorders = function(bu, slotID, texture, rarity, type)
+    local ColourBagBorders = function(bu, slotID, texture, rarity, type, quest)
         local q = _G[bu:GetName()..'IconQuestTexture']
         local s = _G[bu:GetName()].searchOverlay
         if  bu.bo then
@@ -36,7 +16,7 @@
                     if  s:IsShown() then
                         bu.bo[i]:SetVertexColor(1, 1, 1)
                         -- quest
-                    elseif q and q:IsShown() then
+                    elseif quest then
                         bu.bo[i]:SetVertexColor(248/255, 98/255, 86/255)
                         -- uncommon+ quality
                     elseif rarity and rarity >= 2 and BAG_ITEM_QUALITY_COLORS[rarity] then
@@ -87,8 +67,17 @@
             local bu = _G[name..'Item'..i]
             local itemID = GetContainerItemID(id, bu:GetID())
             local texture, _, _, rarity = GetContainerItemInfo(id, bu:GetID())
+            local itemlink = GetContainerItemLink(id, bu:GetID())
+            local quest = false
+            if  itemlink then
+                local _, _, _, _, _, itemtype = GetItemInfo(itemlink)
+                if itemtype == TRANSMOG_SOURCE_2 then
+                    quest = true
+                end
+            end
+
             local _, type = GetContainerNumFreeSlots(id)
-            ColourBagBorders(bu, itemID, texture, rarity, type)
+            ColourBagBorders(bu, itemID, texture, rarity, type, quest)
             bu.IconBorder:Hide()
         end
     end
@@ -126,41 +115,6 @@
             ns.BUElements(bu)
         end
     end
-
-    local AddTokens = function()
-        for i = 1, 3 do
-            local bu    = _G['BackpackTokenFrameToken'..i]
-            local ic    = _G['BackpackTokenFrameToken'..i..'Icon']
-            local count = _G['BackpackTokenFrameToken'..i..'Count']
-            if bu then
-                ic:ClearAllPoints()
-                ic:SetPoint('RIGHT', bu)
-                ic:SetTexCoord(.1, .9, .1, .9)
-
-                count:ClearAllPoints()
-                count:SetPoint('RIGHT', ic, 'LEFT', -3, 0)
-                count:SetFont(FONT_REGULAR, 7)
-            end
-        end
-    end
-
-    local AddSlots = function()
-        for i = 0, 3 do
-            local bu = _G['CharacterBag'..i..'Slot']
-            ns.BU(bu)
-            ns.BUElements(bu)
-        end
-    end
-
-    local MinorButtonSkins = function()
-        AddTokens()
-        AddSlots()
-        AddBankSlots()
-        e:UnregisterEvent'PLAYER_ENTERING_WORLD'
-    end
-
-    e:RegisterEvent'PLAYER_ENTERING_WORLD'
-    e:SetScript('OnEvent', MinorButtonSkins)
 
     hooksecurefunc('ContainerFrame_Update',                 ns.ColourUpdate)
     hooksecurefunc('ContainerFrame_UpdateSearchResults',    ns.ColourUpdate)

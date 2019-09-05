@@ -347,7 +347,7 @@
 
 		BankFrameItemButtonBag_OnClick = function(self, button)
 			local id = self:GetInventorySlot()
-			local hadItem = PutItemInBag(id)
+			local  hadItem = PutItemInBag(id)
 			if not hadItem then return end
 		end
 
@@ -358,7 +358,8 @@
 		OpenBackpack   = OpenBags
 		CloseAllBags   = CloseBags
 
-		hooksecurefunc('ContainerFrame_Update', HideBagSmall)
+		hooksecurefunc('ContainerFrame_Update', ReAnchor)
+
 
 		_G['modbag'].CloseButton:SetScript('OnClick', ToggleBags)
 		_G['modbank'].CloseButton:SetScript('OnClick', function() HideBank() CloseBankFrame() HideBankArt() end)

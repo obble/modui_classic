@@ -6,97 +6,58 @@
 
     local events = {
         'PLAYER_LOGIN',
-        'UNIT_DISPLAYPOWER',
         'PLAYER_REGEN_DISABLED',
         'PLAYER_REGEN_ENABLED',
-        'UNIT_POWER_UPDATE',
     }
 
-    local lastEnergyValue       = 0     -- The energy value after the last regen pulse.
-    local currentEnergyValue    = 0     -- The current energy value at the time of the current regen pulse.
-    local preLastPulseTime      = 2     -- Time of the second to last regen pulse.
-    local lastPulseTime         = 2     -- Time of the last regen pulse.
-    local pulseTotal            = 0     -- Total time of all regen pulse gaps > 2.0.
-    local pulseCount            = 0     -- Total number of regen pulses > 2.0.
-    local syncNextUpdate        = false -- True if a regen pulse just ocurred and energy value will sync next frame.
+    local last_tick  = GetTime()
+    local last_value = 0
 
-    local OnUpdate = function()
-        local energy = _G['PlayerFrameManaBar_modui_energy']
-        local spark  = energy.spark
-        if  syncNextUpdate then
-            local v = mod((GetTime() - lastPulseTime), 2)
-            spark:SetPoint('CENTER', energy, 'LEFT', (energy:GetWidth()*(v/2)), 0)
+    local SetEnergyValue = function(self, value)
+        local x         = self:GetWidth()
+        local v, max  = UnitPower'player', UnitPowerMax'player'
+        local type      = UnitPowerType'player'
 
-            local nextPulseTotalAddition = (lastPulseTime - preLastPulseTime)
-            if ((nextPulseTotalAddition > 2) and (nextPulseTotalAddition < 2.5)) then
-                pulseTotal = pulseTotal + (lastPulseTime - preLastPulseTime)
-                pulseCount = (pulseCount + 1)
+	if  type ~= Enum.PowerType.Energy then
+		self.energy.spark:Hide()
+	else
+		local position = (x*value)/2
+		self.energy.spark:Show()
+		self.energy.spark:SetPoint('CENTER', self, 'LEFT', position, 0)
+	end
 
-                -- -- TEST BLOCK ---------------------------
-                -- print('Sync update just ocurred')
-                -- print('time to be added to total: ' .. (lastPulseTime - preLastPulseTime))
-                -- print('pulseTotal: '.. pulseTotal)
-                -- print('pulseCount: ' .. pulseCount)
-                -- print('pulseAverage: ' .. pulseTotal / pulseCount)
-                -- -- END TESTBLOCK ------------------------
-            end
-            syncNextUpdate = false
-        else
-            if  pulseCount == 0 then
-                local v = mod((GetTime() - lastPulseTime), 2.0)
-                spark:SetPoint('CENTER', energy, 'LEFT', (energy:GetWidth()*(v/2)), 0)
-            else
-                local v = mod((GetTime() - lastPulseTime), (pulseTotal / pulseCount))
-                spark:SetPoint('CENTER', energy, 'LEFT', (energy:GetWidth()*(v/(pulseTotal/pulseCount))), 0)
+    end
 
-                if ((GetTime() - lastPulseTime) > 120) then
-                    energy:Hide()
-                end
+    local UpdateEnergy = function(self, unit)
+        local energy = UnitPower('player', Enum.PowerType.Energy)
+        local time  = GetTime()
+    	local v = time - last_tick
 
-                -- -- TEST BLOCK ---------------------------
-                -- print('running average mode')
-                -- print('pulseTotal: '.. pulseTotal)
-                -- print('pulseCount: ' .. pulseCount)
-                -- print('pulseAverage: ' .. pulseTotal / pulseCount)
-                -- -- END TESTBLOCK ------------------------
-            end
-        end
+    	if  energy > last_value or time >= last_tick + 2 then
+    		last_tick = time
+    	end
+
+    	SetEnergyValue(self:GetParent(), v)
+
+    	last_value = energy
     end
 
     local AddEnergy = function()
-        local energy = CreateFrame('Statusbar', 'PlayerFrameManaBar_modui_energy', PlayerFrameManaBar)
-        energy:SetAllPoints()
-        energy:Hide()
+        PlayerFrameManaBar.energy = CreateFrame('Statusbar', 'PlayerFrameManaBar_modui_energy', PlayerFrameManaBar)
 
-        energy.spark = energy:CreateTexture(nil, 'OVERLAY')
-        energy.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
-        energy.spark:SetSize(32, 32)
-        energy.spark:SetBlendMode'ADD'
-        energy.spark:SetAlpha(.4)
-    end
+        PlayerFrameManaBar.energy.spark = PlayerFrameManaBar.energy:CreateTexture(nil, 'OVERLAY')
+        PlayerFrameManaBar.energy.spark:SetTexture[[Interface\CastingBar\UI-CastingBar-Spark]]
+        PlayerFrameManaBar.energy.spark:SetSize(32, 32)
+        PlayerFrameManaBar.energy.spark:SetPoint('CENTER', PlayerFrameManaBar, 0, 0)
+        PlayerFrameManaBar.energy.spark:SetBlendMode'ADD'
+        PlayerFrameManaBar.energy.spark:SetAlpha(.4)
 
-    local ShowEnergy = function(show)
-        local energy = _G['PlayerFrameManaBar_modui_energy']
-        if show then energy:Show() else energy:Hide() end
+        PlayerFrameManaBar.energy:RegisterEvent'UNIT_POWER_UPDATE'
+		PlayerFrameManaBar.energy:SetScript('OnUpdate', UpdateEnergy)
     end
 
     local ToggleCombat = function(alpha)
-        local energy = _G['PlayerFrameManaBar_modui_energy']
-        energy.spark:SetAlpha(alpha)
-    end
-
-    local UpdateEnergy = function(unit)
-        if  unit == 'player' then
-            local energy = _G['PlayerFrameManaBar_modui_energy']
-            currentEnergyValue = UnitPower'player'
-            if  currentEnergyValue == lastEnergyValue + 20 then
-                preLastPulseTime = lastPulseTime
-                lastPulseTime = GetTime()
-                syncNextUpdate = true
-                energy:Show()
-            end
-            lastEnergyValue = currentEnergyValue
-        end
+        PlayerFrameManaBar.energy.spark:SetAlpha(alpha)
     end
 
     local OnEvent = function(self, event, ...)
@@ -106,21 +67,11 @@
             ToggleCombat(1)
         elseif event == 'PLAYER_REGEN_ENABLED' then
             ToggleCombat(.3)
-        elseif event == 'UNIT_DISPLAYPOWER' then
-            local _, power  = UnitPowerType'player'
-            if  power == 'ENERGY' then
-                ShowEnergy(true)
-            else
-                ShowEnergy(false)
-            end
-        else
-            UpdateEnergy(...)
         end
     end
 
     local  e = CreateFrame'Frame'
     for _, v in pairs(events) do e:RegisterEvent(v) end
-    e:SetScript('OnUpdate', OnUpdate)
     e:SetScript('OnEvent', OnEvent)
 
 

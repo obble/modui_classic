@@ -7,26 +7,19 @@
 #   ~load variables table prior to anything else
 core/var.lua
 
-#   ~colour modification (todo: put button skinning in here?)
-theme/theme.lua
-
-#   ~libraries
-libraries/LibStub/LibStub.lua
-libraries/CallbackHandler-1.0/CallbackHandler-1.0.lua
-libraries/LibClassicDurations/core.lua
-libraries/LibClassicDurations/classAbilities.lua
-libraries/LibClassicDurations/diminishingReturns.lua
-libraries/LibClassicDurations/npcAbilities.lua
-libraries/LibClassicMobHealth/LibClassicMobHealth.lua
-libraries/LibClassicCasterino/LibClassicCasterino.lua
-libraries/SortBags/SortBags.lua
-
 #   ~shared functions & overall UI biz
 core/colour.lua
 core/functions.lua
 core/text.lua
 core/skins.lua
 core/tables.lua
+
+#   ~colour modification (todo: put button skinning in here?)
+theme/theme.lua
+theme/buttons/character.lua
+
+#   ~libraries
+libraries/init.xml
 
 #   ~insert templates
 templates.xml
@@ -53,6 +46,7 @@ bag/bag/bag.lua
 bag/button.lua
 bag/bank/bank.lua
 bag/tools/greys.lua
+bag/tools/sort.lua
 bag/update.lua
 
 #   ~micromenu
