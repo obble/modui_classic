@@ -100,6 +100,7 @@
             MODUI_VAR['elements']['chat'].events                = true
             MODUI_VAR['elements']['chat'].style                 = true
             MODUI_VAR['elements']['chat'].url                   = true
+            MODUI_VAR['elements']['chat'].colornames            = true
             MODUI_VAR['elements']['onebag'].enable              = true
             MODUI_VAR['elements']['onebag'].greys               = true
             MODUI_VAR['elements']['ecastbar'].enable            = true
@@ -135,6 +136,7 @@
             MODUI_VAR['elements']['chat'].events                = false
             MODUI_VAR['elements']['chat'].style                 = false
             MODUI_VAR['elements']['chat'].url                   = false
+            MODUI_VAR['elements']['chat'].colornames            = false
             MODUI_VAR['elements']['onebag'].enable              = false
             MODUI_VAR['elements']['onebag'].greys               = false
             MODUI_VAR['elements']['ecastbar'].enable            = false
@@ -320,6 +322,7 @@
                         _G['modui_checkbutton10'],
                         _G['modui_checkbutton11'],
                         _G['modui_checkbutton12'],
+                        _G['modui_checkbutton13'],
                     }
                 )
             end,
@@ -346,6 +349,17 @@
                 ShowReload()
             end,
             MODUI_VAR['elements']['chat'].style and true or false,
+            1, 1, 1,
+            true,
+            MODUI_VAR['elements']['chat'].enable and true or false
+        )
+        add(
+            'Chat Color Names by Class',
+            function(self)
+                MODUI_VAR['elements']['chat'].colornames = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['chat'].colornames and true or false,
             1, 1, 1,
             true,
             MODUI_VAR['elements']['chat'].enable and true or false

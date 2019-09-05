@@ -31,6 +31,11 @@
     end
 
     local AddChat = function()
+        if  MODUI_VAR['elements']['chat'].enable and  MODUI_VAR['elements']['chat'].colornames then
+            SetCVar("chatClassColorOverride", 0)
+        else
+            SetCVar("chatClassColorOverride", 1)
+        end
         ChatFrameChannelButton:ClearAllPoints()
         ChatFrameChannelButton:SetPoint('BOTTOM', ChatFrame1ButtonFrame, 0, 22)
 
