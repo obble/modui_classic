@@ -4,6 +4,10 @@
 
 	local L = {}
 	local locale = GetLocale()
+	
+	-- MENU
+	L['UI Colour'] = ''
+	L['Toggle Elements'] = ''
 
 	-- AURA
 	L['h'] = 'h' -- "h" hours on aura timers
@@ -19,12 +23,14 @@
 	L['Mouse'] = ''
 
 	-- MENU
-	L['Your new settings require a UI reload to take effect.'] = ''
-	L['Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'] = ''
+	L['Your new settings require a UI reload to take effect.'] = 'Your new settings require a UI reload to take effect.'
+	L['Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'] = 'Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'
 	L['Actionbar'] = ''
+	L['Exp & Reputation Bar'] = ''
+	L['Horizontal Third Row (Classic Layout only)'] = ''
 	L['Aura'] = ''
 	L['Statusbars on Auras'] = ''
-	L['Custom Value Formatting on Auras'] ''
+	L['Custom Value Formatting on Auras'] = ''
 	L['Chat'] = ''
 	L['Events & Custom Chat Text'] = ''
 	L['Chat Style'] = ''
@@ -39,6 +45,7 @@
 	L['Icon-based Nameplates for Totems'] = ''
 	L['Quest Tracker (Click-through to Quest Log)'] = ''
 	L['Tooltip'] = ''
+	L['Mouse Anchor'] = ''
 	L['Unitframes'] = ''
 	L['Player'] = ''
 	L['Target'] = ''
@@ -52,7 +59,7 @@
 	L[' Boss'] = ''
 	L[' Rare Elite'] = ''
 	L[' Rare'] = ''
-	L[' Elite' = ''
+	L[' Elite'] = ''
 
 	-- TRANSFORM
 	L['Increases speed by (.+)%%'] = '' -- tooltip string on mount items
@@ -67,13 +74,13 @@
 	L['|Hchannel:raid|hR|h. %s:\32'] = ''             -- "R. Obble:" raid chat
 	L['RW. %s:\32'] = ''                              -- "RW. Obble:" raid warning
 	L['|Hchannel:raid|hRL|h. %s:\32'] = ''            -- "RL. Obble:" raid leader
-	L['|Hchannel:INSTANCE_CHAT|hIns|h. %s:\32'] - ''  -- "Ins. Obble:" instance chat
+	L['|Hchannel:INSTANCE_CHAT|hIns|h. %s:\32'] = ''  -- "Ins. Obble:" instance chat
 	L['|Hchannel:INSTANCE_CHAT|hIL|h. %s:\32'] = ''   -- "IL. Obble:" instance leader
 	L['|Hchannel:Battleground|hBG|h. %s:\32'] = ''    -- "BG. Obble:" battleground chat
 	L['|Hchannel:Battleground|hBL|h. %s:\32'] = ''     -- "BL. Obble:" battleground leader
 	L['|Hchannel:party|hP|h. %s:\32'] = ''              -- "P. Obble:" party chat
 	L['|Hchannel:party|hDG|h. %s:\32'] = ''             -- "DG. Obble:" party guide
-	L['|Hchannel:raid|hR|h. %s:\32'] == ''              -- "R. Obble:" CHAT_MONSTER_PARTY_GET
+	L['|Hchannel:raid|hR|h. %s:\32'] = ''              -- "R. Obble:" CHAT_MONSTER_PARTY_GET
 
 	-- CHAT EVENTS
 	L['Joined Channel: (.+)'] = ''
@@ -127,11 +134,15 @@
 	L['To (|HBNplayer.+|h):'] = ''          --   whisper to bnet
 	L['To (|Hplayer.+|h):'] = ''            --   whisper to
 	L[' whispers:'] = ''                    --   whisper from
-	L['Joined Channel:' = ''                --   channel join
+	L['Joined Channel:'] = ''                --   channel join
 	L['Left Channel:'] = 'Left '            --   channel left
 	
 	if locale == "zhTW" then
-	
+
+		-- MENU
+		L['UI Colour'] = '介面顏色'
+		L['Toggle Elements'] = '切換選項'
+		
 		-- BAG
 		L['Bag'] = '背包' -- or use BAGSLOT
 		L['Bank'] = '銀行' -- or use BANK
@@ -144,6 +155,8 @@
 		L['Your new settings require a UI reload to take effect.'] = '你的新設定需要重載介面才會生效。'
 		L['Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'] = '全局切換開關。|cffff0000注意：會覆蓋掉你現有的設定。|r'
 		L['Actionbar'] = '快捷列'
+		L['Exp & Reputation Bar'] = '經驗聲望條'
+		L['Horizontal Third Row (Classic Layout only)'] = '橫式的第三排快捷列，僅在經典布局生效'
 		L['Cast Spells on Button Down'] = '按下按鍵時施法'
 		L['Aura'] = '光環'
 		L['Statusbars on Auras'] = '在光環上顯示計時條'
@@ -162,6 +175,7 @@
 		L['Icon-based Nameplates for Totems'] = '圖騰圖示'
 		L['Quest Tracker (Click-through to Quest Log)'] = '點擊任務追蹤開啟任務日誌'
 		L['Tooltip'] = '滑鼠提示'
+		L['Mouse Anchor'] = '錨點於滑鼠位置'
 		L['Unitframes'] = '單位框架'
 		L['Player'] = '玩家'
 		L['Target'] = '目標'
@@ -175,10 +189,13 @@
 		L[' Boss'] = ' 首領' -- or use BOSS
 		L[' Rare Elite'] = ' 稀有精英'
 		L[' Rare'] = ' 稀有' -- or use ELITE
-		L[' Elite' = ' 精英'
+		L[' Elite'] = ' 精英'
 	
 	elseif locale == "zhCN" then
-	
+		-- MENU
+		L['UI Colour'] = '界面颜色'
+		L['Toggle Elements'] = '配置选项'
+		
 		-- BAG
 		L['Bag'] = '背包' -- or use BAGSLOT
 		L['Bank'] = '银行' -- or use BANK
@@ -191,6 +208,8 @@
 		L['Your new settings require a UI reload to take effect.'] = '你的新设置需要重载界面才会生效。'
 		L['Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'] = '全局切换开关。|cffff0000注意：会复盖掉你现有的设置。|r'
 		L['Actionbar'] = '动作条'
+		L['Exp & Reputation Bar'] = '经验声望条'
+		L['Horizontal Third Row (Classic Layout only)'] = '横式的第三排动作条，仅在经典布局生效'
 		L['Cast Spells on Button Down'] = '按下按键时施法'
 		L['Aura'] = '光环'
 		L['Statusbars on Auras'] = '在光环上显示计时条'
@@ -209,6 +228,7 @@
 		L['Icon-based Nameplates for Totems'] = '图腾图示'
 		L['Quest Tracker (Click-through to Quest Log)'] = '点击任务追踪开启任务日志'
 		L['Tooltip'] = '鼠标提示'
+		L['Mouse Anchor'] = '锚点于鼠标'
 		L['Unitframes'] = '单位框体'
 		L['Player'] = '玩家'
 		L['Target'] = '目标'
@@ -222,7 +242,7 @@
 		L[' Boss'] = ' 首领' -- or use BOSS
 		L[' Rare Elite'] = ' 稀有精英'
 		L[' Rare'] = ' 稀有' -- or use ELITE
-		L[' Elite' = ' 精英'
+		L[' Elite'] = ' 精英'
 		
 	else
 		return
