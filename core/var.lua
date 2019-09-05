@@ -25,6 +25,7 @@
 				style			= true,
 				url				= true,
 				sysmsg			= false, -- objective text goes in chat window
+				colornames      = true,
 			},
 			ecastbar = {
 				enable			= true,
