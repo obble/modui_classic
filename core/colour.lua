@@ -33,29 +33,31 @@
 	RAID_CLASS_COLORS['SHAMAN'] = INTERNAL_CLASS_COLORS['SHAMAN']
 
 	local AddPowerColour = function()
-		PowerBarColor['MANA'] 	= {
-			r = MODUI_VAR['elements']['statusbar']['mana'].r or 0,
-			g = MODUI_VAR['elements']['statusbar']['mana'].g or 0,
-			b = MODUI_VAR['elements']['statusbar']['mana'].b or 1,
-		}
-		PowerBarColor['RAGE'] 	= {
-			r = MODUI_VAR['elements']['statusbar']['rage'].r or 1,
-			g = MODUI_VAR['elements']['statusbar']['rage'].g or 0,
-			b = MODUI_VAR['elements']['statusbar']['rage'].b or 0,
-			fullPowerAnim = true
-		}
-		PowerBarColor['FOCUS'] 	= {
-			r = MODUI_VAR['elements']['statusbar']['focus'].r or 1,
-			g = MODUI_VAR['elements']['statusbar']['focus'].g or .5,
-			b = MODUI_VAR['elements']['statusbar']['focus'].b or .25,
-			fullPowerAnim = true
-		}
-		PowerBarColor['ENERGY'] = {
-			r = MODUI_VAR['elements']['statusbar']['energy'].r or 1,
-			g = MODUI_VAR['elements']['statusbar']['energy'].g or 1,
-			b = MODUI_VAR['elements']['statusbar']['energy'].b or 0,
-			fullPowerAnim = true
-		}
+        if MODUI_VAR['elements']['statusbar'] then
+            PowerBarColor['MANA'] 	= {
+                   r = MODUI_VAR['elements']['statusbar']['mana'].r or 0,
+                    g = MODUI_VAR['elements']['statusbar']['mana'].g or 0,
+                    b = MODUI_VAR['elements']['statusbar']['mana'].b or 1,
+            }
+            PowerBarColor['RAGE'] 	= {
+                r = MODUI_VAR['elements']['statusbar']['rage'].r or 1,
+                g = MODUI_VAR['elements']['statusbar']['rage'].g or 0,
+                b = MODUI_VAR['elements']['statusbar']['rage'].b or 0,
+                fullPowerAnim = true
+            }
+            PowerBarColor['FOCUS'] 	= {
+                r = MODUI_VAR['elements']['statusbar']['focus'].r or 1,
+                g = MODUI_VAR['elements']['statusbar']['focus'].g or .5,
+                b = MODUI_VAR['elements']['statusbar']['focus'].b or .25,
+                fullPowerAnim = true
+            }
+            PowerBarColor['ENERGY'] = {
+                r = MODUI_VAR['elements']['statusbar']['energy'].r or 1,
+                g = MODUI_VAR['elements']['statusbar']['energy'].g or 1,
+                b = MODUI_VAR['elements']['statusbar']['energy'].b or 0,
+                fullPowerAnim = true
+            }
+        end
 	end
 
     ns.CLASS_COLOUR = function(f, a)

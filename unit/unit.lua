@@ -42,13 +42,10 @@
             PlayerFrame.bg = PlayerFrame:CreateTexture()
             PlayerFrame.bg:SetPoint('TOPLEFT', PlayerFrameBackground)
             PlayerFrame.bg:SetPoint('BOTTOMRIGHT', PlayerFrameBackground, 0, 22)
-            --PlayerFrame.bg:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
             PlayerFrame.bg:SetVertexColor(colour.r, colour.g, colour.b)
         end
 
-        PlayerPVPIcon:SetSize(48, 48)
-        PlayerPVPIcon:ClearAllPoints()
-        PlayerPVPIcon:SetPoint('CENTER', PlayerFrame, 'LEFT', 60, 16)
+        PlayerPVPIcon:SetAlpha(0)
 
         if  MODUI_VAR['elements']['unit'].castbar then
             CastingBarFrame.Icon:SetSize(16, 16)
@@ -130,7 +127,7 @@
 
         TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
 
-        --TargetFrameNameBackground:SetTexture[[Interface/AddOns/modui_classic/art/statusbar/namebg.tga]]
+        TargetFrameNameBackground:SetTexture(nil)
 
         TargetFrame.Elite = TargetFrameTextureFrame:CreateTexture(nil, 'BORDER')
         TargetFrame.Elite:SetTexture[[Interface\AddOns\modui_classic\art\unitframe\UI-TargetingFrame-Elite]]
@@ -166,10 +163,13 @@
             v:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE')
         end
 
-        TargetFrameTextureFramePVPIcon:SetSize(48, 48)
-        TargetFrameTextureFramePVPIcon:ClearAllPoints()
-        TargetFrameTextureFramePVPIcon:SetPoint('CENTER', TargetFrame, 'RIGHT', -42, 16)
+        --TargetFrameTextureFramePVPIcon:SetSize(48, 48)
+        --TargetFrameTextureFramePVPIcon:ClearAllPoints()
+        --TargetFrameTextureFramePVPIcon:SetPoint('CENTER', TargetFrame, 'RIGHT', -42, 16)
+
+        TargetFrameTextureFramePVPIcon:SetAlpha(0)
     end
+
 
     local AddToTFrame = function()
         TargetFrameToTPortrait:SetSize(37, 37)
@@ -202,12 +202,15 @@
     end
 
     local AddHealthTextColour = function(t, statusbar)
+        --[[
         local min, max = statusbar:GetMinMaxValues()
         local v = statusbar:GetValue()
         ns.GRADIENT_COLOUR(t, v, min, max)
+        --]]
     end
 
     local AddManaTextColour = function(t, class, powertype)
+        --[[
         if  MODUI_VAR['elements']['unit'].vcolour then
             if class == 'ROGUE' or (class == 'DRUID' and powertype == 3) then
                 t:SetTextColor(250/255, 240/255, 200/255)
@@ -219,6 +222,7 @@
         else
             t:SetTextColor(1, 1, 1)
         end
+        --]]
     end
 
     local AddTargetAura = function(self)
@@ -314,13 +318,11 @@
     end
 
     local UpdateTargetNameClassColour = function()
-        --[[
         if  UnitIsPlayer'target' then
             local _, class  = UnitClass'target'
             local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
-            TargetFrameNameBackground:SetVertexColor(colour.r, colour.g, colour.b)
+            --TargetFrameNameBackground:SetVertexColor(0.25, 0.78, 0.92)
         end
-        --]]
     end
 
     local UpdatePartyTextClassColour = function()
@@ -436,6 +438,7 @@
             AddPartyPets()
             if not InCombatLockdown() then UpdatePartyTextClassColour() end
         end
+
     end
 
     local  e = CreateFrame'Frame'
