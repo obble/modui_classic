@@ -354,6 +354,16 @@
         hooksecurefunc('ShowPetActionBar', UpdatePetBar)
     end
 
+    local DisableXPBarForMaxLevel = function()
+        local level = UnitLevel("player")
+        if (level == 60)
+            MainMenuMaxLevelBar:Hide()
+            MainMenuMaxLevelBar0:Hide()
+            MainMenuMaxLevelBar1:Hide()
+            MainMenuMaxLevelBar3:Hide()
+        end
+    end
+
     local OnEvent = function(self, event)
         if  MODUI_VAR['elements']['mainbar'].enable then
             if  event == 'PLAYER_LOGIN' then
@@ -361,8 +371,10 @@
                 AddButtonSkin()
                 MoveBars()
                 UpdateBars()
+                DisableXPBarForMaxLevel()
             else
                 UpdateXP()
+                DisableXPBarForMaxLevel()
             end
         elseif MODUI_VAR['elements']['mainbar'].xp then
             AddXP()
