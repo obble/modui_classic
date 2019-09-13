@@ -356,10 +356,9 @@
 
     local DisableXPBarForMaxLevel = function()
         local level = UnitLevel("player")
-        if (level == 60)
-            MainMenuMaxLevelBar:Hide()
+        if level == 60 then
             MainMenuMaxLevelBar0:Hide()
-            MainMenuMaxLevelBar1:Hide()
+            MainMenuMaxLevelBar2:Hide()
             MainMenuMaxLevelBar3:Hide()
         end
     end
@@ -374,7 +373,6 @@
                 DisableXPBarForMaxLevel()
             else
                 UpdateXP()
-                DisableXPBarForMaxLevel()
             end
         elseif MODUI_VAR['elements']['mainbar'].xp then
             AddXP()
