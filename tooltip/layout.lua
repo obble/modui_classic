@@ -149,11 +149,11 @@
             if  MODUI_VAR['elements']['tooltip'].disablefade then
                 self.hasUnitTooltip = false
                 self:SetScript('OnUpdate', function(self)
-                    local _, unit = GameTooltip:GetUnit()
-                    if self.hasUnitTooltip and not unit then
+                    local mouseoverExists = UnitExists("mouseover")
+                    if self.hasUnitTooltip and not mouseoverExists then
                         GameTooltip:Hide()
                         self.hasUnitTooltip = nil
-                    elseif unit then
+                    elseif not self.hasUnitTooltip and mouseoverExists then
                         self.hasUnitTooltip = true
                     end
                 end)
