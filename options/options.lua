@@ -122,6 +122,7 @@
             MODUI_VAR['elements']['unit'].auras                 = true
             MODUI_VAR['elements']['unit'].vcolour               = true
             MODUI_VAR['elements']['unit'].rcolour               = true
+            MODUI_VAR['elements']['talentbuilds'].enable          = true
             UpdateAllCheckButtons(true)
         else
             MODUI_VAR['elements'].all                           = false
@@ -158,6 +159,7 @@
             MODUI_VAR['elements']['unit'].auras                 = false
             MODUI_VAR['elements']['unit'].vcolour               = false
             MODUI_VAR['elements']['unit'].rcolour               = false
+            MODUI_VAR['elements']['talentbuilds'].enable          = false
             UpdateAllCheckButtons(false)
         end
         ShowReload()
@@ -622,9 +624,39 @@
             true,
             MODUI_VAR['elements']['unit'].enable and true or false
         )
+        add(
+            'Show Talent Builds',
+            function(self)
+                MODUI_VAR['elements']['talentbuilds'].enable = self:GetChecked() and true or false
+                ShowReload()
+            end,
+            MODUI_VAR['elements']['talentbuilds'].enable and true or false,
+            1, .8, 0,
+            nil,
+            true
+        )
     end
 
     local OnEvent = function(self, event, addon)
+        -- Copies default values to the saved variables
+        -- This makes sure existing saved variables get newly added options
+        local function MergeTable(source, destination)
+            if destination == nil then
+                destination = {}
+            end
+
+            for key, value in pairs(source) do
+                if type(value) == 'table' then
+                    destination[key] = MergeTable(value, destination[key])
+                elseif destination[key] == nil then
+                    destination[key] = value
+                end
+            end
+
+            return destination
+        end
+
+        MODUI_VAR = MergeTable(MODUI_VAR_DEFAULTS, MODUI_VAR)
         AddMenu()
     end
 
