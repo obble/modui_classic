@@ -122,7 +122,7 @@
             MODUI_VAR['elements']['unit'].auras                 = true
             MODUI_VAR['elements']['unit'].vcolour               = true
             MODUI_VAR['elements']['unit'].rcolour               = true
-            MODUI_VAR['elements']['talentbuilds'].enable          = true
+            MODUI_VAR['elements']['talentbuilds'].enable        = true
             UpdateAllCheckButtons(true)
         else
             MODUI_VAR['elements'].all                           = false
@@ -159,7 +159,7 @@
             MODUI_VAR['elements']['unit'].auras                 = false
             MODUI_VAR['elements']['unit'].vcolour               = false
             MODUI_VAR['elements']['unit'].rcolour               = false
-            MODUI_VAR['elements']['talentbuilds'].enable          = false
+            MODUI_VAR['elements']['talentbuilds'].enable        = false
             UpdateAllCheckButtons(false)
         end
         ShowReload()
