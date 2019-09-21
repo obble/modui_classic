@@ -10,6 +10,12 @@
 	local colour = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
 
     local menu = CreateFrame('Frame', 'modui_elementsmenu', menu)
+    menu:SetFrameStrata('TOOLTIP')
+    menu:SetMovable(true)
+    menu:EnableMouse(true)
+    menu:RegisterForDrag('LeftButton')
+    menu:SetScript('OnDragStart', menu.StartMoving)
+    menu:SetScript('OnDragStop', menu.StopMovingOrSizing)
     menu:SetSize(500, 460)
     menu:SetBackdrop(
         {
