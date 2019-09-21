@@ -129,6 +129,12 @@
         end
     end
 
+    local HideMaxXP = function()
+        if  MainMenuBarMaxLevelBar:IsShown() then
+            MainMenuBarMaxLevelBar:Hide()
+        end
+    end
+
     local UpdatePetBar = function()
         SlidingActionBarTexture0:ClearAllPoints()
         SlidingActionBarTexture0:SetPoint('BOTTOMLEFT', PetActionButton1, -14, -2)
@@ -209,7 +215,10 @@
         MainMenuExpBar.t:SetPoint('BOTTOMRIGHT', MainMenuExpBar, 'TOPRIGHT')
 
         hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
-        hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
+        hooksecurefunc('MainMenuBar_UpdateExperienceBars',  function()
+            UpdateWatchbar()
+            HideMaxXP()
+        end)
     end
 
     local AddButtonSkin = function()
