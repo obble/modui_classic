@@ -145,7 +145,19 @@
             hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
             if  MODUI_VAR['elements']['tooltip'].mouseanchor then
 				GameTooltip:HookScript('OnUpdate', MouseUpdate)
-			end
+            end
+            if  MODUI_VAR['elements']['tooltip'].disablefade then
+                self.hasUnitTooltip = false
+                self:SetScript('OnUpdate', function(self)
+                    local mouseoverExists = UnitExists("mouseover")
+                    if self.hasUnitTooltip and not mouseoverExists then
+                        GameTooltip:Hide()
+                        self.hasUnitTooltip = nil
+                    elseif not self.hasUnitTooltip and mouseoverExists then
+                        self.hasUnitTooltip = true
+                    end
+                end)
+            end
         end
     end
 

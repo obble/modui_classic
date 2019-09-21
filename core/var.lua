@@ -61,6 +61,7 @@
 			tooltip = {
 				enable			= true,
 				mouseanchor		= false,
+				disablefade		= false,
 			},
 			tracker = {
 				enable 			= true,
