@@ -114,24 +114,27 @@
         end
     end
 
+    local HideMaxXP = function()
+        for i = 0, 3 do
+            local t = _G['MainMenuMaxLevelBar'..i]
+            t:SetTexture''
+            t:Hide()
+        end
+    end
+
     local UpdateXP = function()
         local xp, max = UnitXP'player', UnitXPMax'player'
 		local x = (xp/max)*MainMenuExpBar:GetWidth()
         local rest = GetRestState()
         UpdateExhaustion()
         if  _G['modui_mainbar'] then
+            HideMaxXP()
     		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
             if  rest == 1 then
                 MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)
             elseif rest == 2 then
                 MainMenuExpBar.spark:SetVertexColor(.58*1.5, 0*1.5, .55*1.5, 1)
     	    end
-        end
-    end
-
-    local HideMaxXP = function()
-        if  MainMenuBarMaxLevelBar:IsShown() then
-            MainMenuBarMaxLevelBar:Hide()
         end
     end
 
@@ -215,10 +218,7 @@
         MainMenuExpBar.t:SetPoint('BOTTOMRIGHT', MainMenuExpBar, 'TOPRIGHT')
 
         hooksecurefunc('MainMenuTrackingBar_Configure',     UpdateWatchbar)
-        hooksecurefunc('MainMenuBar_UpdateExperienceBars',  function()
-            UpdateWatchbar()
-            HideMaxXP()
-        end)
+        hooksecurefunc('MainMenuBar_UpdateExperienceBars',  UpdateWatchbar)
     end
 
     local AddButtonSkin = function()
