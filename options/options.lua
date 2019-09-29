@@ -97,6 +97,8 @@
             MODUI_VAR['elements'].all                           = true
             MODUI_VAR['elements']['mainbar'].enable             = true
             MODUI_VAR['elements']['mainbar'].keypress           = true
+            MODUI_VAR['elements']['mainbar'].micromenubutton    = true
+            MODUI_VAR['elements']['mainbar'].bagbutton          = true
             MODUI_VAR['elements']['aura'].enable                = true
             MODUI_VAR['elements']['aura'].statusbars            = true
             MODUI_VAR['elements']['aura'].values                = true
@@ -135,6 +137,8 @@
             MODUI_VAR['elements'].all                           = false
             MODUI_VAR['elements']['mainbar'].enable             = false
             MODUI_VAR['elements']['mainbar'].keypress           = false
+            MODUI_VAR['elements']['mainbar'].micromenubutton    = false
+            MODUI_VAR['elements']['mainbar'].bagbutton          = false
             MODUI_VAR['elements']['aura'].enable                = false
             MODUI_VAR['elements']['aura'].statusbars            = false
             MODUI_VAR['elements']['aura'].values                = false
@@ -267,6 +271,24 @@
                     MODUI_VAR['elements']['mainbar'].horiz and true or false,
                     MODUI_VAR['elements']['mainbar'].enable and true or false
                 },
+                {
+                    'Micro Menu Button',
+                    function(self)
+                        MODUI_VAR['elements']['mainbar'].micromenubutton = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['mainbar'].micromenubutton and true or false,
+                    MODUI_VAR['elements']['mainbar'].enable and true or false
+                },
+                {
+                    'Bag Button',
+                    function(self)
+                        MODUI_VAR['elements']['mainbar'].bagbutton = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['mainbar'].bagbutton and true or false,
+                    MODUI_VAR['elements']['mainbar'].enable and true or false
+                }
             }
         )
         add(

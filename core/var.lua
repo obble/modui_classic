@@ -39,6 +39,8 @@
 				keypress		= true,
 				xp				= true,
 				horiz			= false,
+				micromenubutton	= true,
+				bagbutton		= true,
 			},
 			nameplate = {
 				enable			= true,
