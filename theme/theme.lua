@@ -4,6 +4,7 @@
 
     local f = CreateFrame'Frame'
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
+    local UpdateSkins = nil
 
     ns.colour   = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
     ns.colour_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
@@ -266,7 +267,27 @@
     end
 
     local ADDON_LOADED = function(self, event, addon)
-        if  addon == 'Blizzard_TimeManager' then
+        local function CheckForAddOn(name)
+            if addon == name then
+                return true
+            elseif addon == 'modui_classic' then
+                return IsAddOnLoaded(name)
+            end
+        end
+
+        if CheckForAddOn('Leatrix_Plus') then
+            if LeaPlusDB['EnhanceQuestLog'] == 'On' then
+                QuestLogFrame.Material:SetSize(510, 512)
+            end
+        elseif CheckForAddOn('WideQuestLog') then
+            QuestLogFrame.Material:ClearAllPoints()
+            QuestLogFrame.Material:SetPoint('TOPLEFT', QuestLogDetailScrollFrame, 'TOPLEFT', -10, 0);
+            QuestLogFrame.Material:SetSize(520, 552)
+            local _, _, _, _, _, _, _, _, _, _, _, _, a, b = QuestLogFrame:GetRegions()
+            for _, v in pairs({a, b}) do
+                tinsert(ns.skin, v)
+            end
+        elseif addon == 'Blizzard_TimeManager' then
             local a = TimeManagerClockButton:GetRegions()
             tinsert(ns.skin, a)
         elseif addon == 'Blizzard_AuctionUI' then
@@ -390,7 +411,7 @@
   tinsert(ns.skinb, QuestTimerFrame)
   tinsert(ns.skin, QuestTimerHeader)
 
-  local UpdateSkins = function()
+  UpdateSkins = function()
       for _,  v in pairs(ns.skin) do
           if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
               v:SetVertexColor(
