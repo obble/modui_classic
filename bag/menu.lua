@@ -88,9 +88,13 @@
 
 	local OnEvent = function(self, event)
 		if  MODUI_VAR['elements']['mainbar'].enable then
-			AddBagMenu()
-			UpdateFreeSlots()
-			hooksecurefunc('MainMenuBarBackpackButton_UpdateFreeSlots', UpdateFreeSlots)
+			if  MODUI_VAR['elements']['mainbar'].bagbutton then
+				AddBagMenu()
+				UpdateFreeSlots()
+				hooksecurefunc('MainMenuBarBackpackButton_UpdateFreeSlots', UpdateFreeSlots)
+			else
+				bu:Hide()
+			end
 		end
 	end
 

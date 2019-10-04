@@ -97,6 +97,8 @@
             MODUI_VAR['elements'].all                           = true
             MODUI_VAR['elements']['mainbar'].enable             = true
             MODUI_VAR['elements']['mainbar'].keypress           = true
+            MODUI_VAR['elements']['mainbar'].micromenubutton    = true
+            MODUI_VAR['elements']['mainbar'].bagbutton          = true
             MODUI_VAR['elements']['aura'].enable                = true
             MODUI_VAR['elements']['aura'].statusbars            = true
             MODUI_VAR['elements']['aura'].values                = true
@@ -135,6 +137,8 @@
             MODUI_VAR['elements'].all                           = false
             MODUI_VAR['elements']['mainbar'].enable             = false
             MODUI_VAR['elements']['mainbar'].keypress           = false
+            MODUI_VAR['elements']['mainbar'].micromenubutton    = false
+            MODUI_VAR['elements']['mainbar'].bagbutton          = false
             MODUI_VAR['elements']['aura'].enable                = false
             MODUI_VAR['elements']['aura'].statusbars            = false
             MODUI_VAR['elements']['aura'].values                = false
@@ -187,17 +191,18 @@
 
     local ToggleChildButton = function(self, table)
         if  self:GetChecked() then
-            for _, v in pairs(table) do
-                v:Enable()
+            for _, v in pairs(self.suboptions) do
+                _G[v]:Enable()
             end
         else
-            for _, v in pairs(table) do
-                v:Disable()
+            for _, v in pairs(self.suboptions) do
+                _G[v]:Disable()
             end
         end
     end
 
-    local add = function(name, func, checked, r, g, b, inset, enable)
+    local add = nil
+    add = function(name, func, checked, r, g, b, inset, enable, children)
 		local bu = CreateFrame('CheckButton', 'modui_checkbutton'..i, menu.inner, 'UICheckButtonTemplate')
         bu:SetSize(19, 19)
         bu:SetPoint('TOPLEFT',
@@ -224,42 +229,67 @@
         i = i + 1
         tinsert(j, bu)
         k = inset and true or false
-        --print(name, inset, k)
+
+        bu.suboptions = {}
+        if children then
+            for _, v in ipairs(children) do
+                tinsert(bu.suboptions, 'modui_checkbutton'..i)
+                local name, func, checked, enable = unpack(v)
+                add(name, func, checked, 1, 1, 1, true, enable)
+            end
+        end
 	end
 
     local AddMenu = function()
+        local add = function(name, func, checked, children)
+            add(name, func, checked, 1, .8, 0, nil, true, children)
+        end
         add(
             'Actionbar',
             function(self)
                 MODUI_VAR['elements']['mainbar'].enable = self:GetChecked() and true or false
                 ShowReload()
+                ToggleChildButton(self)
             end,
             MODUI_VAR['elements']['mainbar'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
-        )
-        add(
-            'Exp & Reputation Bar',
-            function(self)
-                MODUI_VAR['elements']['mainbar'].xp = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['mainbar'].xp and true or false,
-            1, 1, 1,
-            true,
-            true
-        )
-        add(
-            'Horizontal Third Row (Classic Layout only)',
-            function(self)
-                MODUI_VAR['elements']['mainbar'].horiz = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['mainbar'].horiz and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['mainbar'].enable and false or true
+            {
+                {
+                    'Exp & Reputation Bar',
+                    function(self)
+                        MODUI_VAR['elements']['mainbar'].xp = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['mainbar'].xp and true or false,
+                    MODUI_VAR['elements']['mainbar'].enable and true or false
+                },
+                {
+                    'Horizontal Third Row (Classic Layout only)',
+                    function(self)
+                        MODUI_VAR['elements']['mainbar'].horiz = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['mainbar'].horiz and true or false,
+                    MODUI_VAR['elements']['mainbar'].enable and true or false
+                },
+                {
+                    'Micro Menu Button',
+                    function(self)
+                        MODUI_VAR['elements']['mainbar'].micromenubutton = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['mainbar'].micromenubutton and true or false,
+                    MODUI_VAR['elements']['mainbar'].enable and true or false
+                },
+                {
+                    'Bag Button',
+                    function(self)
+                        MODUI_VAR['elements']['mainbar'].bagbutton = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['mainbar'].bagbutton and true or false,
+                    MODUI_VAR['elements']['mainbar'].enable and true or false
+                }
+            }
         )
         add(
             'Cast Spells on Button Down',
@@ -267,48 +297,34 @@
                 MODUI_VAR['elements']['mainbar'].keypress = self:GetChecked() and true or false
                 ShowReload()
             end,
-            MODUI_VAR['elements']['mainbar'].keypress and true or false,
-            1, .8, 0,
-            nil,
-            true
+            MODUI_VAR['elements']['mainbar'].keypress and true or false
         )
         add(
             'Aura',
             function(self)
                 MODUI_VAR['elements']['aura'].enable = self:GetChecked() and true or false
                 ShowReload()
-                ToggleChildButton(
-                    self,
-                    {
-                        _G['modui_checkbutton6'],
-                        _G['modui_checkbutton7']
-                    }
-                )
+                ToggleChildButton(self)
             end,
             MODUI_VAR['elements']['aura'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
-        )
-        add(
-            'Statusbars on Auras',
-            function(self)
-                MODUI_VAR['elements']['aura'].statusbars = self:GetChecked() and true or false
-            end,
-            MODUI_VAR['elements']['aura'].statusbars and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['aura'].enable and true or false
-        )
-        add(
-            'Custom Value Formatting on Auras',
-            function(self)
-                MODUI_VAR['elements']['aura'].values = self:GetChecked() and true or false
-            end,
-            MODUI_VAR['elements']['aura'].values and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['aura'].enable and true or false
+            {
+                {
+                    'Statusbars on Auras',
+                    function(self)
+                        MODUI_VAR['elements']['aura'].statusbars = self:GetChecked() and true or false
+                    end,
+                    MODUI_VAR['elements']['aura'].statusbars and true or false,
+                    MODUI_VAR['elements']['aura'].enable and true or false
+                },
+                {
+                    'Custom Value Formatting on Auras',
+                    function(self)
+                        MODUI_VAR['elements']['aura'].values = self:GetChecked() and true or false
+                    end,
+                    MODUI_VAR['elements']['aura'].values and true or false,
+                    MODUI_VAR['elements']['aura'].enable and true or false
+                }
+            }
         )
         add(
             'Castbar',
@@ -316,74 +332,54 @@
                 MODUI_VAR['elements']['unit'].castbar = self:GetChecked() and true or false
                 ShowReload()
             end,
-            MODUI_VAR['elements']['unit'].castbar and true or false,
-            1, .8, 0,
-            nil,
-            true
+            MODUI_VAR['elements']['unit'].castbar and true or false
         )
         add(
             'Chat',
             function(self)
                 MODUI_VAR['elements']['chat'].enable = self:GetChecked() and true or false
                 ShowReload()
-                ToggleChildButton(
-                    self,
-                    {
-                        _G['modui_checkbutton10'],
-                        _G['modui_checkbutton11'],
-                        _G['modui_checkbutton12'],
-                        _G['modui_checkbutton13'],
-                    }
-                )
+                ToggleChildButton(self)
             end,
             MODUI_VAR['elements']['chat'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
-        )
-        add(
-            'Events & Custom Chat Text',
-            function(self)
-                MODUI_VAR['elements']['chat'].events = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['chat'].events and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['chat'].enable and true or false
-        )
-        add(
-            'Chat Style',
-            function(self)
-                MODUI_VAR['elements']['chat'].style = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['chat'].style and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['chat'].enable and true or false
-        )
-        add(
-            'Chat Color Names by Class',
-            function(self)
-                MODUI_VAR['elements']['chat'].colornames = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['chat'].colornames and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['chat'].enable and true or false
-        )
-        add(
-            'URLs',
-            function(self)
-                MODUI_VAR['elements']['chat'].url = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['chat'].url and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['chat'].enable and true or false
+            {
+                {
+                    'Events & Custom Chat Text',
+                    function(self)
+                        MODUI_VAR['elements']['chat'].events = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['chat'].events and true or false,
+                    MODUI_VAR['elements']['chat'].enable and true or false
+                },
+                {
+                    'Chat Style',
+                    function(self)
+                        MODUI_VAR['elements']['chat'].style = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['chat'].style and true or false,
+                    MODUI_VAR['elements']['chat'].enable and true or false
+                },
+                {
+                    'Chat Color Names by Class',
+                    function(self)
+                        MODUI_VAR['elements']['chat'].colornames = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['chat'].colornames and true or false,
+                    MODUI_VAR['elements']['chat'].enable and true or false
+                },
+                {
+                    'URLs',
+                    function(self)
+                        MODUI_VAR['elements']['chat'].url = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['chat'].url and true or false,
+                    MODUI_VAR['elements']['chat'].enable and true or false
+                }
+            }
         )
         add(
             'Inventory',
@@ -392,20 +388,17 @@
                 ShowReload()
             end,
             MODUI_VAR['elements']['onebag'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
-        )
-        add(
-            'Button For Selling Grey Items at Vendor',
-            function(self)
-                MODUI_VAR['elements']['onebag'].greys = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['onebag'].greys and true or false,
-            1, 1, 1,
-            true,
-            true
+            {
+                {
+                    'Button For Selling Grey Items at Vendor',
+                    function(self)
+                        MODUI_VAR['elements']['onebag'].greys = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['onebag'].greys and true or false,
+                    MODUI_VAR['elements']['onebag'].enable
+                }
+            }
         )
         add(
             'Enemy Castbars',
@@ -413,73 +406,53 @@
                 MODUI_VAR['elements']['ecastbar'].enable = self:GetChecked() and true or false
                 ShowReload()
             end,
-            MODUI_VAR['elements']['ecastbar'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
+            MODUI_VAR['elements']['ecastbar'].enable and true or false
         )
         add(
             'Nameplates',
             function(self)
                 MODUI_VAR['elements']['nameplate'].enable = self:GetChecked() and true or false
                 ShowReload()
-                ToggleChildButton(
-                    self,
-                    {
-                        _G['modui_checkbutton18'],
-                        _G['modui_checkbutton19'],
-                        _G['modui_checkbutton20'],
-                        _G['modui_checkbutton21'],
-                    }
-                )
+                ToggleChildButton(self)
             end,
             MODUI_VAR['elements']['nameplate'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
-        )
-        add(
-            'Show Auras on Nameplates',
-            function(self)
-                MODUI_VAR['elements']['nameplate'].aura = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['nameplate'].aura and true or false,
-            1, 1, 1,
-            true,
-            true
-        )
-        add(
-            'Show Combo Points on Nameplate',
-            function(self)
-                MODUI_VAR['elements']['nameplate'].combo = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['nameplate'].combo and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['nameplate'].enable and true or false
-        )
-        add(
-            'Class Colours on Friendly Nameplates',
-            function(self)
-                MODUI_VAR['elements']['nameplate'].friendlyclass = self:GetChecked() and true or false
-            end,
-            MODUI_VAR['elements']['nameplate'].friendlyclass and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['nameplate'].enable and true or false
-        )
-        add(
-            'Icon-based Nameplates for Totems',
-            function(self)
-                MODUI_VAR['elements']['nameplate'].totem = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['nameplate'].totem and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['nameplate'].enable and true or false
+            {
+                {
+                    'Show Auras on Nameplates',
+                    function(self)
+                        MODUI_VAR['elements']['nameplate'].aura = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['nameplate'].aura and true or false,
+                    MODUI_VAR['elements']['nameplate'].enable and true or false
+                },
+                {
+                    'Show Combo Points on Nameplate',
+                    function(self)
+                        MODUI_VAR['elements']['nameplate'].combo = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['nameplate'].combo and true or false,
+                    MODUI_VAR['elements']['nameplate'].enable and true or false
+                },
+                {
+                    'Class Colours on Friendly Nameplates',
+                    function(self)
+                        MODUI_VAR['elements']['nameplate'].friendlyclass = self:GetChecked() and true or false
+                    end,
+                    MODUI_VAR['elements']['nameplate'].friendlyclass and true or false,
+                    MODUI_VAR['elements']['nameplate'].enable and true or false
+                },
+                {
+                    'Icon-based Nameplates for Totems',
+                    function(self)
+                        MODUI_VAR['elements']['nameplate'].totem = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['nameplate'].totem and true or false,
+                    MODUI_VAR['elements']['nameplate'].enable and true or false
+                }
+            }
         )
         add(
             'Quest Tracker (Click-through to Quest Log)',
@@ -487,162 +460,119 @@
                 MODUI_VAR['elements']['tracker'].enable = self:GetChecked() and true or false
                 ShowReload()
             end,
-            MODUI_VAR['elements']['tracker'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
+            MODUI_VAR['elements']['tracker'].enable and true or false
         )
         add(
             'Tooltip',
             function(self)
                 MODUI_VAR['elements']['tooltip'].enable = self:GetChecked() and true or false
                 ShowReload()
-                ToggleChildButton(
-                    self,
-                    {
-                        _G['modui_checkbutton24'],
-                        _G['modui_checkbutton25'],
-                    }
-                )
+                ToggleChildButton(self)
             end,
             MODUI_VAR['elements']['tooltip'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
-        )
-        add(
-            'Mouse Anchor',
-            function(self)
-                MODUI_VAR['elements']['tooltip'].mouseanchor = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['tooltip'].mouseanchor and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['tooltip'].enable and true or false
-        )
-        add(
-            'Disable fade out',
-            function(self)
-                MODUI_VAR['elements']['tooltip'].disablefade = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['tooltip'].disablefade and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['tooltip'].enable and true or false
+            {
+                {
+                    'Mouse Anchor',
+                    function(self)
+                        MODUI_VAR['elements']['tooltip'].mouseanchor = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['tooltip'].mouseanchor and true or false,
+                    MODUI_VAR['elements']['tooltip'].enable and true or false
+                },
+                {
+                    'Disable fade out',
+                    function(self)
+                        MODUI_VAR['elements']['tooltip'].disablefade = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['tooltip'].disablefade and true or false,
+                    MODUI_VAR['elements']['tooltip'].enable and true or false
+                }
+            }
         )
         add(
             'Unitframes',
             function(self)
                 MODUI_VAR['elements']['unit'].enable = self:GetChecked() and true or false
                 ShowReload()
-                ToggleChildButton(
-                    self,
-                    {
-                        _G['modui_checkbutton27'],
-                        _G['modui_checkbutton28'],
-                        _G['modui_checkbutton29'],
-                        _G['modui_checkbutton30'],
-                        _G['modui_checkbutton31'],
-                        _G['modui_checkbutton32'],
-                        _G['modui_checkbutton33'],
-                        _G['modui_checkbutton34'],
-                    }
-                )
+                ToggleChildButton(self)
             end,
             MODUI_VAR['elements']['unit'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
-        )
-        add(
-            'Player',
-            function(self)
-                MODUI_VAR['elements']['unit'].player = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['unit'].player and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
-        )
-        add(
-            'Target',
-            function(self)
-                MODUI_VAR['elements']['unit'].target = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['unit'].target and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
-        )
-        add(
-            'Party',
-            function(self)
-                MODUI_VAR['elements']['unit'].party = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['unit'].party and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
-        )
-        add(
-            'Target of Target',
-            function(self)
-                MODUI_VAR['elements']['unit'].tot = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['unit'].tot and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
-        )
-        add(
-            'Pet',
-            function(self)
-                MODUI_VAR['elements']['unit'].pet = self:GetChecked() and true or false
-                ShowReload()
-            end,
-             MODUI_VAR['elements']['unit'].pet and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
-        )
-        add(
-            'Cooldowns on Auras',
-            function(self)
-                MODUI_VAR['elements']['unit'].auras = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['unit'].auras and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
-        )
-        add(
-            'Value Colours on Text',
-            function(self)
-                MODUI_VAR['elements']['unit'].vcolour = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['unit'].vcolour and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
-        )
-        add(
-            'Elite/Rare Dragons in Colour (for dark theme UIs)',
-            function(self)
-                MODUI_VAR['elements']['unit'].rcolour = self:GetChecked() and true or false
-                ShowReload()
-            end,
-            MODUI_VAR['elements']['unit'].rcolour and true or false,
-            1, 1, 1,
-            true,
-            MODUI_VAR['elements']['unit'].enable and true or false
+            {
+                {
+                    'Player',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].player = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].player and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                },
+                {
+                    'Target',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].target = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].target and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                },
+                {
+                    'Party',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].party = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].party and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                },
+                {
+                    'Target of Target',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].tot = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].tot and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                },
+                {
+                    'Pet',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].pet = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].pet and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                },
+                {
+                    'Cooldowns on Auras',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].auras = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].auras and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                },
+                {
+                    'Value Colours on Text',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].vcolour = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].vcolour and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                },
+                {
+                    'Elite/Rare Dragons in Colour (for dark theme UIs)',
+                    function(self)
+                        MODUI_VAR['elements']['unit'].rcolour = self:GetChecked() and true or false
+                        ShowReload()
+                    end,
+                    MODUI_VAR['elements']['unit'].rcolour and true or false,
+                    MODUI_VAR['elements']['unit'].enable and true or false
+                }
+            }
         )
         add(
             'Show Talent Builds',
@@ -650,33 +580,11 @@
                 MODUI_VAR['elements']['talentbuilds'].enable = self:GetChecked() and true or false
                 ShowReload()
             end,
-            MODUI_VAR['elements']['talentbuilds'].enable and true or false,
-            1, .8, 0,
-            nil,
-            true
+            MODUI_VAR['elements']['talentbuilds'].enable and true or false
         )
     end
 
     local OnEvent = function(self, event, addon)
-        -- Copies default values to the saved variables
-        -- This makes sure existing saved variables get newly added options
-        local function MergeTable(source, destination)
-            if destination == nil then
-                destination = {}
-            end
-
-            for key, value in pairs(source) do
-                if type(value) == 'table' then
-                    destination[key] = MergeTable(value, destination[key])
-                elseif destination[key] == nil then
-                    destination[key] = value
-                end
-            end
-
-            return destination
-        end
-
-        MODUI_VAR = MergeTable(MODUI_VAR_DEFAULTS, MODUI_VAR)
         AddMenu()
     end
 

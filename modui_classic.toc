@@ -82,3 +82,7 @@ worldmap/worldmap.lua
 
 #   ~options
 options/options.lua
+
+#   ~addon skins
+theme/addons/LeatrixPlus.lua
+theme/addons/WideQuestLog.lua

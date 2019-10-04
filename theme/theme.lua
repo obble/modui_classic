@@ -4,10 +4,12 @@
 
     local f = CreateFrame'Frame'
     local build = tonumber(string.sub(GetBuildInfo() , 1, 2))
+    local UpdateSkins = nil
 
     ns.colour   = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
     ns.colour_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
 
+    ns.addon_skins = {}
     ns.skin     = {
         MinimapBorder,
         MiniMapTrackingBorder,
@@ -266,7 +268,21 @@
     end
 
     local ADDON_LOADED = function(self, event, addon)
-        if  addon == 'Blizzard_TimeManager' then
+        local function CheckForAddOn(name)
+            if addon == name then
+                return true
+            elseif addon == 'modui_classic' then
+                return IsAddOnLoaded(name)
+            end
+        end
+
+        for _, v in pairs(ns.addon_skins) do
+            if CheckForAddOn(v.name) then
+                v.load()
+            end
+        end
+
+        if addon == 'Blizzard_TimeManager' then
             local a = TimeManagerClockButton:GetRegions()
             tinsert(ns.skin, a)
         elseif addon == 'Blizzard_AuctionUI' then
@@ -390,7 +406,7 @@
   tinsert(ns.skinb, QuestTimerFrame)
   tinsert(ns.skin, QuestTimerHeader)
 
-  local UpdateSkins = function()
+  UpdateSkins = function()
       for _,  v in pairs(ns.skin) do
           if  v and v:GetObjectType() == 'Texture' and v:GetVertexColor() then
               v:SetVertexColor(
