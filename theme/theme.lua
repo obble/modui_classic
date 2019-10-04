@@ -9,6 +9,7 @@
     ns.colour   = {MODUI_VAR['theme'].r, MODUI_VAR['theme'].g, MODUI_VAR['theme'].b}
     ns.colour_bu = {MODUI_VAR['theme_bu'].r, MODUI_VAR['theme_bu'].g, MODUI_VAR['theme_bu'].b}
 
+    ns.addon_skins = {}
     ns.skin     = {
         MinimapBorder,
         MiniMapTrackingBorder,
@@ -275,19 +276,13 @@
             end
         end
 
-        if CheckForAddOn('Leatrix_Plus') then
-            if LeaPlusDB['EnhanceQuestLog'] == 'On' then
-                QuestLogFrame.Material:SetSize(510, 512)
+        for _, v in pairs(ns.addon_skins) do
+            if CheckForAddOn(v.name) then
+                v.load()
             end
-        elseif CheckForAddOn('WideQuestLog') then
-            QuestLogFrame.Material:ClearAllPoints()
-            QuestLogFrame.Material:SetPoint('TOPLEFT', QuestLogDetailScrollFrame, 'TOPLEFT', -10, 0);
-            QuestLogFrame.Material:SetSize(520, 552)
-            local _, _, _, _, _, _, _, _, _, _, _, _, a, b = QuestLogFrame:GetRegions()
-            for _, v in pairs({a, b}) do
-                tinsert(ns.skin, v)
-            end
-        elseif addon == 'Blizzard_TimeManager' then
+        end
+
+        if addon == 'Blizzard_TimeManager' then
             local a = TimeManagerClockButton:GetRegions()
             tinsert(ns.skin, a)
         elseif addon == 'Blizzard_AuctionUI' then
