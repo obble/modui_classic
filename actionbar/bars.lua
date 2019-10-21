@@ -114,12 +114,21 @@
         end
     end
 
+    local HideMaxXP = function()
+        for i = 0, 3 do
+            local t = _G['MainMenuMaxLevelBar'..i]
+            t:SetTexture''
+            t:Hide()
+        end
+    end
+
     local UpdateXP = function()
         local xp, max = UnitXP'player', UnitXPMax'player'
 		local x = (xp/max)*MainMenuExpBar:GetWidth()
         local rest = GetRestState()
         UpdateExhaustion()
         if  _G['modui_mainbar'] then
+            HideMaxXP()
     		MainMenuExpBar.spark:SetPoint('CENTER', MainMenuExpBar, 'LEFT', x, 2)
             if  rest == 1 then
                 MainMenuExpBar.spark:SetVertexColor(0*1.5, .39*1.5, .88*1.5, 1)

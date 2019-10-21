@@ -61,6 +61,7 @@
 			tooltip = {
 				enable			= true,
 				mouseanchor		= false,
+				disablefade		= false,
 			},
 			tracker = {
 				enable 			= true,
@@ -77,6 +78,9 @@
 				vcolour			= true,
 				rcolour 		= true,
 			},
+			talentbuilds = {
+				enable 			= false,
+			}
 		},
 		['statusbar'] = {
 			smooth = true,
@@ -84,6 +88,7 @@
 		['theme'] 		= {r =  0, g =  0, b =  0},
 		['theme_bu']	= {r = .4, g = .4, b = .4},
 	}
+	MODUI_VAR_DEFAULTS = MODUI_VAR
 
 
 	--

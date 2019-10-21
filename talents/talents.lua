@@ -108,7 +108,10 @@
     end
 
     local OnEvent = function(self, event, addon)
-        if  addon == 'Blizzard_TalentUI' then
+        if addon == 'Blizzard_TalentUI' then
+            if not MODUI_VAR['elements']['talentbuilds'].enable then
+                return
+            end
             AddCookieCutters()
             hooksecurefunc('TalentFrameTab_OnClick', TabOnClick)
         end

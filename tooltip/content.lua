@@ -181,7 +181,7 @@
 
             hooksecurefunc(v, 'SetSendMailItem', function(index)
             	local _, _, count = GetSendMailItem(index)
-                AddPrice(count)
+                AddPrice(self, count)
             end)
 
             hooksecurefunc(v, 'SetTradePlayerItem', function(self, index)

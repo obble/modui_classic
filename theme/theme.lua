@@ -597,16 +597,16 @@
         if  event == 'ADDON_LOADED' then
             ADDON_LOADED(self, event, addon)
         end
+		if event == 'PLAYER_ENTERING_WORLD' then
+			if  not MODUI_VAR['theme'] then
+				MODUI_VAR['theme'] = {r = 0, g = 0, b = 0}
+			end
 
-        if  not MODUI_VAR['theme'] then
-            MODUI_VAR['theme'] = {r = 0, g = 0, b = 0}
-        end
-
-        if  not MODUI_VAR['theme_bu'] then
-            MODUI_VAR['theme_bu'] = {r = .9, g = .9, b = .9}
-        end
-
-        UpdateSkins()
+			if 	not MODUI_VAR['theme_bu'] then
+				MODUI_VAR['theme_bu'] = {r = .9, g = .9, b = .9}
+			end
+			UpdateSkins()
+		end
     end
 
     hooksecurefunc('GroupLootFrame_OnShow', OnShow)
@@ -614,6 +614,7 @@
     local e = CreateFrame'Frame'
     e:RegisterEvent'VARIABLES_LOADED'
     e:RegisterEvent'ADDON_LOADED'
+	e:RegisterEvent'PLAYER_ENTERING_WORLD'
     e:SetScript('OnEvent', OnEvent)
 
     --
