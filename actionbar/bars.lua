@@ -363,6 +363,10 @@
         hooksecurefunc('ShowPetActionBar', UpdatePetBar)
     end
 
+    local HideKeyBind = function()
+        for i=1,12 do _G['ActionButton'..i..'HotKey']:SetAlpha(0) end
+    end
+
     local OnEvent = function(self, event)
         if  MODUI_VAR['elements']['mainbar'].enable then
             if  event == 'PLAYER_LOGIN' then
@@ -381,6 +385,8 @@
             AddHorizBars()
         end
     end
+
+    HideKeyBind()
 
     local  e = CreateFrame'Frame'
     for _, v in pairs(events) do e:RegisterEvent(v) end

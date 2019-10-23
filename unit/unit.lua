@@ -106,12 +106,13 @@
         UpdateCastingBarIcon(texture)
     end
 
-    local UpdateTargetValue = function()
+    local UpdateTargetValue = function(targetFrame)
         local v, max, found = LCMH:GetUnitHealth'target'
         local display = GetCVar'statusTextDisplay'
+        print(v)
         TextStatusBar_UpdateTextStringWithValues(TargetFrameHealthBar, TargetFrameHealthBarText, v, 0, max)
         if  TargetFrameHealthBar.RightText and display == 'BOTH' and not TargetFrameHealthBar.showPercentage then
-            TargetFrameHealthBar.RightText:SetText(v)
+            targetFrame.RightText:SetText(v)
         end
     end
 
@@ -125,9 +126,10 @@
             --ns.SB(v)
         end
 
-        TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
 
-        TargetFrameNameBackground:SetTexture(nil)
+        --TargetFrameNameBackground:SetTexture(nil)
+        --TargetFrameNameBackground:SetVertexColor(0.0, 0.0, 0.0, 0.5)
+        TargetFrameNameBackground:Hide()
 
         TargetFrame.Elite = TargetFrameTextureFrame:CreateTexture(nil, 'BORDER')
         TargetFrame.Elite:SetTexture[[Interface\AddOns\modui_classic\art\unitframe\UI-TargetingFrame-Elite]]
@@ -153,19 +155,38 @@
         TargetFrameHealthBarTextRight:SetPoint('RIGHT', -110, 3)
         TargetFrameHealthBar.RightText = TargetFrameHealthBarTextRight
 
+        print("first")
+
+        TargetFrameManaBarText = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
+        TargetFrameManaBarText:SetPoint('CENTER', -50, -8)
+        TargetFrameManaBar.TextString = TargetFrameManaBarText
+
+        print("second")
+        TargetFrameManaBarTextLeft = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
+        TargetFrameManaBarTextLeft:SetPoint('LEFT', 8, -8)
+        TargetFrameManaBar.LeftText = TargetFrameManaBarTextLeft
+
+        print("third")
+        TargetFrameManaBarTextRight = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
+        TargetFrameManaBarTextRight:SetPoint('RIGHT', -110, -8)
+        TargetFrameManaBar.RightText = TargetFrameManaBarTextRight
+
+ 
+
+        --TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
         for _, v in pairs(
             {
                 TargetFrameHealthBarText,
                 TargetFrameHealthBarTextLeft,
                 TargetFrameHealthBarTextRight,
+                TargetFrameManaBarText,
+                TargetFrameManaBarTextLeft,
+                TargetFrameManaBarTextRight,
+ 
             }
         ) do
             v:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE')
         end
-
-        --TargetFrameTextureFramePVPIcon:SetSize(48, 48)
-        --TargetFrameTextureFramePVPIcon:ClearAllPoints()
-        --TargetFrameTextureFramePVPIcon:SetPoint('CENTER', TargetFrame, 'RIGHT', -42, 16)
 
         TargetFrameTextureFramePVPIcon:SetAlpha(0)
     end
@@ -318,11 +339,7 @@
     end
 
     local UpdateTargetNameClassColour = function()
-        if  UnitIsPlayer'target' then
-            local _, class  = UnitClass'target'
-            local colour    = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[class]
-            --TargetFrameNameBackground:SetVertexColor(0.25, 0.78, 0.92)
-        end
+        TargetFrameNameBackground:SetVertexColor(0.0, 0.0, 0.0, 0.4)
     end
 
     local UpdatePartyTextClassColour = function()
@@ -446,4 +463,44 @@
     e:SetScript('OnEvent', OnEvent)
 
 
+    hooksecurefunc("PlayerFrame_UpdateStatus", function()
+        if IsResting("player") then
+            PlayerStatusTexture:Hide()
+            PlayerRestIcon:Hide()
+            PlayerRestGlow:Hide()
+            PlayerStatusGlow:Hide()
+        elseif PlayerFrame.inCombat then
+            PlayerStatusTexture:Hide()
+            PlayerAttackIcon:Hide()
+            PlayerRestIcon:Hide()
+            PlayerAttackGlow:Hide()
+            PlayerRestGlow:Hide()
+            PlayerStatusGlow:Hide()
+            PlayerAttackBackground:Hide() 
+        end 
+    end)
+
+    hooksecurefunc("TextStatusBar_UpdateTextStringWithValues",function(statusFrame, _, value, valueMin, valueMax)
+
+        local leftText = statusFrame.LeftText
+        local rightText = statusFrame.RightText
+
+        if leftText then
+            leftText:SetText('')
+        end
+
+
+        if statusFrame==TargetFrameHealthBar then
+            local v, max, found = LCMH:GetUnitHealth'target'
+            if not found then
+                v = v .. '%'
+            end
+            rightText:SetText(v)
+        elseif statusFrame==TargetFrameManaBar then
+            local v, max, found = LCMH:GetUnitMana'target'
+            rightText:SetText(v)
+        end
+
+        
+    end)
     --

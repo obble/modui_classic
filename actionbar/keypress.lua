@@ -88,7 +88,8 @@
 		if  MODUI_VAR['elements']['mainbar'].keypress then
 			hooksecurefunc('ActionButton_Update', AddKeyDown)
 		end
-	end
+
+    end
 
 	local e = CreateFrame'Frame'
 	e:RegisterEvent'PLAYER_LOGIN'
