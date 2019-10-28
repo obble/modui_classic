@@ -247,3 +247,137 @@
 	else
 		return
 	end
+
+	-- German Translation
+	if locale == "deDE" then
+		-- MENU
+		L['UI Colour'] = 'UI Farbe'
+		L['Toggle Elements'] = 'Elemente umschalten'
+
+		-- AURA
+		L['h'] = 'h' -- "h" hours on aura timers
+		L['m'] = 'm' -- "m" minutes on aura timers
+		L['s'] = 's' -- "s" seconds on aura timers
+
+		-- BAG
+		L['Bag'] = 'Beutel'
+		L['Bank'] = ''
+		L['Sell Poor Quality Items & Rubbish'] = 'Verkaufe Gegenstände von schelchter Qualität & Gerümpel'
+
+		-- MAP
+		L['Mouse'] = 'Maus'
+
+		-- MENU
+		L['Your new settings require a UI reload to take effect.'] = 'Deine neuen Einstellungen sind erst nach einem Reload aktiv.'
+		L['Toggle All modui Elements.    |cffff0000Note: Overrides Selections.|r'] = 'Schalte alle modui Elemente um.    |cffff0000Hinweis: Überschreibt einzelne Auswahlen.|r'
+		L['Actionbar'] = 'Aktionsleiste'
+		L['Exp & Reputation Bar'] = 'Erfahrungs- & Ruf-Leiste'
+		L['Horizontal Third Row (Classic Layout only)'] = 'Horizontale dritte Leiste (nur im classischen Layout)'
+		L['Aura'] = 'Auren'
+		L['Statusbars on Auras'] = 'Statusleisten auf Auren'
+		L['Custom Value Formatting on Auras'] = 'Individuelle Werte Formatierung für Auren'
+		L['Chat'] = 'Chat'
+		L['Events & Custom Chat Text'] = 'Ereignisse & angepasster Chat Text'
+		L['Chat Style'] = 'Chat Darstellung'
+		L['URLs'] = 'Links'
+		L['Inventory'] = 'Inventar'
+		L['Button For Selling Grey Items at Vendor'] = 'Knopf zum Verkaufen von grauen Gegenständen beim Händler'
+		L['Enemy Castbars'] = 'Gegnerische Zauberleisten'
+		L['Nameplates'] = 'Namensbalken'
+		L['Show Auras on Nameplates'] = 'Zeige Auren auf den Namensbalken'
+		L['Show Combo Points on Nameplate'] = 'Zeiuge Kombo-Punkte auf den Namensbalken'
+		L['Class Colours on Friendly Nameplates'] = 'Freundliche Namensbalken in Klassenfarbe'
+		L['Icon-based Nameplates for Totems'] = 'Symbol basierte Namenbalken für Totems'
+		L['Quest Tracker (Click-through to Quest Log)'] = ''
+		L['Tooltip'] = ''
+		L['Mouse Anchor'] = 'An der Maus fixiert'
+		L['Unitframes'] = ''
+		L['Player'] = 'Spieler'
+		L['Target'] = 'Ziel'
+		L['Party'] = 'Gruppe'
+		L['Target of Target'] = 'Ziel des Ziels'
+		L['Pet'] = 'Haustier'
+		L['Value Colours on Text'] = ''
+		L['Elite/Rare Dragons in Colour (for dark theme UIs)'] = ''
+
+		-- TOOLTIP
+		L[' Boss'] = 'Boss'
+		L[' Rare Elite'] = 'Seltener Elite'
+		L[' Rare'] = 'Selten'
+		L[' Elite'] = 'Elite'
+
+		-- TRANSFORM
+		L['Increases speed by (.+)%%'] = 'erhöht die Geschwindigkeit um (.+)%%' -- tooltip string on mount items
+		L['Fishing Pole'] = 'Angelrute'
+		L['Your Fishing Pole has been equipped'] = 'Deine Angelrute wurde angelegt'
+		L['while silenced'] = '' -- UI_ERROR_MESSAGE return, used to check if we're in combat (and dismount)
+		L['shapeshift'] = '' -- UI_ERROR_MESSAGE return, used to check if we're shapeshifted (and shift out)
+
+		-- CHAT CHANNELS
+		L['|Hchannel:Guild|hG|h. %s:\32'] = ''            -- "G. Obble:" guild chat
+		L['|Hchannel:o|hO|h. %s:\32'] = ''                -- "O. Obble:" officer chat
+		L['|Hchannel:raid|hR|h. %s:\32'] = ''             -- "R. Obble:" raid chat
+		L['RW. %s:\32'] = ''                              -- "RW. Obble:" raid warning
+		L['|Hchannel:raid|hRL|h. %s:\32'] = ''            -- "RL. Obble:" raid leader
+		L['|Hchannel:INSTANCE_CHAT|hIns|h. %s:\32'] = ''  -- "Ins. Obble:" instance chat
+		L['|Hchannel:INSTANCE_CHAT|hIL|h. %s:\32'] = ''   -- "IL. Obble:" instance leader
+		L['|Hchannel:Battleground|hBG|h. %s:\32'] = ''    -- "BG. Obble:" battleground chat
+		L['|Hchannel:Battleground|hBL|h. %s:\32'] = ''     -- "BL. Obble:" battleground leader
+		L['|Hchannel:party|hP|h. %s:\32'] = ''              -- "P. Obble:" party chat
+		L['|Hchannel:party|hDG|h. %s:\32'] = ''             -- "DG. Obble:" party guide
+		L['|Hchannel:raid|hR|h. %s:\32'] = ''              -- "R. Obble:" CHAT_MONSTER_PARTY_GET
+
+		-- CHAT EVENTS
+		L['Joined Channel: (.+)'] = 'Kanal betreten: (.+)'
+		L['Reputation with (.+) increased by (.+).'] = 'Ruf mit (.+) um (.+) erhöht.'
+		L['You are now (.+) with (.+).'] = 'Du bist jetzt (.+) mit (.+).'
+		L['(.+) dies, you gain (.+) experience. %(%+(.+)exp Rested bonus%)'] = '(.+) stirbt, Du erhälst (.+) Erfahrung. %(%+(.+)Exp erholt-Bonus%)'
+		L['(.+) dies, you gain (.+) experience.'] = '(.+) stirbt, Du erhälst (.+) Erfahrung.'
+		L['You gain (.+) experience.'] = 'Du erhälst (.+) Erfahrung.'
+		L['You receive currency: (.+)%.'] = 'Du erhälst: (.+)%.'
+		L['You\'ve lost (.+)%.'] = 'Du verlierst (.+)%.'
+		L['(.+) has earned the achievement (.+)!'] = '(.+) hat den Erfolg (.+) errungen!'
+		L['You receive item: (.+)%.'] = 'Du hast folgenden Gegenstand erhalten: (.+)%.'
+		L['You receive loot: (.+)%.'] = 'Du hast folgenden Beute erhalten: (.+)%.'
+		L['You receive bonus loot: (.+)%.'] = 'Du hast folgende zusätzliche Beute erhalten: (.+)%.'
+		L['You create: (.+)%.'] = 'Du erstellst: (.+)%.'
+		L['You are refunded: (.+)%.'] = 'Du bekommst erstattet: (.+)%.'
+		L['You have selected (.+) for: (.+)'] = 'Du hast (.+) gewählt für: (.+)'
+		L['Received item: (.+)%.'] = 'Gegenstand erhalten: (.+)%.'
+		L['(.+) receives item: (.+)%.'] = '(.+) erhält Gegenstand: (.+)%.'
+		L['(.+) receives loot: (.+)%.'] = '(.+) erhält Beute: (.+)%.'
+		L['(.+) receives bonus loot: (.+)%.'] = '(.+) erhält zusätzliche Beute: (.+)%.'
+		L['(.+) creates: (.+)%.'] = '(.+) erstellt: (.+)%.'
+		L['(.+) was disenchanted for loot by (.+).'] = '(.+) wurde durch (.+) für Beute entzaubert.'
+		L['Your skill in (.+) has increased to (.+).'] = 'Deine Fähigkeit in (.+) hat sich auf (.+) erhöht.'
+		L['Received (.+), (.+).'] = 'Du erhälst (.+), (.+).'
+		L['Received (.+).'] = 'Du erhälst (.+).'
+		L['Received (.+) of item: (.+).'] = 'Du erhälst (.+) von: (.+).'
+		L['(.+) is now your follower.'] = '(.+) ist jetzt dein Gefolge.'
+		L['(.+) completed.'] = '(.+) abgeschlossen.'
+		L['Quest accepted: (.+)'] = 'Aufgabe angenommen: (.+)'
+		L['Received item: (.+)%.'] = 'Gegenstand erhalten: (.+)%.'
+		L['Experience gained: (.+).'] = 'Erfahrung erhalten: (.+).'
+		L['(.+) has come online.'] = '(.+) ist jetzt online.'
+		L['(.+) has gone offline.'] = '(.+) ist jetzt offline.'
+		L['You are now Busy: in combat'] =  'Du bist jetzt als Beschäftigt markiert: Im Kampf'
+		L['You are no longer marked Busy.'] = 'Du bist nicht länger als Beschäftigt markiert'
+		L['Discovered (.+): (.+) experience gained']  = '(.+) entdeckt: (.+) Erfahrung erhalten'
+		L['You are now (.+) with (.+).'] = 'Du bist jetzt (.+) mit (.+).'
+		L['Quest Accepted (.+)'] = 'Aufgabe angenommen (.+)'
+		L['You are now Away: AFK'] = 'Du bist jetzt abwesend: AFK'
+		L['You are no longer Away.'] = 'Du bist nicht länger abwesend'
+		L['You are no longer rested.'] = 'Du bist nicht länger ausgeruht.'
+		L['You don\'t meet the requirements for that quest.']  = 'Du erfüllst nicht die Voraussetzungen für diese Aufgabe.'
+		L['(.+) has joined the raid group.'] = '(.+) ist dem Schlachtzug beigetreten.'
+		L['(.+) has left the raid group.'] = '(.+) hat den Schlachtzug verlassen.'
+		L['You have earned the title \'(.+)\'.'] = 'Du hast den Titel \'(.+)\' erlangt.'
+		L['(.+) creates (.+).'] = '(.+) erstellt (.+).'
+
+		L['Guild Message of the Day:'] = 'Gildennachricht des Tages'     --   guild message of the day
+		L['To (|HBNplayer.+|h):'] = 'An (|HBNplayer.+|h):'          --   whisper to bnet
+		L['To (|Hplayer.+|h):'] = 'An (|Hplayer.+|h):'            --   whisper to
+		L[' whispers:'] = ' flüstert:'                    --   whisper from
+		L['Joined Channel:'] = 'Kanal betreten:'                --   channel join
+		L['Left Channel:'] = 'Kanal verlassen:'            --   channel left
+	end
