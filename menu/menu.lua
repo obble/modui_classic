@@ -216,9 +216,11 @@
 
    local OnEvent = function(self, event)
        if  MODUI_VAR['elements']['mainbar'].enable then
-           if  event == 'PLAYER_LOGIN' then
-               AddMenu()
-               hooksecurefunc('UpdateMicroButtons', PositionMicroButtons)
+           if  MODUI_VAR['elements']['mainbar'].micromenubutton then
+               if  event == 'PLAYER_LOGIN' then
+                   AddMenu()
+                   hooksecurefunc('UpdateMicroButtons', PositionMicroButtons)
+               end
            end
            PositionMicroButtons()
        end

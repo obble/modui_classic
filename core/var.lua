@@ -39,6 +39,8 @@
 				keypress		= true,
 				xp				= true,
 				horiz			= false,
+				micromenubutton	= true,
+				bagbutton		= true,
 			},
 			nameplate = {
 				enable			= true,
@@ -90,5 +92,30 @@
 	}
 	MODUI_VAR_DEFAULTS = MODUI_VAR
 
+	local OnEvent = function(self, event, addon)
+		-- Copies default values to the saved variables
+		-- This makes sure existing saved variables get newly added options
+		local function MergeTable(source, destination)
+			if destination == nil then
+				destination = {}
+			end
+
+			for key, value in pairs(source) do
+				if type(value) == 'table' then
+					destination[key] = MergeTable(value, destination[key])
+				elseif destination[key] == nil then
+					destination[key] = value
+				end
+			end
+
+			return destination
+		end
+
+		MODUI_VAR = MergeTable(MODUI_VAR_DEFAULTS, MODUI_VAR)
+	end
+	
+	local e = CreateFrame'Frame'
+	e:RegisterEvent'VARIABLES_LOADED'
+	e:SetScript('OnEvent', OnEvent)
 
 	--
