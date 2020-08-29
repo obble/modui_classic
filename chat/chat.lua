@@ -69,8 +69,8 @@
             SetChatWindowAlpha(i, 0)
             HideChatElements(v)
 
-            chat:SetFrameLevel(99)
-            chat:SetFrameStrata'MEDIUM'
+--            chat:SetFrameLevel(99)
+--            chat:SetFrameStrata'MEDIUM'
             chat:SetShadowOffset(1, -1)
             chat:SetClampedToScreen(false)
             chat:SetClampRectInsets(0, 0, 0, 0)

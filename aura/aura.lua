@@ -20,8 +20,8 @@
                 'TOPRIGHT',
                 Minimap,
                 'TOPLEFT',
-                -35,
-                -8,
+                -200,
+                -180,
             },
         },
         ['player|HARMFUL']  = {
@@ -29,16 +29,16 @@
             sort            = 'TIME',
             minWidth        = 330,
             minHeight       = 100,
-            x               = -50,
-            wrapAfter       = 1,
+            x               = -38,
+            wrapAfter       = 12,
             wrapY           = -50,
             direction       = '+',
             position        = {
                 'TOPRIGHT',
-                QuestWatchFrame,
+                Minimap,
                 'TOPLEFT',
-                -25,
-                -20,
+                -200,
+                -330,
             },
         },
         ['weapons|NA']      =   {
@@ -101,10 +101,10 @@
     local FormatDebuffs = function(self, name, dtype)
         if  name then
             local colour = DebuffTypeColor[dtype or 'none']
-            self.Name:SetText(strupper(name))
-            self.Name:SetTextColor(colour.r*1.7, colour.g*1.7, colour.b*1.7)    -- brighten up
-            self.Name:SetWidth(150)
-            self.Name:SetWordWrap(true)
+            --self.Name:SetText(strupper(name))
+            --self.Name:SetTextColor(colour.r*1.7, colour.g*1.7, colour.b*1.7)    -- brighten up
+            --self.Name:SetWidth(150)
+            --self.Name:SetWordWrap(true)
             for  i, v in pairs(self.F.bo) do
                  self.F.bo[i]:SetVertexColor(colour.r, colour.g, colour.b)
             end

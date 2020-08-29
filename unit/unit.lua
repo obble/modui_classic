@@ -46,7 +46,6 @@
         end
 
         PlayerPVPIcon:SetAlpha(0)
-
         if  MODUI_VAR['elements']['unit'].castbar then
             CastingBarFrame.Icon:SetSize(16, 16)
             CastingBarFrame.Icon:ClearAllPoints()
@@ -155,23 +154,20 @@
         TargetFrameHealthBarTextRight:SetPoint('RIGHT', -110, 3)
         TargetFrameHealthBar.RightText = TargetFrameHealthBarTextRight
 
-        print("first")
 
         TargetFrameManaBarText = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
         TargetFrameManaBarText:SetPoint('CENTER', -50, -8)
         TargetFrameManaBar.TextString = TargetFrameManaBarText
 
-        print("second")
         TargetFrameManaBarTextLeft = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
         TargetFrameManaBarTextLeft:SetPoint('LEFT', 8, -8)
         TargetFrameManaBar.LeftText = TargetFrameManaBarTextLeft
 
-        print("third")
         TargetFrameManaBarTextRight = TargetFrameTextureFrame:CreateFontString(nil, 'OVERLAY', 'TextStatusBarText')
         TargetFrameManaBarTextRight:SetPoint('RIGHT', -110, -8)
         TargetFrameManaBar.RightText = TargetFrameManaBarTextRight
 
- 
+
 
         --TargetFrameHealthBar:HookScript('OnValueChanged', UpdateTargetValue)
         for _, v in pairs(
@@ -182,7 +178,7 @@
                 TargetFrameManaBarText,
                 TargetFrameManaBarTextLeft,
                 TargetFrameManaBarTextRight,
- 
+
             }
         ) do
             v:SetFont(STANDARD_TEXT_FONT, 10, 'OUTLINE')
@@ -339,7 +335,7 @@
     end
 
     local UpdateTargetNameClassColour = function()
-        TargetFrameNameBackground:SetVertexColor(0.0, 0.0, 0.0, 0.4)
+        TargetFrameNameBackground:SetVertexColor(0.0, 0.0, 0.0, 0.5)
     end
 
     local UpdatePartyTextClassColour = function()
@@ -456,6 +452,8 @@
             if not InCombatLockdown() then UpdatePartyTextClassColour() end
         end
 
+
+        PlayerFrameGroupIndicator:Hide()
     end
 
     local  e = CreateFrame'Frame'
@@ -476,8 +474,8 @@
             PlayerAttackGlow:Hide()
             PlayerRestGlow:Hide()
             PlayerStatusGlow:Hide()
-            PlayerAttackBackground:Hide() 
-        end 
+            PlayerAttackBackground:Hide()
+        end
     end)
 
     hooksecurefunc("TextStatusBar_UpdateTextStringWithValues",function(statusFrame, _, value, valueMin, valueMax)
@@ -496,11 +494,7 @@
                 v = v .. '%'
             end
             rightText:SetText(v)
-        elseif statusFrame==TargetFrameManaBar then
-            local v, max, found = LCMH:GetUnitMana'target'
-            rightText:SetText(v)
         end
 
-        
     end)
     --
