@@ -24,16 +24,16 @@
     end
 
 
-    local t     = MiniMapTrackingButton or MiniMapTrackingFrame
     local time  = TimeManagerClockButton or GameTimeFrame
 
-    t:SetFrameStrata'MEDIUM'
-    t:ClearAllPoints()
-    t:SetPoint('BOTTOMRIGHT', Minimap)
+    --t:SetFrameStrata'MEDIUM'
+    --t:ClearAllPoints()
+    --t:SetPoint('BOTTOMRIGHT', Minimap)
 
     if  MiniMapTracking then
         MiniMapTracking:ClearAllPoints()
-        MiniMapTracking:SetAllPoints(t)
+        --MiniMapTracking:SetAllPoints(t)
+        MiniMapTracking:SetPoint('TOPLEFT', Minimap)
     end
 
     MiniMapMailFrame:ClearAllPoints()

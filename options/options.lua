@@ -18,11 +18,11 @@
     menu:SetScript('OnDragStop', menu.StopMovingOrSizing)
     menu:SetSize(500, 460)
     menu:SetBackdrop(
-        {
-            bgFile   = [[Interface\Tooltips\UI-Tooltip-Background]],
-            edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
-            insets   = {left = 11, right = 12, top = 12, bottom = 11}
-        }
+       {
+           bgFile   = [[Interface\Tooltips\UI-Tooltip-Background]],
+           edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]],
+           insets   = {left = 11, right = 12, top = 12, bottom = 11}
+       }
     )
     menu:SetBackdropColor(0, 0, 0, 1)
     menu:SetPoint('CENTER', UIParent, 0, 50)

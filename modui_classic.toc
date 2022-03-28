@@ -1,4 +1,4 @@
-## Interface: 11302
+## Interface: 20504
 ## Title: mod ui
 ## Author: modernist
 ##SavedVariablesPerCharacter: MODUI_VAR
@@ -24,14 +24,10 @@ libraries/init.xml
 #   ~insert templates
 templates.xml
 
-#   ~action bar and buttons
-actionbar/bars.lua
 
 #   ~buffs
 aura/aura.lua
 
-#   ~castbars for target and nameplates
-castbars/enemy.lua
 
 #   ~chat
 chat/chat.lua
@@ -40,27 +36,18 @@ chat/event.lua
 chat/tab.lua
 chat/url.lua
 
-#   ~one bag system
-bag/menu.lua
-bag/bag/bag.lua
-bag/button.lua
-bag/bank/bank.lua
-bag/tools/greys.lua
-bag/tools/sort.lua
-bag/update.lua
-
 #   ~micromenu
-menu/menu.lua
+#menu/menu.lua
 
 #   ~minimap
 minimap/minimap.lua
 
 #   ~nameplates
-nameplate/aura.lua
-nameplate/colour.lua
-nameplate/combopoint.lua
-nameplate/style.lua
-nameplate/totem.lua
+#nameplate/aura.lua
+#nameplate/colour.lua
+#nameplate/combopoint.lua
+#nameplate/style.lua
+#nameplate/totem.lua
 
 #   ~objective tracker
 quest/quest.lua
@@ -81,7 +68,7 @@ unit/energy.lua
 worldmap/worldmap.lua
 
 #   ~options
-options/options.lua
+#options/options.lua
 
 #   ~addon skins
 theme/addons/LeatrixPlus.lua

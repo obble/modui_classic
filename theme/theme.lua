@@ -18,6 +18,7 @@
 
         PlayerFrameTexture,
         TargetFrameTextureFrameTexture,
+        FocusFrameTextureFrameTexture,
         PetFrameTexture,
         PartyMemberFrame1Texture,
         PartyMemberFrame2Texture,
@@ -38,6 +39,7 @@
         CastingBarFrame.Border,
 
         _G['TargetFrameToTTextureFrameTexture'],
+        _G['FocusFrameToTTextureFrameTexture'],
     }
     ns.skinbu   = {}
     ns.skinb    = {}
@@ -47,11 +49,11 @@
     if  build > 1 then
         for _, v in pairs(
             {
-                MainMenuBarArtFrameBackground.BackgroundLarge,
-                MainMenuBarArtFrameBackground.BackgroundSmall,
-                MainMenuBarArtFrame.LeftEndCap,
-                MainMenuBarArtFrame.RightEndCap,
-                MicroButtonAndBagsBar.MicroBagBar,
+            -- MainMenuBarArtFrameBackground.BackgroundLarge,
+            -- MainMenuBarArtFrameBackground.BackgroundSmall,
+            -- MainMenuBarArtFrame.LeftEndCap,
+            -- MainMenuBarArtFrame.RightEndCap,
+            -- MicroButtonAndBagsBar.MicroBagBar,
             }
         ) do
             tinsert(ns.skin, v)
@@ -314,10 +316,10 @@
             for _, v in pairs({a, b, c, d}) do
                 tinsert(ns.skin, v)
             end
-            local a, b, c, d = InspectHonorFrame:GetRegions()
-            for _, v in pairs({a, b, c, d}) do
-                tinsert(ns.skin, v)
-            end
+            --local a, b, c, d = InspectHonorFrame:GetRegions()
+            --for _, v in pairs({a, b, c, d}) do
+            --    tinsert(ns.skin, v)
+            --end
         elseif addon == 'Blizzard_MacroUI' then
             local _, a, b, c, d = MacroFrame:GetRegions()
             for _, v in pairs({a, b, c, d}) do
@@ -331,7 +333,7 @@
             local _, a = ReadyCheckFrame:GetRegions()
             tinsert(ns.skin, a)
         elseif addon == 'Blizzard_TalentUI' then
-            local _, a, b, c, d = TalentFrame:GetRegions()
+            local _, a, b, c, d = PlayerTalentFrame:GetRegions()
             for _, v in pairs({a, b, c, d}) do
                 tinsert(ns.skin, v)
             end

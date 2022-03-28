@@ -45,28 +45,32 @@
     ns.BD = function(bu, a, ix)               --  build in an anti-fuckup
         if not bu then return end
         local f = bu
+        if not f.SetBackdrop then
+            Mixin(f, BackdropTemplateMixin)
+        end
         if  f:GetObjectType() == 'Texture' then
             if not bu.BD then
                 local parent = bu:GetParent()
-                bu.BD = CreateFrame('Frame', nil, parent)
+                bu.BD = CreateFrame('Frame', nil, parent, "BackdropTemplate")
                 bu.BD:SetAllPoints(bu)
                 bu.BD:SetFrameLevel(parent:GetFrameLevel() - 1)
             end
             f = bu.BD
         end
-        f:SetBackdrop(
-            {
-                bgFile     = [[Interface\ChatFrame\ChatFrameBackground]],
-                tiled      = false,
-                insets     = {
-                    left    = ix or -3,
-                    right   = ix or -3,
-                    top     = ix or -3,
-                    bottom  = ix or -3
-                }
-            }
-        )
-        f:SetBackdropColor(0, 0, 0, a or 1)
+
+       f:SetBackdrop(
+           {
+               bgFile     = [[Interface\ChatFrame\ChatFrameBackground]],
+               tiled      = false,
+               insets     = {
+                   left    = ix or -3,
+                   right   = ix or -3,
+                   top     = ix or -3,
+                   bottom  = ix or -3
+               }
+           }
+       )
+       f:SetBackdropColor(0, 0, 0, a or 1)
     end
 
     ns.BU = function(bu, a, hover, x, y, ix)
@@ -226,8 +230,8 @@
     ns.BDStone = function(bu, x, path)
         bu.stone = CreateFrame('Frame', nil, bu)
         bu.stone:SetBackdrop({
-            bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
-            insets = {left = -2, right = -2, top = -2, bottom = -2}
+           bgFile = [[Interface\ChatFrame\ChatFrameBackground]],
+           insets = {left = -2, right = -2, top = -2, bottom = -2}
         })
         bu.stone:SetBackdropColor(.05, .05, .05)
         bu.stone:SetPoint('TOPLEFT', bu, x and -x or -4, x and x or 4)

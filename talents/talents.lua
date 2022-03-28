@@ -47,7 +47,7 @@
 
     local OnClick = function(self, bu, t)
        local n = self:GetText()
-       local i = PanelTemplates_GetSelectedTab(TalentFrame)
+       local i = PanelTemplates_GetSelectedTab(PlayerTalentFrame)
        local j = buttons[class][n]['Tab'..i]
 
        --  show relative talent frames

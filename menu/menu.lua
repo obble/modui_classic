@@ -214,22 +214,3 @@
        end)
    end
 
-   local OnEvent = function(self, event)
-       if  MODUI_VAR['elements']['mainbar'].enable then
-           if  MODUI_VAR['elements']['mainbar'].micromenubutton then
-               if  event == 'PLAYER_LOGIN' then
-                   AddMenu()
-                   hooksecurefunc('UpdateMicroButtons', PositionMicroButtons)
-               end
-           end
-           PositionMicroButtons()
-       end
-   end
-
-   local e = CreateFrame'Frame'
-   e:RegisterEvent'PLAYER_LOGIN'
-   e:RegisterEvent'PLAYER_LEVEL_UP'
-   e:SetScript('OnEvent', OnEvent)
-   -- hooksecurefunc('MainMenuMicroButton_ShowAlert', AddAlerts)
-
-    --

@@ -4,8 +4,10 @@
 
     -- todo: statusbar
 
-    GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT['edgeFile'] = ''
-    GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT['insets'] = {left = -2, right = -2, top = -2, bottom = -2}
+    --GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT['edgeFile'] = ''
+    --GAME_TOOLTIP_BACKDROP_STYLE_DEFAULT['insets'] = {left = -2, right = -2, top = -2, bottom = -2}
+
+
 
     local tooltips = {
         'GameTooltip',
@@ -27,26 +29,37 @@
     end
 
     local AddBackdrop = function(self)
+
         self:SetFrameLevel(999)
-    	self:SetBackdropColor(0, 0, 0, 1)
+        self:SetBackdropColor(0, 0, 0, 0.7)
+
         if not self.BD then
-            self.BD = CreateFrame('Frame', nil, self)
+            self.BD = CreateFrame('Frame', nil, self, "BackdropTemplate")
+            self.BD:ClearAllPoints()
             self.BD:SetPoint('TOPLEFT', -8.5, 10)
             self.BD:SetPoint('BOTTOMRIGHT', 9, -10)
             self.BD:SetBackdrop({
                 bgFile     = '',
                 edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
                 edgeSize   = 18,
+                insets = {left = -2, right = -2, top = -2, bottom = -2},
             })
             tinsert(ns.skinb, self.BD)
+            self.BD:SetBackdropBorderColor(
+                            MODUI_VAR['theme'].r,
+                            MODUI_VAR['theme'].g,
+                            MODUI_VAR['theme'].b
+            )
 
-            self.BD.shadow = self:CreateTexture(nil, 'BACKGROUND')
-    		self.BD.shadow:SetPoint('TOPLEFT', self.BD, -5, 12)
-    		self.BD.shadow:SetPoint('BOTTOMRIGHT', self.BD, 5, -11)
-    		self.BD.shadow:SetTexture[[Interface\Scenarios\ScenarioParts]]
-    		self.BD.shadow:SetVertexColor(0, 0, 0, .6)
-    		self.BD.shadow:SetTexCoord(0, .641, 0, .18)
+--             self.BD.shadow = self:CreateTexture(nil, 'BACKGROUND')
+--     		self.BD.shadow:SetPoint('TOPLEFT', self.BD, 0, 0)
+--     		self.BD.shadow:SetPoint('BOTTOMRIGHT', self.BD, 0, 0)
+--     		self.BD.shadow:SetTexture[[Interface\Scenarios\ScenarioParts]]
+--     		self.BD.shadow:SetVertexColor(0, 0, 0, .6)
+--     		self.BD.shadow:SetTexCoord(0, .641, 0, .18)
         end
+
+
     end
 
     local AddStatusBarBG = function(bar)
@@ -112,7 +125,7 @@
     end
 
     local UpdateStyle = function(self)
-        local _, link = self:GetItem()
+
         if  self.BD then
             self.BD:ClearAllPoints()
             self.BD:SetPoint('TOPLEFT', -8.5, 10)
@@ -120,7 +133,7 @@
             self.BD:SetBackdrop({
                 bgFile     = '',
                 edgeFile   = [[Interface\LFGFRAME\LFGBorder]],
-                edgeSize   = 18,
+                edgeSize   = 16,
             })
             self.BD:SetBackdropBorderColor(
                 MODUI_VAR['theme'].r,
@@ -131,19 +144,31 @@
     end
 
     local OnEvent = function(self, event)
+
+
+
         if  MODUI_VAR['elements']['tooltip'].enable then
             for _, v in next, tooltips do
                 local f = _G[v]
+
+                f:SetBackdropBorderColor(0, 0, 0, 1)
+                f.SetBackdropBorderColor = function() end
+
+                if f.NineSlice then
+                    f.NineSlice:SetAlpha(0)
+                end
+
                 ns.BD(f)
                 f:HookScript('OnShow',             AddBackdrop)
                 f:HookScript('OnHide',             AddBackdrop)
                 f:HookScript('OnTooltipCleared',   AddBackdrop)
             end
 
-            hooksecurefunc('GameTooltip_UpdateStyle',       UpdateStyle)
-            hooksecurefunc('GameTooltip_SetBackdropStyle',  UpdateStyle)
+
+--             hooksecurefunc('GameTooltip_UpdateStyle',       UpdateStyle)
+--             hooksecurefunc('SharedTooltip_SetBackdropStyle',  UpdateStyle)
             hooksecurefunc('GameTooltip_SetDefaultAnchor',  AddAnchor)
-            if  MODUI_VAR['elements']['tooltip'].mouseanchor then
+            if MODUI_VAR['elements']['tooltip'].mouseanchor then
 				GameTooltip:HookScript('OnUpdate', MouseUpdate)
             end
             if  MODUI_VAR['elements']['tooltip'].disablefade then

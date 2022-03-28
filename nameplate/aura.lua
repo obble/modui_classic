@@ -2,8 +2,6 @@
 
     local _, ns = ...
 
-    local LCD = LibStub'LibClassicDurations'
-
     local events = {
         'NAME_PLATE_UNIT_ADDED',
         'UNIT_AURA'
@@ -94,12 +92,6 @@
                 -- we'll probably have to move over to combat log events if LCD isnt flexible enough...
 
                 if  ns.auras[name] then
-                    local durationnew, expirationnew = LCD:GetAuraDurationByUnit(unit, spellid, caster, name)
-
-                    if  duration == 0 and durationnew then
-                        duration    = durationnew
-                        expiration  = expirationnew
-                    end
 
                     if  expiration and expiration ~= 0 then
                         local start = expiration - duration

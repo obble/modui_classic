@@ -13,7 +13,7 @@
             minHeight       = 100,
             x               = -38,
             y               = 0,
-            wrapAfter       = 12,
+            wrapAfter       = 10,
             wrapY           = -50,
             direction       = '+',
             position        = {
@@ -38,7 +38,7 @@
                 Minimap,
                 'TOPLEFT',
                 -200,
-                -330,
+                -370,
             },
         },
         ['weapons|NA']      =   {
@@ -57,7 +57,7 @@
         local h, m, s, text
         if  time <= 0 then
             text = ''
-        elseif time < 3600 and time > 60 then
+        elseif time > 60 then
             h       = floor(time/3600)
             m       = floor(mod(time, 3600)/60 + 1)
             s       = mod(time, 60)
@@ -66,9 +66,6 @@
             m       = floor(time/60)
             s       = mod(time, 60)
             text    = m == 0 and format('|cffffffff%d|rs', s)
-        else
-            h       = floor(time/3600 + 1)
-            text    = format('|cffffffff%d|rh', h)
         end
         return text
     end
@@ -122,6 +119,7 @@
         local name, icon, count, dtype, duration, expiration = UnitAura(unit, index, filter)
     	if  name then
     		self:SetNormalTexture(icon)
+
     		self.Count:SetText(count > 1 and count or '')
 
             self.debuff     = false
@@ -178,14 +176,13 @@
     end
 
     local AddButton = function(self, name, bu)
-        --print(name)
     	if  name:match'^child' or name:find'tempenchant' then
         	bu:SetScript('OnUpdate',            OnUpdate)
             bu:SetScript('OnAttributeChanged',  OnAttributeChanged)
 
-            bu.F = CreateFrame('Frame', nil, bu)
-            bu.F:SetAllPoints()
             ns.BD(bu)
+            bu.F = CreateFrame('Frame', nil, bu, "BackdropTemplate")
+            bu.F:SetAllPoints()
 
             ns.BUBorder(bu.F, 20)
             for i = 1, 4 do
@@ -212,7 +209,7 @@
             count:SetJustifyH'CENTER'
         	count:SetPoint('CENTER', bu, 'TOP', 0, 2)
 
-            local sb = CreateFrame('StatusBar', nil, bu)
+            local sb = CreateFrame('StatusBar', nil, bu, "BackdropTemplate")
             ns.BD(sb, 1, -2)
             ns.SB(sb)
             sb:SetHeight(5)

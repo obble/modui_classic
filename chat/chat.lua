@@ -85,7 +85,7 @@
             edit:SetTextInsets(11 + header:GetWidth() + (suffix:IsShown() and suffix:GetWidth() or 0), 11, 0, 0)
 
             if not edit.f then
-                edit.f = CreateFrame('Frame', nil, edit)
+                edit.f = CreateFrame('Frame', nil, edit, "BackdropTemplate")
                 ns.BD(edit.f)
                 edit.f:SetPoint('TOPLEFT', 12, -6)
                 edit.f:SetPoint('BOTTOMRIGHT', -12, 6)
