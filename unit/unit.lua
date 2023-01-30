@@ -385,18 +385,18 @@ local New_TextStatusBar_UpdateTextStringWithValues = function(statusFrame, textS
             elseif (textDisplay == "BOTH" and not statusFrame.showPercentage) then
                 if (statusFrame.LeftText and statusFrame.RightText) then
                     if (not statusFrame.powerToken or statusFrame.powerToken == "MANA") then
-                        statusFrame.LeftText:SetText(mceil((value / valueMax) * 100) .. "%");
+                        statusFrame.LeftText:SetText(math.ceil((value / valueMax) * 100) .. "%");
                         statusFrame.LeftText:Show();
                     end
                     statusFrame.RightText:SetText(valueDisplay);
                     statusFrame.RightText:Show();
                     textString:Hide();
                 else
-                    valueDisplay = "(" .. mceil((value / valueMax) * 100) .. "%) " .. valueDisplay .. " / " .. valueMaxDisplay;
+                    valueDisplay = "(" .. math.ceil((value / valueMax) * 100) .. "%) " .. valueDisplay .. " / " .. valueMaxDisplay;
                 end
                 textString:SetText(valueDisplay);
             else
-                valueDisplay = mceil((value / valueMax) * 100) .. "%";
+                valueDisplay = math.ceil((value / valueMax) * 100) .. "%";
                 if (statusFrame.prefix and (statusFrame.alwaysPrefix or not (statusFrame.cvar and GetCVar(statusFrame.cvar) == "1" and statusFrame.textLockable))) then
                     textString:SetText(statusFrame.prefix .. " " .. valueDisplay);
                 else
