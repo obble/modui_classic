@@ -241,10 +241,15 @@ local AddHeader = function(unit, filter, attribute)
     if  filter == 'HELPFUL' then
         Header:SetAttribute('weaponTemplate',   'modauraTemplate')
         Header:SetAttribute('includeWeapons', 1)
+
+        local buffsAreConsolidated = GetCVarBool("consolidateBuffs")
+        if buffsAreConsolidated then
+            Header:SetAttribute("consolidateTo",    1)
+            Header:SetAttribute("consolidateDuration", -1)
+        end
     end
 
-    --Header:SetAttribute("consolidateTo",    1)
-    --Header:SetAttribute("consolidateDuration", -1)
+
     Header:SetAttribute('sortDirection',    attribute.direction)
     Header:SetAttribute('sortMethod',       attribute.sort)
     Header:SetAttribute('sortDirection',    attribute.direction)
@@ -282,6 +287,9 @@ local AddHeader = function()
             AddHeader(unit, filter, v)
         end
     end
+
+    ConsolidatedBuffs:ClearAllPoints();
+    ConsolidatedBuffs:SetPoint('TOPRIGHT', MinimapCluster, 'TOPLEFT', -147, -130);
 end
 
 e:RegisterEvent'PLAYER_LOGIN'
