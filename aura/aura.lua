@@ -18,7 +18,7 @@ local layout    = {
             'TOPRIGHT',
             MinimapCluster,
             'TOPLEFT',
-            -200,
+            -150,
             -180,
         },
     },
@@ -28,14 +28,14 @@ local layout    = {
         minWidth        = 330,
         minHeight       = 100,
         x               = -38,
-        wrapAfter       = 12,
+        wrapAfter       = 10,
         wrapY           = -50,
         direction       = '+',
         position        = {
             'TOPRIGHT',
             MinimapCluster,
             'TOPLEFT',
-            -200,
+            -150,
             -390,
         },
     },
@@ -112,8 +112,8 @@ end
 local UpdateAura = function(self, index, filter)
     local header = self:GetParent()
     local unit, filter = header:GetAttribute'unit', header:GetAttribute'filter'
-    local name, icon, count, dtype, duration, expiration = UnitAura(unit, index, filter)
-    if  name then
+    local name, icon, count, dtype, duration, expiration, _, __, shouldConsolidate = UnitAura(unit, index, filter)
+    if name then
         self:SetNormalTexture(icon)
 
         self.Count:SetText(count > 1 and count or '')
@@ -173,6 +173,7 @@ end
 
 local AddButton = function(self, name, bu)
     if  name:match'^child' or name:find'tempenchant' then
+
         bu:SetScript('OnUpdate',            OnUpdate)
         bu:SetScript('OnAttributeChanged',  OnAttributeChanged)
 
@@ -242,6 +243,8 @@ local AddHeader = function(unit, filter, attribute)
         Header:SetAttribute('includeWeapons', 1)
     end
 
+    --Header:SetAttribute("consolidateTo",    1)
+    --Header:SetAttribute("consolidateDuration", -1)
     Header:SetAttribute('sortDirection',    attribute.direction)
     Header:SetAttribute('sortMethod',       attribute.sort)
     Header:SetAttribute('sortDirection',    attribute.direction)

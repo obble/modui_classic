@@ -200,16 +200,16 @@ for _, v in pairs({ReputationDetailCorner, ReputationDetailDivider}) do
     tinsert(ns.skin, v)
 end
 
-local _, _, a, b, c, d = QuestLogFrame:GetRegions()
-for _, v in pairs({a, b, c, d}) do
-    tinsert(ns.skin, v)
-end
+--local a, b, c, d = QuestLogFrame:GetRegions()
+--for _, v in pairs({a, b, c, d}) do
+--    tinsert(ns.skin, v)
+--end
 
-QuestLogFrame.Material = QuestLogFrame:CreateTexture(nil, 'OVERLAY', nil, 7)
-QuestLogFrame.Material:SetTexture[[Interface\AddOns\modui_classic\art\quest\QuestBG.tga]]
-QuestLogFrame.Material:SetSize(510, 398)
-QuestLogFrame.Material:SetPoint('TOPLEFT', QuestLogDetailScrollFrame)
-QuestLogFrame.Material:SetVertexColor(.9, .9, .9)
+--QuestLogFrame.Material = QuestLogFrame:CreateTexture(nil, 'OVERLAY', nil, 7)
+--QuestLogFrame.Material:SetTexture[[Interface\AddOns\modui_classic\art\quest\QuestBG.tga]]
+--QuestLogFrame.Material:SetSize(510, 398)
+--QuestLogFrame.Material:SetPoint('TOPLEFT', QuestLogDetailScrollFrame)
+--QuestLogFrame.Material:SetVertexColor(.9, .9, .9)
 
 for _, v in pairs({FriendsFrame:GetRegions()}) do
     if v:GetObjectType() == 'Texture' and v ~= FriendsFrameIcon then

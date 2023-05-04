@@ -26,7 +26,7 @@ local AddPlayerFrame = function()
     end
 
     PlayerFrame:ClearAllPoints();
-    PlayerFrame:SetPoint("TOPLEFT", UIParent, 380, -290);
+    PlayerFrame:SetPoint("TOPLEFT", UIParent, 300, -290);
     PlayerFrame:SetUserPlaced(true)
 
 
