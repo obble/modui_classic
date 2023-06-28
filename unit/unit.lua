@@ -461,16 +461,24 @@ hooksecurefunc("PlayerFrame_UpdateStatus", function()
         PlayerRestIcon:Hide()
         PlayerRestGlow:Hide()
         PlayerStatusGlow:Hide()
+        PlayerAttackIcon:Hide();
     elseif PlayerFrame.inCombat then
         PlayerStatusTexture:Hide()
-        PlayerAttackIcon:Hide()
         PlayerRestIcon:Hide()
         PlayerAttackGlow:Hide()
         PlayerRestGlow:Hide()
         PlayerStatusGlow:Hide()
         PlayerAttackBackground:Hide()
+        PlayerAttackIcon:Show();
+    elseif ( PlayerFrame.onHateList ) then
+		PlayerAttackIcon:Show();
+    else 
     end
 end)
+
+PlayerHitIndicator:Hide();
+PlayerHitIndicator.Show=function() end
+
 
 PlayerFrameGroupIndicator:HookScript("OnShow", function(self) self:Hide() end);
 
