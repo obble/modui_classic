@@ -627,6 +627,9 @@ end
 
 hooksecurefunc('GroupLootFrame_OnShow', OnShow)
 
+UIWidgetTopCenterContainerFrame:ClearAllPoints() 
+UIWidgetTopCenterContainerFrame:SetPoint("TOP", 0, -40)
+
 local e = CreateFrame'Frame'
 e:RegisterEvent'VARIABLES_LOADED'
 e:RegisterEvent'ADDON_LOADED'
