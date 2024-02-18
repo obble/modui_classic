@@ -101,6 +101,14 @@ WorldMapFrame:SetScale(.8)
 WorldMapFrame.BlackoutFrame:EnableMouse(false)
 WorldMapFrame.BlackoutFrame:SetAlpha(0)
 
+local WorldMapHolder = CreateFrame("Frame", nil, UIParent)
+WorldMapHolder:SetSize(WorldMapFrame:GetWidth(), WorldMapFrame:GetHeight())
+WorldMapHolder:SetPoint("CENTER", UIParent, 0, 0)
+
+WorldMapFrame:SetParent(WorldMapHolder)
+WorldMapFrame:ClearAllPoints()
+WorldMapFrame:SetPoint("CENTER", WorldMapHolder, 0, 0)
+
 WorldMapFrame.ScrollContainer.GetCursorPosition = function(frame)
     local x, y = MapCanvasScrollControllerMixin.GetCursorPosition(frame)
     local s = WorldMapFrame:GetScale()
